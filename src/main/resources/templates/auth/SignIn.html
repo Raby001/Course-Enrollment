@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign In</title>
+  <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="relative w-[1100px] h-[560px] rounded-xl shadow-lg overflow-hidden bg-gradient-to-b from-lime-300 to-emerald-200">
+
+  <!-- IMAGE PANEL -->
+  <div id="imagePanel"
+       class="absolute top-0 left-0 w-1/2 h-full bg-white rounded-xl flex items-center justify-center transition-transform duration-700 ease-in-out z-20">
+    <img th:src="@{/images/image1.png}"
+         alt="Auth Image"
+         class="w-[80%] h-[80%] object-contain">
+  </div>
+
+  <!-- SIGN IN FORM -->
+  <div id="signin"
+       class="absolute right-0 top-0 w-1/2 h-full flex items-center justify-center transition-opacity duration-500">
+    <div class="w-[380px]">
+
+      <h2 class="text-2xl font-bold text-center">Sign In</h2>
+      <p class="text-center mb-6">Welcome back!</p>
+
+      <form th:action="@{/login}" method="post" class="space-y-4">
+
+        <div>
+          <label>Email</label>
+          <input type="email" name="email"
+                 class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500"
+                 placeholder="Enter your email">
+        </div>
+
+        <div>
+          <label>Password</label>
+          <input type="password" name="password"
+                 class="w-full px-4 py-2 rounded-lg border outline-none focus:ring-2 focus:ring-emerald-500"
+                 placeholder="Enter your password">
+        </div>
+
+        <div class="flex justify-between text-sm">
+          <label class="flex gap-2">
+            <input type="checkbox" name="remember-me">
+            Remember Me
+          </label>
+          <button type="button" class="text-blue-600 cursor-pointer">
+            Forgot Password?
+          </button>
+        </div>
+
+        <button type="submit"
+                class="w-[220px] mx-auto block bg-teal-700 text-white py-2 rounded-lg shadow
+                       hover:bg-teal-800 transition-colors cursor-pointer">
+          Sign In
+        </button>
+
+        <p class="text-center text-sm">Or</p>
+
+        <button type="button"
+                onclick="toggleAuth()"
+                class="w-[220px] mx-auto block bg-teal-700 text-white py-2 rounded-lg shadow
+                       hover:bg-teal-800 transition-colors cursor-pointer">
+          Don’t have account yet
+        </button>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- SIGN UP FORM -->
+  <div id="signup"
+       class="absolute left-0 top-0 w-1/2 h-full flex items-center justify-center
+              opacity-0 pointer-events-none transition-opacity duration-500">
+    <div class="w-[380px]">
+
+      <h2 class="text-2xl font-bold text-center">Sign Up</h2>
+      <p class="text-center mb-6">You can register here</p>
+
+      <form th:action="@{/register}" method="post" class="space-y-2">
+
+        <div>
+          <label>Username</label>
+          <input type="text" name="username"
+                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-emerald-500 outline-none"
+                 placeholder="Username">
+        </div>
+
+        <div>
+          <label>Email</label>
+          <input type="email" name="email"
+                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-emerald-500 outline-none"
+                 placeholder="Email">
+        </div>
+
+        <div>
+          <label>Password</label>
+          <input type="password" name="password"
+                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-emerald-500 outline-none"
+                 placeholder="Password">
+        </div>
+
+        <div>
+          <label>Confirm Password</label>
+          <input type="password" name="confirmPassword"
+                 class="w-full px-4 py-2 rounded-lg border focus:ring-2 focus:ring-emerald-500 outline-none"
+                 placeholder="Re-enter Password">
+        </div>
+
+
+        <button type="submit"
+                class="w-[220px] mx-auto block bg-teal-700 text-white py-2 rounded-lg shadow
+                       hover:bg-teal-800 transition-colors cursor-pointer">
+          Register
+        </button>
+
+        <p class="text-center text-sm">
+          Already have an account?
+          <button type="button"
+                  onclick="toggleAuth()"
+                  class="text-blue-600 underline cursor-pointer">
+            Sign In
+          </button>
+        </p>
+
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let signup = false;
+
+  function toggleAuth() {
+    const image = document.getElementById("imagePanel");
+    const signin = document.getElementById("signin");
+    const signupForm = document.getElementById("signup");
+
+    signup = !signup;
+
+    if (signup) {
+      image.classList.add("translate-x-full");
+      signin.classList.add("opacity-0", "pointer-events-none");
+      signupForm.classList.remove("opacity-0", "pointer-events-none");
+    } else {
+      image.classList.remove("translate-x-full");
+      signupForm.classList.add("opacity-0", "pointer-events-none");
+      signin.classList.remove("opacity-0", "pointer-events-none");
+    }
+  }
+</script>
+
+</body>
+</html>
