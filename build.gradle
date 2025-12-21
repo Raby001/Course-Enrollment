@@ -20,7 +20,6 @@ repositories {
 
 
 dependencies {
-  // Spring Boot Starters
   implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
   implementation 'org.springframework.boot:spring-boot-starter-webmvc'
   testImplementation 'org.springframework.boot:spring-boot-starter-thymeleaf-test'
@@ -30,6 +29,7 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
   implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
   // For mapping between DTOs and Entities
 	 implementation 'org.modelmapper:modelmapper:3.1.1'
@@ -45,11 +45,11 @@ dependencies {
   
   // Testing
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
-  implementation 'org.springframework.boot:spring-boot-starter-web'
   implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
   testImplementation 'org.springframework.security:spring-security-test'
-}
 
+
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
