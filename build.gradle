@@ -27,7 +27,10 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+// For mapping between DTOs and Entities
+	 implementation 'org.modelmapper:modelmapper:3.1.1'
 	// Database Driver
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
