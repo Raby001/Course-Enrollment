@@ -7,3 +7,9 @@
    - Create exception: resourceNotFoundException
    - Create GlobalExceptionHandler.java
    - Create controllers: CourseController.java
+  
+2. Lo Bunleang's task done this week:
+   - Create repository: ClassroomRepository.java
+   - Create DTO: ClassroomDTO.java
+   - Create service: ClassroomService.java
+   - Cretae controller: ClassroomController.java
