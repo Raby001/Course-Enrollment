@@ -31,8 +31,10 @@ dependencies {
 
   implementation 'org.springframework.boot:spring-boot-starter-security'
 
-  // Database Driver
-  runtimeOnly 'com.mysql:mysql-connector-j'
+  // For mapping between DTOs and Entities
+	 implementation 'org.modelmapper:modelmapper:3.1.1'
+	// Database Driver
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
   // Lombok (Optional but recommended)
     compileOnly 'org.projectlombok:lombok'
