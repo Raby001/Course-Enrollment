@@ -6,10 +6,12 @@
 - Create a UserDetailsServiceImpl.java
 - Create a RoleRepository.java & UserRepository.java
 - Create a DashboardController.java for testing
+--- 
 
 ### Hun Lyhorng
--  Designing UI in Figma
+-  Designing UI in Figma: [Link of Figma](https://www.figma.com/design/y2mzEZUAfgVZlEZw4WlzoC/Vue-Js?node-id=755-37&p=f&t=Gfh8au3SvFFxD5rf-0)
 - Create LoginForm.html using html, tailwindcss, javascript, thymeleaf
+--- 
 
 ### Heng oulong
 - Create a CourseRepository.java
@@ -18,6 +20,14 @@
 - Create exception: resourceNotFoundException
 - Create GlobalExceptionHandler.java
 - Create controllers: CourseController.java
+---
+
+### Lo Bunleang
+- Create repository: ClassroomRepository.java
+- Create DTO: ClassroomDTO.java
+- Create service: ClassroomService.java
+- Cretae controller: ClassroomController.java
+---
 
 ### Chea Chanminea
 1. Integrate Database Design in coding
