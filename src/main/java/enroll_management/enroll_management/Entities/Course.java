@@ -25,6 +25,10 @@ public class Course {
     @Column(name = "course_code", nullable = false, length = 20)
     private String courseCode;
     
+    @Column(name = "course_image", nullable = true, length = 500)
+    private String courseImage;
+    
+
     @Column(name = "course_name", nullable = false, length = 100)
     private String courseName;
     
@@ -77,7 +81,7 @@ public class Course {
     public Course() {}
     
     public Course(String courseCode, String courseName, Integer credits, 
-                  Integer maxCapacity, User lecturer) {
+                  Integer maxCapacity, User lecturer, String courseImage) {
         this.courseCode = courseCode;
         this.courseName = courseName;
         this.credits = credits;
@@ -91,6 +95,9 @@ public class Course {
 
     public String getCourseCode() { return courseCode; }
     public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
+
+    public String getCourseImage(){return courseImage;}
+    public void setCourseImage(String courseImage){this.courseImage = courseImage; }
     
     public String getCourseName() { return courseName; }
     public void setCourseName(String courseName) { this.courseName = courseName; }

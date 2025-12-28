@@ -2,7 +2,6 @@ package enroll_management.enroll_management.security;
 
 import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

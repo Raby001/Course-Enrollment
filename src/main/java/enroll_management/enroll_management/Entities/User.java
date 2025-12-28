@@ -68,6 +68,9 @@ public class User {
     
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "user_image", nullable = true, length = 500)
+    private String userImage;
     
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
@@ -111,6 +114,9 @@ public class User {
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
+
+    public String getCourseImage(){return userImage;}
+    public void setCourseImage(String userImage){this.userImage = userImage; }
     
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
