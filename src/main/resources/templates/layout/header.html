@@ -1,0 +1,75 @@
+<header th:fragment="header" class="bg-white shadow">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex items-center justify-between h-16">
+
+      <!-- Logo -->
+      <div class="flex items-center space-x-2">
+        <img
+          src="https://image2url.com/r2/default/images/1766936034816-102a1246-3811-43dd-b076-46bf91e4b3e7.png"
+          class="w-12"
+          alt="Logo"
+        >
+        <span class="font-bold text-lg">Course Enrollment</span>
+      </div>
+
+      <!-- Navigation -->
+      <nav class="flex items-center space-x-6">
+
+        <!-- Courses Dropdown -->
+        <div class="relative group">
+          <button class="flex items-center gap-1 hover:text-blue-600">
+            Courses
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                 viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div
+            class="absolute right-0 mt-2 w-44 bg-white border rounded shadow-lg
+                   opacity-0 invisible group-hover:opacity-100 group-hover:visible
+                   transition-all duration-200 z-50"
+          >
+            <a href="/courses" class="block px-4 py-2 hover:bg-gray-100">
+              All Courses
+            </a>
+            <a href="/courses/cpp" class="block px-4 py-2 hover:bg-gray-100">
+              C++
+            </a>
+            <a href="/courses/java" class="block px-4 py-2 hover:bg-gray-100">
+              Java
+            </a>
+            <a href="/courses/python" class="block px-4 py-2 hover:bg-gray-100">
+              Python
+            </a>
+            <a href="/courses/network" class="block px-4 py-2 hover:bg-gray-100">
+              Network
+            </a>
+          </div>
+        </div>
+
+        <!-- Schedule -->
+        <a href="#" class="hover:text-blue-600">Schedule</a>
+
+        <!-- Logout -->
+        <a href="/logout"
+           class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">
+          Logout
+        </a>
+
+        <!-- Profile Icon -->
+        <div class="relative">
+          <img
+            src="https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png"
+            alt="Profile"
+            class="w-8 h-8 rounded-full cursor-pointer"
+          >
+        </div>
+
+      </nav>
+
+    </div>
+  </div>
+</header>

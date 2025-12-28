@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Course Details</title>
+  <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+</head>
+
+<body class="bg-gray-50">
+
+<!-- HEADER -->
+<div th:replace="layouts/header :: header"></div>
+
+<!-- COURSE DETAILS -->
+<section class="max-w-7xl mx-auto px-6 mt-10">
+
+  <div class="bg-white rounded-lg shadow p-6 flex flex-col lg:flex-row gap-6">
+
+    <!-- Course Image + Info -->
+    <div class="lg:w-1/3">
+      <img
+        src="https://conservation-pink-gzb3rk13h9-wnreflzq9s.edgeone.app/c++.png"
+        alt="Course Image"
+        class="rounded-lg w-full h-56 object-cover"
+      >
+
+      <h3 class="font-semibold mt-4">
+        Starting Learning C++ from Scratch
+      </h3>
+
+      <p class="text-sm text-gray-500 mt-1">3 credits</p>
+      <p class="text-sm text-gray-500">Capacity: 100</p>
+      <p class="text-sm text-gray-500">Created at: 28/12/2025</p>
+
+      <button
+        class="mt-4 w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700">
+        Enroll Now
+      </button>
+    </div>
+
+    <!-- Course Description -->
+    <div class="lg:w-2/3">
+      <h2 class="text-xl font-semibold mb-3">About This Course</h2>
+
+      <p class="text-gray-700 leading-relaxed">
+        This course is designed for beginners who want to start their journey
+        in programming with C++. It introduces fundamental programming concepts
+        in a clear and practical way, helping learners build a strong foundation
+        for further studies in software development.
+        <br><br>
+        No prior programming experience is required. Through step-by-step
+        lessons and hands-on examples, students will learn how programming works
+        and how to think logically to solve problems.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- OTHER COURSES -->
+<section class="max-w-7xl mx-auto px-6 mt-12">
+  <h3 class="text-lg font-semibold mb-4">Other Courses</h3>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    <!-- Card 1 -->
+    <div class="bg-white rounded-lg shadow w-72">
+      <img
+        src="https://conservation-pink-gzb3rk13h9-wnreflzq9s.edgeone.app/c++.png"
+        class="rounded-t-lg h-44 w-full object-cover"
+      >
+      <div class="p-4">
+        <h4 class="font-semibold text-sm">
+          Starting Java + Spring Boot
+        </h4>
+        <p class="text-sm text-gray-500">3 credits</p>
+        <div class="text-yellow-500 text-sm mt-1">★★★★★</div>
+        <a href="#"
+           class="mt-3 block bg-teal-600 text-white text-center py-2 rounded">
+          Enroll Now
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="bg-white rounded-lg shadow w-72">
+      <img
+        src="https://conservation-pink-gzb3rk13h9-wnreflzq9s.edgeone.app/c++.png"
+        class="rounded-t-lg h-44 w-full object-cover"
+      >
+      <div class="p-4">
+        <h4 class="font-semibold text-sm">
+          Starting Learning CyberSecurity
+        </h4>
+        <p class="text-sm text-gray-500">3 credits</p>
+        <div class="text-yellow-500 text-sm mt-1">★★★★★</div>
+        <a href="#"
+           class="mt-3 block bg-teal-600 text-white text-center py-2 rounded">
+          Enroll Now
+        </a>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="bg-white rounded-lg shadow w-72">
+      <img
+        src="https://conservation-pink-gzb3rk13h9-wnreflzq9s.edgeone.app/c++.png"
+        class="rounded-t-lg h-44 w-full object-cover"
+      >
+      <div class="p-4">
+        <h4 class="font-semibold text-sm">
+          Starting Learning Database
+        </h4>
+        <p class="text-sm text-gray-500">3 credits</p>
+        <div class="text-yellow-500 text-sm mt-1">★★★★★</div>
+        <a href="#"
+           class="mt-3 block bg-teal-600 text-white text-center py-2 rounded">
+          Enroll Now
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div th:replace="layouts/footer :: footer"></div>
+
+</body>
+</html>
