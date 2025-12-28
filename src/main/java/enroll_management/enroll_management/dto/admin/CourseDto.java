@@ -1,4 +1,4 @@
-package enroll_management.enroll_management.dto;
+package enroll_management.enroll_management.dto.admin;
 
 import java.time.LocalDateTime;
 

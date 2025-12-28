@@ -1,9 +1,9 @@
-package enroll_management.enroll_management.services;
+package enroll_management.enroll_management.services.admin;
 
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.User;
-import enroll_management.enroll_management.dto.CourseCreateUpdateDto;
-import enroll_management.enroll_management.dto.CourseDto;
+import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
+import enroll_management.enroll_management.dto.admin.CourseDto;
 import enroll_management.enroll_management.exception.ResourceNotFoundException;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.UserRepository; // You will need this

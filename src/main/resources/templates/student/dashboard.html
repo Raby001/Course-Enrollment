@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Student Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-6">
+        <h1 class="text-2xl font-bold mb-4">📚 Welcome, Student!</h1>
+        <p class="mb-6">Browse available courses and manage your enrollments.</p>
+
+        <div class="space-x-4">
+            <a href="/student/courses" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Browse Courses</a>
+            <a href="/student/enrollments" class="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded">My Enrollments</a>
+        </div>
+
+        <div class="mt-8">
+            <a href="/logout" class="text-red-500 hover:underline">Logout</a>
+        </div>
+    </div>
+</body>
+</html>

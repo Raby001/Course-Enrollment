@@ -1,17 +1,18 @@
-package enroll_management.enroll_management.controllers;
+package enroll_management.enroll_management.controllers.admin;
 
-import enroll_management.enroll_management.dto.CourseCreateUpdateDto;
-import enroll_management.enroll_management.dto.CourseDto;
-import enroll_management.enroll_management.services.CourseService;
+import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
+import enroll_management.enroll_management.dto.admin.CourseDto;
+import enroll_management.enroll_management.services.admin.CourseService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/api/courses")
 public class CourseController {
 

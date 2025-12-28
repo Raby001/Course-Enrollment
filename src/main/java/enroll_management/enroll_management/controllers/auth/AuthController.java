@@ -1,8 +1,8 @@
-package enroll_management.enroll_management.controllers;
+package enroll_management.enroll_management.controllers.auth;
 
 import enroll_management.enroll_management.Entities.Role;
 import enroll_management.enroll_management.Entities.User;
-import enroll_management.enroll_management.dto.SignupRequest;
+import enroll_management.enroll_management.dto.auth.SignupRequest;
 import enroll_management.enroll_management.enums.RoleName;
 import enroll_management.enroll_management.enums.UserStatus;
 import enroll_management.enroll_management.repositories.RoleRepository;
@@ -32,13 +32,15 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+
     // Show login page (with empty signup form)
     @GetMapping("/login")
     public String loginPage(Model model) {
-        // ✅ ALWAYS add signupRequest to avoid Thymeleaf errors
+        // ALWAYS add signupRequest to avoid Thymeleaf errors
         if (!model.containsAttribute("signupRequest")) {
             model.addAttribute("signupRequest", new SignupRequest());
         }
+
         return "auth/LoginForm";
     }
 
@@ -74,17 +76,17 @@ public class AuthController {
         }
 
         // 4. Get STUDENT role
-        Role studentRole = roleRepository.findUserByName(RoleName.STUDENT)
+        Role studentRole = roleRepository.findByName(RoleName.STUDENT)
                 .orElseThrow(() -> new RuntimeException("STUDENT role not found in DB!"));
 
         // 5. Hash password and create user
         String hashedPassword = passwordEncoder.encode(signupRequest.getPassword());
         User user = new User();
         user.setUsername(signupRequest.getUsername());
+        user.setFirstName(signupRequest.getUsername());
+        user.setLastName("");    
         user.setEmail(signupRequest.getEmail());
         user.setPasswordHash(hashedPassword);
-        user.setFirstName(signupRequest.getUsername());
-        user.setLastName("");
         user.setDob(LocalDate.now().minusYears(18));
         user.setRole(studentRole);
         user.setStatus(UserStatus.ACTIVE);

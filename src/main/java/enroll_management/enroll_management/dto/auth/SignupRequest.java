@@ -1,4 +1,4 @@
-package enroll_management.enroll_management.dto;
+package enroll_management.enroll_management.dto.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -23,7 +23,7 @@ public class SignupRequest {
 
     public boolean isPasswordMatch() {
         return password != null && password.equals(confirmPassword);
-    }
+    }   
 
     // Getters & Setters
     public String getUsername() { return username; }
