@@ -115,8 +115,8 @@ public class User {
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
 
-    public String getCourseImage(){return userImage;}
-    public void setCourseImage(String userImage){this.userImage = userImage; }
+    public String getUserImage(){return userImage;}
+    public void setUserImage(String userImage){this.userImage = userImage; }
     
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }

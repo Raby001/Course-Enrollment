@@ -42,10 +42,15 @@ dependencies {
   // Development tools
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
   
+  // cloudinary
+  implementation 'com.cloudinary:cloudinary-http44:1.38.0'
+
+
   // Testing
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
   testImplementation 'org.springframework.security:spring-security-test'
+
 
 
 }

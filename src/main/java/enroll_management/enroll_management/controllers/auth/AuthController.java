@@ -51,7 +51,7 @@ public class AuthController {
             BindingResult bindingResult,
             Model model,
             RedirectAttributes redirectAttributes) {
-
+        
         // 1. Validate password match
         if (!signupRequest.isPasswordMatch()) {
             bindingResult.rejectValue("confirmPassword", "match", "Passwords do not match");
