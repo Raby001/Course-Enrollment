@@ -48,6 +48,9 @@ public class User {
     @Past(message = "Date of birth must be in the past")
     private LocalDate dob;
 
+    @Column(name = "profile_image", length = 500, nullable = true)
+    private String profileImage;
+
     public String getFormattedDob() {
         if (dob == null) {
             return "";
@@ -129,6 +132,9 @@ public class User {
     
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
+
+    public String getProfileImage() { return profileImage; }
+    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
     
     public UserStatus getStatus() { return status; }
     public void setStatus(UserStatus status) { this.status = status; }

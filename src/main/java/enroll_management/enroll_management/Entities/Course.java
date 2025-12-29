@@ -36,7 +36,10 @@ public class Course {
     
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
-    
+
+    @Column(name = "course_image", length = 500, nullable = true)
+    private String courseImage;
+
     // ===== RELATIONSHIPS =====
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "lecturer_id", nullable = false,
@@ -115,6 +118,10 @@ public class Course {
     
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    public String getCourseImage() { return courseImage;}
+
+    public void setCourseImage(String courseImage) { this.courseImage = courseImage;}
     
     public Set<Schedule> getSchedules() { return schedules; }
     public void setSchedules(Set<Schedule> schedules) { this.schedules = schedules; }
@@ -123,6 +130,7 @@ public class Course {
     public void setEnrollments(Set<Enrollment> enrollments) { this.enrollments = enrollments; }
     
     // ===== HELPER METHODS =====
+    @SuppressWarnings("unlikely-arg-type")
     public Integer getCurrentEnrollmentCount() {
         return (int) enrollments.stream()
                 .filter(e -> "ENROLLED".equals(e.getStatus()))
