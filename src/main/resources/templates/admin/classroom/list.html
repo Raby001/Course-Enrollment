@@ -1,0 +1,24 @@
+<head>
+    <title>Admin Classrooms</title>
+</head>
+<h1>Classrooms (Admin)</h1>
+<a href="/admin/classrooms/new">➕ New Classroom</a>
+
+<table border="1">
+<tr>
+    <th>Room</th>
+    <th>Building</th>
+    <th>Capacity</th>
+    <th>Actions</th>
+</tr>
+<tr th:each="c : ${classrooms}">
+    <td th:text="${c.roomNumber}"></td>
+    <td th:text="${c.building}"></td>
+    <td th:text="${c.capacity}"></td>
+    <td>
+        <a th:href="@{/admin/classrooms/{id}/edit(id=${c.id})}">Edit</a>
+        |
+        <a th:href="@{/admin/classrooms/{id}/delete(id=${c.id})}">Delete</a>
+    </td>
+</tr>
+</table>

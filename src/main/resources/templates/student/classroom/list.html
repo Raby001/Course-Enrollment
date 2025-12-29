@@ -1,0 +1,16 @@
+<h1>Available Classrooms</h1>
+
+<table border="1">
+<tr>
+    <th>Room</th>
+    <th>Building</th>
+    <th>Capacity</th>
+</tr>
+
+<tr th:each="c : ${classrooms}">
+    <td th:text="${c.roomNumber}"></td>
+    <td th:text="${c.building}"></td>
+    <td th:text="${c.capacity}"></td>
+</tr>
+</table>
+    
