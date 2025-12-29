@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Schedules</title>
+</head>
+<body>
+
+<h1>Schedules (Admin)</h1>
+
+<a href="/admin/schedules/new">➕ Create Schedule</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Course</th>
+        <th>Classroom</th>
+        <th>Day</th>
+        <th>Time</th>
+        <th>Actions</th>
+    </tr>
+
+    <tr th:each="s : ${schedules}">
+        <td th:text="${s.id}"></td>
+        <td th:text="${s.course.courseName}"></td>
+        <td th:text="${s.classroom.roomNumber}"></td>
+        <td th:text="${s.dayOfWeek}"></td>
+        <td th:text="${s.startTime} + ' - ' + ${s.endTime}"></td>
+        <td>
+            <a th:href="@{/admin/schedules/{id}/edit(id=${s.id})}">Edit</a>
+            |
+            <a th:href="@{/admin/schedules/{id}/delete(id=${s.id})}">Delete</a>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

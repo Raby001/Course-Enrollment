@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Classroom Form</title>
+</head>
+<body>
+
+<h2>Classroom Form</h2>
+
+<form th:action="@{/admin/classrooms}" th:object="${classroom}" method="post">
+
+    <input type="hidden" th:field="*{id}" />
+
+    <label>Building:</label>
+    <input type="text" th:field="*{building}" /><br/>
+
+    <label>Room Number:</label>
+    <input type="text" th:field="*{roomNumber}" /><br/>
+
+    <label>Capacity:</label>
+    <input type="number" th:field="*{capacity}" /><br/>
+
+    <label>Projector:</label>
+    <input type="checkbox" th:field="*{hasProjector}" /><br/>
+
+    <label>Computer:</label>
+    <input type="checkbox" th:field="*{hasComputer}" /><br/>
+
+    <label>Status:</label>
+    <select th:field="*{status}">
+        <option value="AVAILABLE">AVAILABLE</option>
+        <option value="MAINTENANCE">MAINTENANCE</option>
+        <option value="CLOSED">CLOSED</option>
+    </select><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+<a th:href="@{/admin/classrooms}">⬅ Back</a>
+
+</body>
+</html>

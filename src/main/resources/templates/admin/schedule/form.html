@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Schedule</title>
+</head>
+<body>
+
+<h2>Create Schedule</h2>
+
+<form th:action="@{/admin/schedules}" th:object="${schedule}" method="post">
+
+    <label>Course ID:</label>
+    <input type="number" th:field="*{courseId}" /><br/>
+
+    <label>Classroom ID:</label>
+    <input type="number" th:field="*{classroomId}" /><br/>
+
+    <label>Academic Year:</label>
+    <input type="number" th:field="*{academicYear}" /><br/>
+
+    <label>Semester:</label>
+    <input type="number" th:field="*{semester}" /><br/>
+
+    <label>Day:</label>
+    <select th:field="*{dayOfWeek}">
+        <option th:value="MONDAY">MONDAY</option>
+        <option th:value="TUESDAY">TUESDAY</option>
+        <option th:value="WEDNESDAY">WEDNESDAY</option>
+        <option th:value="THURSDAY">THURSDAY</option>
+        <option th:value="FRIDAY">FRIDAY</option>
+    </select><br/>
+
+    <label>Start Time:</label>
+    <input type="time" th:field="*{startTime}" /><br/>
+
+    <label>End Time:</label>
+    <input type="time" th:field="*{endTime}" /><br/>
+
+    <button type="submit">Save</button>
+</form>
+
+</body>
+</html>
