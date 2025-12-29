@@ -6,11 +6,15 @@ public class CourseCreateUpdateDto {
     private String description;
     private Integer credits;
     private Integer maxCapacity;
+    private String courseImage;
     private Long lecturerId; // We only need the ID to link the User
 
     // Getters and Setters
     public String getCourseCode() { return courseCode; }
     public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
+
+    public String getCourseImage() {return courseImage;}
+    public void setCourseImage(String courseImage) {this.courseImage = courseImage;}
 
     public String getCourseName() { return courseName; }
     public void setCourseName(String courseName) { this.courseName = courseName; }

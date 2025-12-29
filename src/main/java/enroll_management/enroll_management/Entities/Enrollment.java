@@ -116,7 +116,7 @@ public class Enrollment {
     
     // ===== HELPER METHODS =====
     public boolean isActive() {
-        return EnrollmentStatus.APPROVED.equals(status);
+        return EnrollmentStatus.ENROLLED.equals(status);
     }
     
     public boolean isCompleted() {
