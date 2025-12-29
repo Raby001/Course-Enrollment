@@ -36,6 +36,9 @@ public class Course {
     
     @Column(name = "max_capacity", nullable = false)
     private Integer maxCapacity;
+    @Column(name = "course_image", nullable = true, length = 500)
+    private String courseImage;
+
     
     // ===== RELATIONSHIPS =====
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -88,6 +91,10 @@ public class Course {
     // ===== GETTERS & SETTERS =====
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
+
+    public String getCourseImage(){return courseImage;}
+    public void setCourseImage(String courseImage){this.courseImage = courseImage; }
+
 
     public String getCourseCode() { return courseCode; }
     public void setCourseCode(String courseCode) { this.courseCode = courseCode; }

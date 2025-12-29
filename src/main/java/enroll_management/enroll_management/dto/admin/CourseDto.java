@@ -15,6 +15,7 @@ public class CourseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Integer currentEnrollmentCount;
+    private String courseImage;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -22,6 +23,10 @@ public class CourseDto {
 
     public String getCourseCode() { return courseCode; }
     public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
+
+    public String getCourseImage() {return courseImage;}
+
+    public void setCourseImage(String courseImage) {this.courseImage = courseImage;}
 
     public String getCourseName() { return courseName; }
     public void setCourseName(String courseName) { this.courseName = courseName; }
