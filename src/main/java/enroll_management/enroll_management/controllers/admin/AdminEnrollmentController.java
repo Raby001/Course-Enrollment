@@ -27,7 +27,7 @@ public class AdminEnrollmentController {
                 "enrollments",
                 enrollmentService.getAllEnrollments()
         );
-        return "admin/enrollments"; // Thymeleaf page
+        return "admin/enrollments"; 
     }
 
     // =========================
@@ -71,7 +71,7 @@ public class AdminEnrollmentController {
     // =========================
     @PostMapping("/delete/{id}")
     public String deleteEnrollment(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             Authentication authentication) {
 
         enrollmentService.deleteEnrollment(id, authentication);

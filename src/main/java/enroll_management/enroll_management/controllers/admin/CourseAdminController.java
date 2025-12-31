@@ -51,7 +51,7 @@ public class CourseAdminController {
     // =========================
     @GetMapping("/edit/{id}")
     public String showEditForm(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             Model model) {
 
         model.addAttribute("course", courseService.getCourseById(id));
@@ -63,7 +63,7 @@ public class CourseAdminController {
     // =========================
     @PostMapping("/edit/{id}")
     public String updateCourse(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.updateCourse(id, courseDto);
@@ -74,7 +74,7 @@ public class CourseAdminController {
     // DELETE COURSE
     // =========================
     @PostMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable Long id) {
+    public String deleteCourse(@PathVariable("id") Long id) {
 
         courseService.deleteCourse(id);
         return "redirect:/admin/courses";
