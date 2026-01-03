@@ -2,6 +2,8 @@ package enroll_management.enroll_management.services.common;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +25,7 @@ public class ImageUploadService {
         }
 
         // Upload to Cloudinary
+        @SuppressWarnings("unchecked")
         Map<String, Object> uploadResult = cloudinary.uploader()
                 .upload(imageFile.getBytes(), ObjectUtils.asMap(
                         "folder", "student_profiles",
