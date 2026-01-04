@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management</title>
+  <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+</head>
+
+<body class="bg-gray-50">
+
+<!-- ===== HEADER ===== -->
+<div th:replace="layout/header :: header"></div>
+
+<section class="max-w-7xl mx-auto px-6 mt-10">
+
+  <!-- ===== TITLE & ACTION ===== -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-semibold">User Management</h1>
+
+    <a th:href="@{/admin/users/create}"
+       class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+      + Create User
+    </a>
+  </div>
+
+  <!-- ===== USER TABLE ===== -->
+  <div class="bg-white rounded-lg shadow overflow-x-auto">
+
+    <table class="w-full text-sm">
+      <thead class="bg-gray-100 border-b">
+        <tr class="text-left">
+          <th class="px-4 py-3">ID</th>
+          <th class="px-4 py-3">Profile</th>
+          <th class="px-4 py-3">Username</th>
+          <th class="px-4 py-3">Full Name</th>
+          <th class="px-4 py-3">Email</th>
+          <th class="px-4 py-3">Role</th>
+          <th class="px-4 py-3">Status</th>
+          <th class="px-4 py-3 text-center">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <!-- ===== USER ROW ===== -->
+        <tr th:each="u : ${users}" class="border-b hover:bg-gray-50">
+
+          <!-- ID -->
+          <td class="px-4 py-3" th:text="${u.id}"></td>
+
+          <!-- PROFILE IMAGE -->
+          <td class="px-4 py-3">
+            <img th:src="${u.profileImage != null ? u.profileImage : 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
+                alt="Profile Image"
+                class="w-10 h-10 rounded-full">
+          </td>
+
+          <!-- USERNAME -->
+          <td class="px-4 py-3 font-medium" th:text="${u.username}"></td>
+
+          <!-- FULL NAME -->
+          <td class="px-4 py-3" th:text="${u.fullName}"></td>
+
+          <!-- EMAIL -->
+          <td class="px-4 py-3" th:text="${u.email}"></td>
+
+          <!-- ROLE -->
+          <td class="px-4 py-3">
+            <span th:text="${u.role}"
+                th:classappend="${u.role == 'ADMIN' ? 'bg-blue-500' :
+                        u.role == 'LECTURER' ? 'bg-orange-500' :
+                        'bg-cyan-500'}"
+                    class="text-white px-3 py-1 rounded text-xs">
+            </span>
+          </td>
+
+          <!-- STATUS -->
+          <td class="px-4 py-3">
+            <span th:text="${u.status}"
+                th:classappend="${u.status == 'ACTIVE' ? 'bg-green-500' :
+                       u.status == 'INACTIVE' ? 'bg-gray-400' :
+                       u.status == 'PENDING' ? 'bg-yellow-400' :
+                       u.status == 'SUSPENDED' ? 'bg-red-500' :
+                       'bg-blue-400'}"
+                class="text-white px-3 py-1 rounded text-xs">
+            </span>
+          </td>
+
+          <!-- ACTIONS -->
+          <td class="px-4 py-3 text-center space-x-2">
+
+            <!-- TOGGLE STATUS -->
+            <form th:action="@{/admin/users/{id}/status(id=${u.id})}"
+                  method="post"
+                  class="inline">
+              <button type="submit"
+                      class="px-3 py-1 rounded text-white text-xs"
+                      th:classappend="
+                        ${u.status == 'ACTIVE'} ? 'bg-gray-500' : 'bg-green-500'">
+                <span th:text="${u.status == 'ACTIVE'} ? 'Deactivate' : 'Activate'"></span>
+              </button>
+            </form>
+
+            <!-- DELETE -->
+            <form th:action="@{/admin/users/{id}/delete(id=${u.id})}"
+                  method="post"
+                  class="inline"
+                  onsubmit="return confirm('Are you sure you want to delete this user?');">
+              <button type="submit"
+                      class="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600">
+                Delete
+              </button>
+            </form>
+
+          </td>
+
+        </tr>
+
+        <!-- EMPTY STATE -->
+        <tr th:if="${#lists.isEmpty(users)}">
+          <td colspan="8" class="text-center py-6 text-gray-500">
+            No users found.
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+  </div>
+
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div th:replace="layout/footer :: footer"></div>
+
+</body>
+</html>
