@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/student/enrollments")
@@ -35,21 +36,39 @@ public class StudentEnrollmentController {
     // =========================
     // ENROLL INTO A COURSE
     // =========================
-    @PostMapping("/enroll")
-    public String enrollCourse(
-            @Valid @ModelAttribute EnrollmentCreateDto enrollmentDto,
-            Authentication authentication) {
+ @PostMapping("/enroll")
+public String enrollCourse(
+       @RequestParam("courseId") Long courseId,
+        Authentication authentication,
+        RedirectAttributes redirectAttributes) {
 
-        enrollmentService.createEnrollment(enrollmentDto, authentication);
-        return "redirect:/student/enrollments";
+    try {
+        EnrollmentCreateDto dto = new EnrollmentCreateDto();
+        dto.setCourseId(courseId);
+
+        enrollmentService.createEnrollment(dto, authentication);
+
+        redirectAttributes.addFlashAttribute(
+                "success",
+                "Successfully enrolled in course");
+
+    } catch (IllegalStateException ex) {
+
+        redirectAttributes.addFlashAttribute(
+                "error",
+                ex.getMessage());
     }
+
+    return "redirect:/student/courses";
+}
+
 
     // =========================
     // DROP (DELETE) ENROLLMENT
     // =========================
     @PostMapping("/drop/{id}")
     public String dropEnrollment(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             Authentication authentication) {
 
         enrollmentService.deleteEnrollment(id, authentication);

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Assign Enrollment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white p-8 rounded shadow max-w-md w-full">
+
+    <h2 class="text-xl font-bold mb-6">Assign Student to Course</h2>
+
+    <form th:action="@{/admin/enrollments/create}"
+          th:object="${enrollment}"
+          method="post"
+          class="space-y-4">
+
+        <input th:field="*{studentId}" type="number"
+               placeholder="Student ID"
+               class="w-full p-2 border rounded"/>
+
+        <input th:field="*{courseId}" type="number"
+               placeholder="Course ID"
+               class="w-full p-2 border rounded"/>
+
+        <div class="flex justify-end space-x-3">
+            <a href="/admin/enrollments"
+               class="border px-4 py-2 rounded">Cancel</a>
+            <button class="bg-blue-600 text-white px-4 py-2 rounded">
+                Assign
+            </button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
