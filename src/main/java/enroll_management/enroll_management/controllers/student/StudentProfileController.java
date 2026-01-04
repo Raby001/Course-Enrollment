@@ -2,7 +2,7 @@ package enroll_management.enroll_management.controllers.student;
 
 import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.student.StudentProfileDto;
-import enroll_management.enroll_management.services.common.StudentProfileService;
+import enroll_management.enroll_management.services.student.StudentProfileService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

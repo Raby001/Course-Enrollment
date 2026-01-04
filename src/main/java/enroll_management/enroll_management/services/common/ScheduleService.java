@@ -1,9 +1,9 @@
-package enroll_management.enroll_management.services;
+package enroll_management.enroll_management.services.common;
 
 import enroll_management.enroll_management.Entities.Classroom;
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.Schedule;
-import enroll_management.enroll_management.dto.ScheduleDTO;
+import enroll_management.enroll_management.dto.admin.ScheduleDTO;
 import enroll_management.enroll_management.repositories.ClassroomRepository;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.ScheduleRepository;

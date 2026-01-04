@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/student/courses")
-@PreAuthorize("hasRole('STUDENT')")
+@PreAuthorize("hasRole('ROLE_STUDENT')") 
 public class StudentCourseController {
 
     @Autowired
@@ -26,7 +26,7 @@ public class StudentCourseController {
                 courseService.getAllCourses()
         );
 
-        return "student/courses"; // Thymeleaf page
+        return "student/course/courses"; // Thymeleaf page
     }
 
     // =========================
@@ -34,7 +34,7 @@ public class StudentCourseController {
     // =========================
     @GetMapping("/{id}")
     public String viewCourseDetail(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             Model model) {
 
         model.addAttribute(
@@ -42,6 +42,6 @@ public class StudentCourseController {
                 courseService.getCourseById(id)
         );
 
-        return "student/course-detail";
+        return "student/course/course-details";
     }
 }

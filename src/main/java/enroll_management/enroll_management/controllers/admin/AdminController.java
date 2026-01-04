@@ -9,6 +9,6 @@ public class AdminController {
     @GetMapping("/admin/dashboard")
     public String adminDashboard(Model model){
         model.addAttribute("title", "Admin Dashboard");
-        return "admin/dashboard";
+        return "admin/adminDashboard";
     }
 }

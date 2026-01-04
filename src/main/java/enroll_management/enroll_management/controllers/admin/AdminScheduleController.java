@@ -1,7 +1,7 @@
 package enroll_management.enroll_management.controllers.admin;
 
-import enroll_management.enroll_management.dto.ScheduleDTO;
-import enroll_management.enroll_management.services.ScheduleService;
+import enroll_management.enroll_management.dto.admin.ScheduleDTO;
+import enroll_management.enroll_management.services.common.ScheduleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

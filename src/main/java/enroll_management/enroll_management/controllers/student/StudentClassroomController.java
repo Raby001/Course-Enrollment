@@ -1,11 +1,12 @@
 package enroll_management.enroll_management.controllers.student;
 
-import enroll_management.enroll_management.services.ClassroomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import enroll_management.enroll_management.services.admin.ClassroomService;
 
 @Controller
 @RequestMapping("/student/classrooms")

@@ -1,8 +1,9 @@
-package enroll_management.enroll_management.services.common;
+package enroll_management.enroll_management.services.student;
 
 
 import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.repositories.UserRepository;
+import enroll_management.enroll_management.services.common.ImageUploadService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

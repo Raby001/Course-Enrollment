@@ -1,7 +1,7 @@
 package enroll_management.enroll_management.controllers.admin;
 
-import enroll_management.enroll_management.dto.ClassroomDTO;
-import enroll_management.enroll_management.services.ClassroomService;
+import enroll_management.enroll_management.dto.admin.ClassroomDTO;
+import enroll_management.enroll_management.services.admin.ClassroomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
