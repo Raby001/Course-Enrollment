@@ -4,12 +4,20 @@ import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.CourseDto;
 import enroll_management.enroll_management.repositories.EnrollmentRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
+import enroll_management.enroll_management.Entities.Course;
+import enroll_management.enroll_management.enums.CourseStatus;
+import enroll_management.enroll_management.exception.ResourceNotFoundException;
+import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.services.admin.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.data.domain.Page;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +29,9 @@ import java.util.stream.Collectors;
 public class StudentCourseController {
 
     @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
     private CourseService courseService;
 
     @Autowired
@@ -30,7 +41,7 @@ public class StudentCourseController {
     private EnrollmentRepository enrollmentRepository;
 
     // =========================
-    // VIEW ALL COURSES
+    // VIEW ALL ACTIVE COURSES
     // =========================
     @GetMapping
     public String viewAllCourses(Authentication auth, Model model) {
@@ -52,7 +63,7 @@ public class StudentCourseController {
     }
 
     // =========================
-    // VIEW COURSE DETAILS
+    // VIEW COURSE DETAILS (ACTIVE ONLY)
     // =========================
     @GetMapping("/{id}")
     public String viewCourseDetail(

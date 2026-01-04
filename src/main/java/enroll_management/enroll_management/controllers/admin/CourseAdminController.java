@@ -1,8 +1,13 @@
 package enroll_management.enroll_management.controllers.admin;
 
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
+import enroll_management.enroll_management.dto.admin.CourseDto;
+import enroll_management.enroll_management.enums.CourseStatus;
+import enroll_management.enroll_management.enums.RoleName;
+import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.admin.CourseService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,24 +21,41 @@ public class CourseAdminController {
 
     @Autowired
     private CourseService courseService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     // =========================
     // VIEW ALL COURSES
     // =========================
-    @GetMapping
-    public String listCourses(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses());
-        return "admin/courses";
-    }
+   @GetMapping
+public String listCourses(
+        @RequestParam(name = "keyword", defaultValue = "") String keyword,
+        @RequestParam(name = "page" ,defaultValue = "0") int page,
+        Model model) {
+
+    Page<CourseDto> courses = courseService.searchCourses(keyword, page);
+
+    model.addAttribute("courses", courses);
+    model.addAttribute("keyword", keyword);
+
+    return "admin/courses";
+}
+
 
     // =========================
     // SHOW CREATE FORM
     // =========================
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("course", new CourseCreateUpdateDto());
-        return "admin/course-create";
-    }
+  @GetMapping("/create")
+public String showCreateForm(Model model) {
+    model.addAttribute("course", new CourseCreateUpdateDto());
+    // fetch lecturers directly
+    model.addAttribute(
+        "lecturers",
+        userRepository.findByRole_Name(RoleName.LECTURER)
+    );
+    return "admin/course-create";
+}
 
     // =========================
     // HANDLE CREATE
@@ -49,14 +71,16 @@ public class CourseAdminController {
     // =========================
     // SHOW EDIT FORM
     // =========================
-    @GetMapping("/edit/{id}")
-    public String showEditForm(
-            @PathVariable("id") Long id,
-            Model model) {
+   @GetMapping("/edit/{id}")
+public String showEditForm(
+        @PathVariable("id") Long id,
+        Model model) {
 
-        model.addAttribute("course", courseService.getCourseById(id));
-        return "admin/course-edit";
-    }
+    model.addAttribute("course", courseService.getCourseById(id));
+    model.addAttribute("statuses", CourseStatus.values());
+    return "admin/course-edit";
+}
+
 
     // =========================
     // HANDLE UPDATE
