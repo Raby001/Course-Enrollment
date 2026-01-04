@@ -1,8 +1,16 @@
 package enroll_management.enroll_management.controllers.student;
 
+import enroll_management.enroll_management.Entities.Enrollment;
+import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.EnrollmentCreateDto;
+import enroll_management.enroll_management.repositories.EnrollmentRepository;
+import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.admin.EnrollmentService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -19,49 +27,62 @@ public class StudentEnrollmentController {
     @Autowired
     private EnrollmentService enrollmentService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
     // =========================
     // VIEW MY ENROLLMENTS
     // =========================
     @GetMapping
     public String myEnrollments(Authentication authentication, Model model) {
 
-        model.addAttribute(
-                "enrollments",
-                enrollmentService.getMyEnrollments(authentication)
-        );
+        // Get current student
+        String username = authentication.getName();
+        User student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        return "student/enrollments"; // Thymeleaf page
+        // Get enrollments for this student
+        List<Enrollment> enrollments = enrollmentRepository.findByStudentId(student.getId());
+
+        model.addAttribute("enrollments", enrollments);
+        return "student/enrollments"; // ← Template path
     }
 
     // =========================
     // ENROLL INTO A COURSE
     // =========================
- @PostMapping("/enroll")
-public String enrollCourse(
-       @RequestParam("courseId") Long courseId,
-        Authentication authentication,
-        RedirectAttributes redirectAttributes) {
+    @PostMapping("/enroll")
+    public String enrollCourse(
+        @RequestParam("courseId") Long courseId,
+            Authentication authentication,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
 
-    try {
-        EnrollmentCreateDto dto = new EnrollmentCreateDto();
-        dto.setCourseId(courseId);
+        try {
+            EnrollmentCreateDto dto = new EnrollmentCreateDto();
+            dto.setCourseId(courseId);
 
-        enrollmentService.createEnrollment(dto, authentication);
+            enrollmentService.createEnrollment(dto, authentication);
 
-        redirectAttributes.addFlashAttribute(
-                "success",
-                "Successfully enrolled in course");
+            redirectAttributes.addFlashAttribute(
+                    "success",
+                    "Successfully enrolled in course");
 
-    } catch (IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    ex.getMessage());
+        }
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isEmpty()) {
+            return "redirect:" + referer;
+        }
 
-        redirectAttributes.addFlashAttribute(
-                "error",
-                ex.getMessage());
+        return "redirect:/student/home"; 
     }
-
-    return "redirect:/student/courses";
-}
-
 
     // =========================
     // DROP (DELETE) ENROLLMENT

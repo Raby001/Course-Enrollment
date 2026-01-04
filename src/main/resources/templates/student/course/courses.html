@@ -1,36 +1,72 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Student | Courses</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>Courses</title>
+  <link rel="stylesheet" th:href="@{/css/tailwind.css}">
 </head>
-<body class="bg-gray-100 p-8">
 
-<h1 class="text-2xl font-bold mb-6">Available Courses</h1>
-
-<div class="grid md:grid-cols-3 gap-6">
-
-    <div th:each="c : ${courses}" class="bg-white rounded shadow p-4">
-        <img th:if="${c.courseImage != null}"
-             th:src="${c.courseImage}"
-             class="h-40 w-full object-cover rounded mb-3"/>
-
-        <h2 class="font-semibold text-lg" th:text="${c.courseName}"></h2>
-        <p class="text-gray-600" th:text="${c.courseCode}"></p>
-
-        <form th:action="@{/student/enrollments/enroll}"
-              method="post"
-              class="mt-4">
-
-            <input type="hidden" name="courseId" th:value="${c.id}"/>
-
-            <button class="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700">
-                Enroll
-            </button>
-        </form>
-    </div>
-
+<body class="bg-gray-50">
+<div th:if="${param.success}" class="max-w-7xl mx-auto px-6 mb-4">
+  <div class="bg-green-100 text-green-800 p-3 rounded-lg">
+    ✅ <span th:text="${param.success[0]}">Successfully enrolled!</span>
+  </div>
 </div>
+<!-- ===== HEADER ===== -->
+<div th:replace="~{layout/header :: header}"></div>
+
+<!-- ===== BREADCRUMB ===== -->
+<section class="max-w-7xl mx-auto px-6 mt-8">
+  <nav class="text-sm text-gray-500">
+    <a href="/student/home">Home</a> > Courses
+  </nav>
+</section>
+
+<!-- ===== COURSE LIST ===== -->
+<section class="max-w-7xl mx-auto px-6 mt-6">
+  <h2 class="text-xl font-semibold mb-4">All Courses</h2>
+
+  <!-- Course Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div th:each="course : ${courses}" class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+      <!-- Clickable Card → Details -->
+      <a th:href="@{/student/courses/{id}(id=${course.id})}"
+         class="block">
+        <img 
+          th:src="${course.courseImage ?: 'https://via.placeholder.com/300x150?text=No+Image'}"
+          th:alt="${course.courseName}"
+          class="rounded-t-lg h-44 w-full object-cover"
+        >
+        <div class="p-4">
+          <h3 class="font-semibold text-lg" th:text="${course.courseName}">Course Name</h3>
+          <p class="text-sm text-gray-500" th:text="${course.credits} + ' credits'">3 credits</p>
+
+          <!-- Rating -->
+          <div class="text-yellow-500 text-sm mt-1">
+            ★★★★☆
+          </div>
+        </div>
+      </a>
+      <!-- Enroll Button -->
+      <div class="px-4 p-4">
+        <form th:if="${!course.enrolled}" th:action="@{/student/enrollments/enroll}" method="post">
+          <input type="hidden" name="courseId" th:value="${course.id}" />
+          <button type="submit" 
+                  class="w-full bg-[#009FAA] hover:bg-teal-700 text-white py-2 rounded-lg font-medium transition">
+            Enroll Now
+          </button>
+        </form>
+        <div th:if="${course.enrolled}" 
+            class="w-full bg-green-100 text-green-800 py-2 rounded-lg font-medium text-center">
+          Enrolled
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div th:replace="~{layout/footer :: footer}"></div>
 
 </body>
 </html>

@@ -7,13 +7,17 @@
 </head>
 
 <body class="bg-gray-50">
-
+<div th:if="${param.success}" class="max-w-7xl mx-auto px-6 mb-4">
+  <div class="bg-green-100 text-green-800 p-3 rounded-lg">
+    ✅ <span th:text="${param.success[0]}">Successfully enrolled!</span>
+  </div>
+</div>
 <!-- ===== HEADER ===== -->
-<div th:replace="layout/header :: header"></div>
+<div th:replace="~{layout/header :: header}"></div>
 
 <!-- ===== HERO ===== -->
 <section class="max-w-7xl mx-auto px-6 mt-8">
-  <div class="bg-gradient-to-b from-[#92C9FF] to-[#9FF0EA] rounded-xl p-8 flex justify-between items-center">
+  <div class="bg-gradient-to-b from-[#92C9FF] to-[#9FF0EA] rounded-xl p-8 flex flex-col md:flex-row justify-between items-center gap-8">
     <div>
       <h1 class="text-2xl font-bold text-black mb-2">
         What do you want to learn today?
@@ -22,19 +26,21 @@
         Your learning journey starts with one course
       </p>
 
-      <div class="flex bg-white rounded overflow-hidden w-96">
+      <div class="flex bg-white rounded overflow-hidden w-full max-w-md">
         <input class="flex-1 px-4 py-2 outline-none" placeholder="Search for courses">
         <button class="text-black px-4">
             <svg xmlns="http://www.w3.org/2000/svg" 
             width="24" height="24" viewBox="0 0 24 24" fill="none" 
             stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-            stroke-linejoin="round" class="lucide lucide-search-icon lucide-search">
+            stroke-linejoin="round" class="lucide lucide-search">
             <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
         </button>
       </div>
     </div>
 
-    <img src="https://image2url.com/r2/default/images/1766935312273-50a34d90-c041-4c5b-bbb9-52da614ba6c1.png" alt="Student learning illustration" class="w-64 hidden md:block">
+    <img src="https://image2url.com/r2/default/images/1766935312273-50a34d90-c041-4c5b-bbb9-52da614ba6c1.png" 
+         alt="Student learning illustration" 
+         class="w-64 hidden md:block">
   </div>
 </section>
 
@@ -42,58 +48,79 @@
 <section class="max-w-7xl mx-auto px-6 mt-10">
   <h2 class="text-xl font-semibold mb-4">Recommended Courses</h2>
 
-  <div class="flex space-x-3 mb-6">
-    <button class="bg-[#42E4F6] text-white px-4 py-1 rounded shadow">All Courses</button>
-    <button class="border px-4 py-1 rounded shadow hover:bg-[#42E4F6]">C++</button>
-    <button class="border px-4 py-1 rounded shadow hover:bg-[#42E4F6]">Java</button>
-    <button class="border px-4 py-1 rounded shadow hover:bg-[#42E4F6]">Python</button>
-  </div>
+<div class="flex flex-wrap gap-2 mb-6">
+  <button class="filter-btn bg-[#42E4F6] text-white px-4 py-1 rounded shadow" data-filter="all">All Courses</button>
+  <button class="filter-btn border px-4 py-1 rounded shadow hover:bg-[#42E4F6]" data-filter="cpp">C++</button>
+  <button class="filter-btn border px-4 py-1 rounded shadow hover:bg-[#42E4F6]" data-filter="java">Java</button>
+  <button class="filter-btn border px-4 py-1 rounded shadow hover:bg-[#42E4F6]" data-filter="python">Python</button>
+  <button class="filter-btn border px-4 py-1 rounded shadow hover:bg-[#42E4F6]" data-filter="others">Others</button>
+</div>
 
-  <!-- <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div th:each="course : ${courses}" class="bg-white rounded shadow">
-      <img th:src="${course.imageUrl}" th:alt="${course.name}" class="rounded-t">
-         <div class="p-4">
-          <h3 th:text="${course.name}"></h3>
-          <p th:text="${course.description}"></p>
-          <a th:href="@{/courses/{id}(id=${course.id})}"
-            class="block bg-teal-600 text-white text-center py-2 rounded">
+  <!-- Dynamic Course Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10">
+    <div th:each="course : ${courses}" 
+     class="course-card bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300"
+     th:data-category="${#strings.containsIgnoreCase(course.courseName, 'c++') ? 'cpp' : 
+                        #strings.containsIgnoreCase(course.courseName, 'java') ? 'java' : 
+                        #strings.containsIgnoreCase(course.courseName, 'python') ? 'python' : 'others'}">
+
+      <!-- Clickable area for details -->
+      <a th:href="@{/student/courses/{id}(id=${course.id})}" class="block">
+        <img th:src="${course.courseImage ?: 'https://via.placeholder.com/300x150?text=No+Image'}" 
+            th:alt="${course.courseName}" 
+            class="rounded-t-lg h-44 w-full object-cover">
+        <div class="p-4">
+          <h3 class="font-semibold text-lg" th:text="${course.courseName}">Course Name</h3>
+          <p class="text-sm text-gray-500 mb-2" th:text="${course.description}">Description</p>
+          <p class="text-sm text-gray-500" th:text="${course.credits} + ' credits'">3 credits</p>
+          <div class="text-yellow-500 text-sm mt-1">★★★★☆</div>
+        </div>
+      </a>
+
+      <!-- Enrollment button (outside <a> tag) -->
+      <div class="p-4 mt-2">
+        <form th:if="${!course.enrolled}" th:action="@{/student/enrollments/enroll}" method="post">
+          <input type="hidden" name="courseId" th:value="${course.id}" />
+          <button type="submit" 
+                  class="w-full bg-[#009FAA] hover:bg-teal-700 text-white py-2 rounded-lg font-medium transition">
             Enroll Now
-          </a>
-         </div>
-    </div>
-  </div> -->
-
-  <!-- Test Static -->
-  <!-- C++ Card -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-  <div class="bg-white rounded-lg shadow hover:ease-in-out duration-300 hover:shadow-lg" href="/courses/1">
-    <img
-      src="https://pub-141831e61e69445289222976a15b6fb3.r2.dev/Image_to_url_V2/c---imagetourl.cloud-1766958423025-xfki9x.png"
-      alt="C++ Course"
-      class="rounded-t-lg h-44 w-full object-cover"
-    >
-    <div class="p-4">
-      <h3 class="font-semibold text-lg">
-        Starting Learning C++ from Scratch
-      </h3>
-      <p class="text-sm text-gray-500">3 credits</p>
-
-      <!-- Rating -->
-      <div class="text-yellow-500 text-sm mt-1">
-        ★★★★★
+          </button>
+        </form>
+        <div th:if="${course.enrolled}" 
+            class="w-full bg-green-100 text-green-800 py-2 rounded-lg font-medium text-center">
+          Enrolled
+        </div>
       </div>
 
-      <a href="#"
-         class="mt-3 block bg-[#009FAA] text-white text-center py-2 rounded hover:bg-teal-700">
-        Enroll Now
-      </a>
     </div>
+
   </div>
-</div>
 </section>
 
 <!-- ===== FOOTER ===== -->
-<div th:replace="layout/footer :: footer"></div>
+<div th:replace="~{layout/footer :: footer}"></div>
+
+
 
 </body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const courseCards = document.querySelectorAll('.course-card');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            filterButtons.forEach(btn => btn.classList.remove('bg-[#42E4F6]', 'text-white'));
+            this.classList.add('bg-[#42E4F6]', 'text-white');
+
+            const filter = this.getAttribute('data-filter');
+            courseCards.forEach(card => {
+                card.style.display = (filter === 'all' || card.getAttribute('data-category') === filter) ? 'block' : 'none';
+            });
+        });
+    });
+});
+</script>
+
 </html>
+

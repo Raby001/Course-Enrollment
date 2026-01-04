@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/tailwind.css}">
 </head>
 <body class="bg-gray-100 min-h-screen">
-
+<div th:replace="~{layout/header :: header}"></div>
 <div class="max-w-6xl mx-auto p-6">
 
     <!-- Header -->
@@ -21,138 +21,107 @@
     </div>
 
     <!-- Layout -->
-    <div class="flex flex-col md:flex-row gap-6">
+    <div class="max-w-6xl mx-auto p-6 flex flex-col md:flex-row gap-6">
 
-    <!-- Sidebar -->
-    <aside class="md:w-1/3 bg-white rounded-2xl shadow-lg p-6 sticky top-6">
-        <div class="flex flex-col items-center">
-            <!-- Profile Image -->
-            <div class="relative w-28 h-28 mb-4">
-                <img 
-                    th:src="${user.userImage ?: 'https://via.placeholder.com/100?text=No+Image'}"
-                    alt="Profile"
-                    class="w-28 h-28 rounded-full border-4 border-sky-200 shadow-md object-cover"
-                />
+        <!-- Sidebar -->
+        <aside class="md:w-1/3 bg-white rounded-2xl shadow-xl p-6 sticky top-6">
+            <div class="flex flex-col items-center">
+                <!-- Profile Image -->
+                <div class="relative w-32 h-32 mb-4">
+                    <img th:src="${user.userImage ?: 'https://via.placeholder.com/150'}"
+                        alt="Profile"
+                        class="w-32 h-32 rounded-full border-4 border-gradient-to-r from-teal-400 to-cyan-400 shadow-lg object-cover"/>
+                </div>
+                <p class="font-bold text-xl text-gray-800 mb-1" th:text="${user.firstName + ' ' + user.lastName}">Student Name</p>
+                <p class="text-gray-500 mb-4" th:text="${user.email}">email@example.com</p>
+
+                <!-- Upload Image -->
+                <form th:action="@{/student/profile/upload-image}" method="post" enctype="multipart/form-data" class="w-full">
+                    <label class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white font-medium rounded-lg shadow-lg cursor-pointer transition">
+                        Upload Image
+                        <input type="file" name="image" accept="image/*" class="hidden"/>
+                    </label>
+                    <button type="submit" class="mt-3 w-full bg-gradient-to-r from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white py-2 rounded-lg font-semibold shadow-md transition">
+                        Change Photo
+                    </button>
+                </form>
             </div>
-
-            <!-- Name & Email -->
-            <p class="font-semibold text-gray-800 text-lg" th:text="${user.firstName + ' ' + user.lastName}">Student Name</p>
-            <p class="text-sm text-gray-500 mb-4" th:text="${user.email}">email@example.com</p>
-
-            <!-- Upload Button (optional if not using overlay) -->
-            <form th:action="@{/student/profile/upload-image}" method="post" enctype="multipart/form-data" class="w-full">
-                <label class="w-full flex items-center justify-center gap-2 px-4 py-2 bg-blue-500 hover:bg-sky-500 text-white font-medium rounded-lg shadow-md cursor-pointer transition">
-                    <span>Upload Image</span> 
-                    <input type="file" name="image" accept="image/*" class="hidden" />
-                </label>
-                <button type="submit" class="mt-3 w-full bg-sky-400 hover:bg-sky-500 text-white py-2 rounded-lg font-medium shadow-md transition">
-                    Change Photo
-                </button>
-            </form>
-
-            <!-- Navigation -->
-            <div class="mt-6 w-full space-y-2">
-                <a href="#" class="block w-full px-4 py-2 bg-sky-400 text-white font-medium rounded-lg text-center hover:bg-sky-500 shadow-sm transition">
-                    Information
-                </a>
-                <a th:href="@{/student/enrollments}" class="block w-full px-4 py-2 bg-gray-100 text-gray-800 font-medium rounded-lg text-center hover:bg-gray-200 shadow-sm transition">
-                    Enrollment
-                </a>
-            </div>
-        </div>
-    </aside>
-
+        </aside>
 
         <!-- Main Content -->
         <main class="md:w-2/3 space-y-6">
 
             <!-- Personal Info -->
-            <section class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">👤 Personal Information</h2>
+            <section class="bg-white rounded-2xl shadow-xl p-6">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-2">👤 Personal Information</h2>
                 <form th:action="@{/student/profile/update}" method="post" th:object="${profile}" class="space-y-4">
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                            <input type="text" th:field="*{firstName}"
-                                   class="w-full px-4 py-2 rounded-md border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+                            <label class="block text-sm font-medium text-gray-700">First Name</label>
+                            <input type="text" th:field="*{firstName}" 
+                                class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-teal-400 focus:outline-none"/>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                            <input type="text" th:field="*{lastName}"
-                                   class="w-full px-4 py-2 rounded-md border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+                            <label class="block text-sm font-medium text-gray-700">Last Name</label>
+                            <input type="text" th:field="*{lastName}" 
+                                class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-teal-400 focus:outline-none"/>
                         </div>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                        <input type="email" th:field="*{email}"
-                               class="w-full px-4 py-2 rounded-md border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" th:field="*{email}" 
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-teal-400 focus:outline-none"/>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
-                        <input type="date" th:field="*{dob}" th:value="${#temporals.format(profile.dob, 'yyyy-MM-dd')}"
-                               class="w-full px-4 py-2 rounded-md border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none" />
+                        <label class="block text-sm font-medium text-gray-700">Date of Birth</label>
+
+                        <!-- Display current date nicely -->
+                        <p class="text-gray-500 mb-2">
+                            Current DOB: 
+                            <span th:text="${#temporals.format(profile.dob, 'dd/MM/yyyy')}">01/01/2000</span>
+                        </p>
+
+                        <!-- Editable input -->
+                        <input type="date" th:field="*{dob}" 
+                            class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 focus:ring-2 focus:ring-teal-400 focus:outline-none"/>
                     </div>
 
-                    <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md font-medium shadow">Save Changes</button>
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-teal-400 to-cyan-500 hover:from-teal-500 hover:to-cyan-600 text-white py-3 rounded-lg font-semibold shadow-lg transition-transform transform hover:-translate-y-1">
+                        Save Changes
+                    </button>
                 </form>
             </section>
 
-            <!-- Enrollment Summary -->
-            <section class="bg-white rounded-xl shadow-lg p-6">
-                <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-b pb-2">📚 Enrollment Summary</h2>
 
-                <!-- Stats Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm text-center">
-                        <p class="text-sm text-gray-500">Total Enrolled</p>
-                        <p class="text-2xl font-bold text-gray-900">2</p>
-                    </div>
-                    <div class="bg-white border border-gray-200 rounded-lg p-4 shadow-sm text-center">
-                        <p class="text-sm text-gray-500">Credits</p>
-                        <p class="text-2xl font-bold text-gray-900">6</p>
-                    </div>
+            <!-- Enrolled Courses -->
+            <section class="bg-white rounded-2xl shadow-xl p-6">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-2">📚 My Enrolled Courses</h2>
+                <div th:if="${#lists.isEmpty(enrolledCourses)}" class="text-gray-500 text-center py-6">
+                    You haven't enrolled in any courses yet.
                 </div>
-
-                <!-- Table -->
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 text-sm">
-                        <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Course</th>
-                            <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                            <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                            <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Credits</th>
-                            <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Capacity</th>
-                            <th class="px-4 py-2 text-left font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                        </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                        <tr>
-                            <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-medium">JAVA</span></td>
-                            <td class="px-4 py-2">Learning JAVA from Scratch</td>
-                            <td class="px-4 py-2">29/12/2025</td>
-                            <td class="px-4 py-2">3</td>
-                            <td class="px-4 py-2">100</td>
-                            <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs font-medium">Enrolled</span></td>
-                        </tr>
-                        <tr>
-                            <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 text-xs font-medium">C++</span></td>
-                            <td class="px-4 py-2">Learning C++ from Scratch</td>
-                            <td class="px-4 py-2">29/12/2025</td>
-                            <td class="px-4 py-2">3</td>
-                            <td class="px-4 py-2">100</td>
-                            <td class="px-4 py-2"><span class="px-2 py-0.5 rounded-full bg-green-100 text-green-800 text-xs font-medium">Enrolled</span></td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div th:each="enrollment : ${enrolledCourses}" class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-blue-50 rounded-xl shadow-sm mb-3">
+                    <div>
+                        <p class="font-semibold text-gray-800" th:text="${enrollment.courseName}">Course Name</p>
+                        <p class="text-gray-500 text-sm" th:text="${enrollment.credits} + ' credits'">3 credits</p>
+                        <p class="text-gray-400 text-xs" th:text="${#temporals.format(enrollment.enrollmentDate,'dd/MM/yyyy')}">28/12/2025</p>
+                    </div>
+                    <form th:action="@{/student/profile/drop-enrollment}" method="post">
+                        <input type="hidden" name="enrollmentId" th:value="${enrollment.id}" />
+                        <button type="submit" class="mt-2 sm:mt-0 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium shadow">
+                            Drop
+                        </button>
+                    </form>
                 </div>
-
             </section>
         </main>
     </div>
 
+
 </div>
+<div th:replace="~{layout/footer :: footer}"></div>
 </body>
 </html>

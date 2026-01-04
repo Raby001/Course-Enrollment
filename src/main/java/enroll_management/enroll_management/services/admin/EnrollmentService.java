@@ -75,60 +75,60 @@ public class EnrollmentService {
     // =========================
     // CREATE ENROLLMENT
     // =========================
-public EnrollmentDto createEnrollment(EnrollmentCreateDto dto,
-                                      Authentication authentication) {
+    public EnrollmentDto createEnrollment(EnrollmentCreateDto dto,
+                                        Authentication authentication) {
 
-    boolean isAdmin = hasRole(authentication, "ROLE_ADMIN");
-    User student;
+        boolean isAdmin = hasRole(authentication, "ROLE_ADMIN");
+        User student;
 
-    // =========================
-    // DETERMINE STUDENT
-    // =========================
-    if (!isAdmin) {
-        student = getLoggedInUser(authentication);
-    } else {
-        student = userRepository.findById(dto.getStudentId())
+        // =========================
+        // DETERMINE STUDENT
+        // =========================
+        if (!isAdmin) {
+            student = getLoggedInUser(authentication);
+        } else {
+            student = userRepository.findById(dto.getStudentId())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("User", "id", dto.getStudentId()));
+        }
+
+        Course course = courseRepository.findById(dto.getCourseId())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User", "id", dto.getStudentId()));
+                        new ResourceNotFoundException("Course", "id", dto.getCourseId()));
+
+        // =========================
+        // BUSINESS RULE 1: DUPLICATE
+        // =========================
+        if (enrollmentRepository.existsByStudentIdAndCourseId(
+                student.getId(), course.getId())) {
+
+            throw new IllegalStateException(
+                    "Student is already enrolled in this course.");
+        }
+
+        // =========================
+        // BUSINESS RULE 2: CAPACITY (CRITICAL FIX)
+        // =========================
+        long enrolledCount =
+                enrollmentRepository.countByCourseIdAndStatus(
+                        course.getId(), EnrollmentStatus.ENROLLED);
+
+        if (enrolledCount >= course.getMaxCapacity()) {
+            throw new IllegalStateException(
+                    "Course '" + course.getCourseName() + "' is already full.");
+        }
+
+        // =========================
+        // CREATE ENROLLMENT
+        // =========================
+        Enrollment enrollment = new Enrollment();
+        enrollment.setStudent(student);
+        enrollment.setCourse(course);
+        enrollment.setStatus(EnrollmentStatus.ENROLLED);
+        enrollment.setEnrollmentDate(LocalDateTime.now());
+
+        return convertToDto(enrollmentRepository.save(enrollment));
     }
-
-    Course course = courseRepository.findById(dto.getCourseId())
-            .orElseThrow(() ->
-                    new ResourceNotFoundException("Course", "id", dto.getCourseId()));
-
-    // =========================
-    // BUSINESS RULE 1: DUPLICATE
-    // =========================
-    if (enrollmentRepository.existsByStudentIdAndCourseId(
-            student.getId(), course.getId())) {
-
-        throw new IllegalStateException(
-                "Student is already enrolled in this course.");
-    }
-
-    // =========================
-    // BUSINESS RULE 2: CAPACITY (CRITICAL FIX)
-    // =========================
-    long enrolledCount =
-            enrollmentRepository.countByCourseIdAndStatus(
-                    course.getId(), EnrollmentStatus.ENROLLED);
-
-    if (enrolledCount >= course.getMaxCapacity()) {
-        throw new IllegalStateException(
-                "Course '" + course.getCourseName() + "' is already full.");
-    }
-
-    // =========================
-    // CREATE ENROLLMENT
-    // =========================
-    Enrollment enrollment = new Enrollment();
-    enrollment.setStudent(student);
-    enrollment.setCourse(course);
-    enrollment.setStatus(EnrollmentStatus.ENROLLED);
-    enrollment.setEnrollmentDate(LocalDateTime.now());
-
-    return convertToDto(enrollmentRepository.save(enrollment));
-}
 
    
     // =========================
