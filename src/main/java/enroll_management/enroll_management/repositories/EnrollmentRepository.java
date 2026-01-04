@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.Query;
+import java.util.Optional;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
@@ -22,4 +24,17 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     
     long countByCourseIdAndStatus(Long courseId, EnrollmentStatus status);
+    // Check if a specific student is already enrolled in a specific course
+    // This is crucial for preventing duplicate enrollments!
+    Optional<Enrollment> findByStudentIdAndCourseId(Long studentId, Long courseId);
+
+    // count enrollments by status
+    long countByStatus(EnrollmentStatus status);
+
+    // Resolved today: changed from PENDING to ENROLLED today
+    @Query("SELECT COUNT(e) FROM Enrollment e WHERE e.status = 'ENROLLED' AND FUNCTION('DATE', e.updatedAt) = CURRENT_DATE")
+    long countResolvedToday();
+
+    // find last enrollment by date
+    Optional<Enrollment> findTopByOrderByEnrollmentDateDesc();
 }

@@ -33,6 +33,8 @@ public class EnrollmentService {
     private UserRepository userRepository;
 
 
+    @Autowired
+    private ModelMapper modelMapper;
 
     // =========================
     // READ OPERATIONS
@@ -107,7 +109,7 @@ public class EnrollmentService {
         }
 
         // =========================
-        // BUSINESS RULE 2: CAPACITY (CRITICAL FIX)
+        // BUSINESS RULE 2: CAPACITY
         // =========================
         long enrolledCount =
                 enrollmentRepository.countByCourseIdAndStatus(
@@ -127,10 +129,12 @@ public class EnrollmentService {
         enrollment.setStatus(EnrollmentStatus.ENROLLED);
         enrollment.setEnrollmentDate(LocalDateTime.now());
 
-        return convertToDto(enrollmentRepository.save(enrollment));
+        Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+
+        // ✅ ALWAYS RETURN
+        return convertToDto(savedEnrollment);
     }
 
-   
     // =========================
     // DELETE ENROLLMENT
     // =========================
@@ -173,24 +177,38 @@ public class EnrollmentService {
 
   private EnrollmentDto convertToDto(Enrollment enrollment) {
 
-    EnrollmentDto dto = new EnrollmentDto();
+        EnrollmentDto dto = new EnrollmentDto();
 
-    dto.setId(enrollment.getId());
-    dto.setEnrollmentDate(enrollment.getEnrollmentDate());
+        dto.setId(enrollment.getId());
+        dto.setEnrollmentDate(enrollment.getEnrollmentDate());
 
-    dto.setStatus(enrollment.getStatus());
+        dto.setStatus(enrollment.getStatus());
 
-    // Student info
-    dto.setStudentId(enrollment.getStudent().getId());
-    dto.setStudentName(enrollment.getStudent().getFullName());
+        // Student info
+        dto.setStudentId(enrollment.getStudent().getId());
+        dto.setStudentName(enrollment.getStudent().getFullName());
 
-    // Course info
-    dto.setCourseId(enrollment.getCourse().getId());
-    dto.setCourseCode(enrollment.getCourse().getCourseCode());
-    dto.setCourseName(enrollment.getCourse().getCourseName());
+        // Course info
+        dto.setCourseId(enrollment.getCourse().getId());
+        dto.setCourseCode(enrollment.getCourse().getCourseCode());
+        dto.setCourseName(enrollment.getCourse().getCourseName());
 
-    return dto;
-}
+        return dto;
+    }
 
 
+    // count enrollments by status
+    public long getPendingEnrollmentsCount() {
+        return enrollmentRepository.countByStatus(EnrollmentStatus.PENDING);
+    }
+
+    public long getResolvedToday() {
+        return enrollmentRepository.countResolvedToday();
+    }
+
+    public Enrollment getLatestEnrollment() {
+        return enrollmentRepository.findTopByOrderByEnrollmentDateDesc()
+                .orElse(null);  // Return null if no enrollments
+    }
+    
 }

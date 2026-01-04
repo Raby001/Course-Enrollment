@@ -6,6 +6,12 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import enroll_management.enroll_management.enums.RoleName;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +21,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @EntityGraph(attributePaths = "role")
     Optional<User> findByUsername(String username);
 
+    long count();
+    long countByRoleName(RoleName name);
+
+    // Count ALL new users created since a given date
+    @Query("SELECT COUNT(u) FROM User u WHERE u.createdAt >= :startDate")
+    long countNewUsersSince(@Param("startDate") LocalDateTime startDate);
 }

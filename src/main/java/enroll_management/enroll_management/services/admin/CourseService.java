@@ -1,10 +1,12 @@
 package enroll_management.enroll_management.services.admin;
 
+
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
 import enroll_management.enroll_management.dto.admin.CourseDto;
 import enroll_management.enroll_management.enums.CourseStatus;
+import enroll_management.enroll_management.enums.RoleName;
 import enroll_management.enroll_management.exception.ResourceNotFoundException;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
@@ -16,6 +18,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
+
+    private static final String String = null;
 
     @Autowired
     private CourseRepository courseRepository;
@@ -150,5 +154,22 @@ public class CourseService {
         course.setCourseImage(dto.getCourseImage());
 
         return course;
+    }
+
+    // Count total courses
+   public long getTotalCourses() {
+        return courseRepository.count();
+    }
+
+    public long getActiveCourses() {
+        return courseRepository.countByStatus(CourseStatus.ACTIVE);
+    }
+
+    public long getDraftCourses() {
+        return courseRepository.countByStatus(CourseStatus.DRAFT);
+    }
+
+    public long getPendingCourses() {
+        return courseRepository.countByStatus(CourseStatus.PENDING);
     }
 }
