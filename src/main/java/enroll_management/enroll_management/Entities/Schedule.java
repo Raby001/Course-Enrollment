@@ -1,8 +1,11 @@
 package enroll_management.enroll_management.Entities;
 
 import jakarta.persistence.*;
-import java.time.DayOfWeek;
+
 import java.time.LocalTime;
+
+import enroll_management.enroll_management.enums.DayOfWeek;
+
 import java.time.LocalDateTime;
 
 @Entity

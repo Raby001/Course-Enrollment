@@ -1,24 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin Classrooms</title>
+    <title>Classrooms Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<h1>Classrooms (Admin)</h1>
-<a href="/admin/classrooms/new">➕ New Classroom</a>
+<body class="bg-gray-100">
 
-<table border="1">
-<tr>
-    <th>Room</th>
-    <th>Building</th>
-    <th>Capacity</th>
-    <th>Actions</th>
-</tr>
-<tr th:each="c : ${classrooms}">
-    <td th:text="${c.roomNumber}"></td>
-    <td th:text="${c.building}"></td>
-    <td th:text="${c.capacity}"></td>
-    <td>
-        <a th:href="@{/admin/classrooms/{id}/edit(id=${c.id})}">Edit</a>
-        |
-        <a th:href="@{/admin/classrooms/{id}/delete(id=${c.id})}">Delete</a>
-    </td>
-</tr>
-</table>
+<div class="flex min-h-screen">
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-1 p-8">
+        <div class="bg-white rounded-lg shadow p-6">
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold">Classrooms Management</h2>
+                <a href="/admin/classrooms/new"
+                   class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    + Add classroom
+                </a>
+            </div>
+
+            <table class="w-full border">
+                <thead class="bg-gray-100">
+                <tr>
+                    <th class="p-2 border">Building</th>
+                    <th class="p-2 border">Room</th>
+                    <th class="p-2 border">Capacity</th>
+                    <th class="p-2 border">Equipment</th>
+                    <th class="p-2 border">Status</th>
+                    <th class="p-2 border">Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="c : ${classrooms}" class="text-center">
+                    <td class="p-2 border" th:text="${c.building}"></td>
+                    <td class="p-2 border" th:text="${c.roomNumber}"></td>
+                    <td class="p-2 border" th:text="${c.capacity}"></td>
+
+                    <!-- Equipment -->
+                    <td class="p-2 border">
+                        <span th:if="${c.hasComputer}">Computer</span>
+                        <span th:if="${c.hasProjector}"> Projector</span>
+                    </td>
+
+                    <!-- Status -->
+                    <td class="p-2 border">
+                        <span th:text="${c.status}"
+                            th:classappend="
+                                ${c.status == 'AVAILABLE'} ? 'bg-green-500' :
+                                (${c.status == 'MAINTENANCE'} ? 'bg-yellow-500' : 'bg-red-500')"
+                            class="px-2 py-1 rounded text-white">
+                        </span>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="p-2 border space-x-2">
+                        <a th:href="@{/admin/classrooms/{id}/edit(id=${c.id})}"
+                           class="text-yellow-500">✏️</a>
+
+                        <form th:action="@{/admin/classrooms/{id}/delete(id=${c.id})}"
+                              method="post" class="inline">
+                            <button type="submit" class="text-red-500">🗑️</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </main>
+</div>
+
+</body>
+</html>

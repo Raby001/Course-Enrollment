@@ -2,41 +2,63 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Classroom Form</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100">
 
-<h2>Classroom Form</h2>
+<div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
+    <h2 class="text-xl font-bold mb-4">Classroom Form</h2>
 
-<form th:action="@{/admin/classrooms}" th:object="${classroom}" method="post">
+    <form th:object="${classroom}"
+          th:action="${classroom.id == null} ? @{/admin/classrooms} : @{/admin/classrooms/{id}(id=${classroom.id})}"
+          method="post">
 
-    <input type="hidden" th:field="*{id}" />
+        <div class="mb-3">
+            <label>Building</label>
+            <input type="text" th:field="*{building}" class="w-full border p-2 rounded">
+        </div>
 
-    <label>Building:</label>
-    <input type="text" th:field="*{building}" /><br/>
+        <div class="mb-3">
+            <label>Room Number</label>
+            <input type="text" th:field="*{roomNumber}" class="w-full border p-2 rounded">
+        </div>
 
-    <label>Room Number:</label>
-    <input type="text" th:field="*{roomNumber}" /><br/>
+        <div class="mb-3">
+            <label>Capacity</label>
+            <input type="number" th:field="*{capacity}" class="w-full border p-2 rounded">
+        </div>
 
-    <label>Capacity:</label>
-    <input type="number" th:field="*{capacity}" /><br/>
+        <!-- Equipment -->
+        <div class="mb-3">
+            <label class="block">Equipment</label>
+            <label>
+                <input type="checkbox" th:field="*{hasComputer}"> Computer
+            </label>
+            <label class="ml-4">
+                <input type="checkbox" th:field="*{hasProjector}"> Projector
+            </label>
+        </div>
 
-    <label>Projector:</label>
-    <input type="checkbox" th:field="*{hasProjector}" /><br/>
+        <!-- Status -->
+        <div class="mb-3">
+            <label>Status</label>
+            <select th:field="*{status}" class="w-full border p-2 rounded">
+                <option value="AVAILABLE">AVAILABLE</option>
+                <option value="MAINTENANCE">MAINTENANCE</option>
+                <option value="CLOSED">CLOSED</option>
+            </select>
+        </div>
 
-    <label>Computer:</label>
-    <input type="checkbox" th:field="*{hasComputer}" /><br/>
-
-    <label>Status:</label>
-    <select th:field="*{status}">
-        <option value="AVAILABLE">AVAILABLE</option>
-        <option value="MAINTENANCE">MAINTENANCE</option>
-        <option value="CLOSED">CLOSED</option>
-    </select><br/>
-
-    <button type="submit">Save</button>
-</form>
-
-<a th:href="@{/admin/classrooms}">⬅ Back</a>
+        <div class="flex justify-end space-x-2">
+            <a href="/admin/classrooms" class="px-4 py-2 bg-gray-400 text-white rounded">
+                Cancel
+            </a>
+            <button class="px-4 py-2 bg-green-600 text-white rounded">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
 
 </body>
 </html>
