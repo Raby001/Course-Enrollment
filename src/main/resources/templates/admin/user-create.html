@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create User</title>
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white w-full max-w-lg p-6 rounded shadow">
+    <h2 class="text-2xl font-bold mb-6 text-center">Create User</h2>
+
+    <form th:action="@{/admin/users/create}"
+          th:object="${user}"
+          method="post"
+          class="space-y-4">
+
+        <input th:field="*{username}" placeholder="Username"
+               class="w-full border px-3 py-2 rounded" required>
+
+        <input th:field="*{email}" type="email" placeholder="Email"
+               class="w-full border px-3 py-2 rounded" required>
+
+        <input th:field="*{firstName}" placeholder="First Name"
+               class="w-full border px-3 py-2 rounded" required>
+
+        <input th:field="*{lastName}" placeholder="Last Name"
+               class="w-full border px-3 py-2 rounded" required>
+
+        <input th:field="*{password}" type="password"
+               placeholder="Password"
+               class="w-full border px-3 py-2 rounded" required>
+
+        <select th:field="*{roleId}" class="w-full border px-3 py-2 rounded">
+            <option value="">Select Role</option>
+            <option th:each="r : ${roles}"
+                    th:value="${r.id}"
+                    th:text="${r.name}">
+            </option>
+        </select>
+
+        <select th:field="*{status}" class="w-full border px-3 py-2 rounded">
+            <option th:each="s : ${statuses}"
+                    th:value="${s}"
+                    th:text="${s}">
+            </option>
+        </select>
+
+        <div class="flex justify-between">
+            <a th:href="@{/admin/users}"
+               class="px-4 py-2 bg-gray-400 text-white rounded">
+                Cancel
+            </a>
+
+            <button type="submit"
+                    class="px-4 py-2 bg-blue-600 text-white rounded">
+                Create User
+            </button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
