@@ -24,7 +24,19 @@
 
 <!-- ===== COURSE LIST ===== -->
 <section class="max-w-7xl mx-auto px-6 mt-6">
-  <h2 class="text-xl font-semibold mb-4">All Courses</h2>
+  <div class="flex flex-row justify-between items-center mb-6">
+    <h2 class="text-xl font-semibold mb-4">All Courses</h2>
+    <div class="flex bg-white rounded overflow-hidden w-full max-w-md">
+      <input class="flex-1 px-4 py-2 outline-none" placeholder="Search for courses">
+      <button class="text-black px-4">
+      <svg xmlns="http://www.w3.org/2000/svg" 
+          width="24" height="24" viewBox="0 0 24 24" fill="none" 
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+          stroke-linejoin="round" class="lucide lucide-search">
+          <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+      </button>
+    </div>
+  </div>
 
   <!-- Course Cards -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

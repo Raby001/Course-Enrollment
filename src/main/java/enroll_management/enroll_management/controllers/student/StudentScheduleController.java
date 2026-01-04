@@ -1,24 +1,33 @@
 package enroll_management.enroll_management.controllers.student;
 
-import lombok.RequiredArgsConstructor;
+import enroll_management.enroll_management.Entities.Schedule;
+import enroll_management.enroll_management.services.student.StudentScheduleService;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import enroll_management.enroll_management.services.common.ScheduleService;
 
 @Controller
-@RequestMapping("/student/schedules")
-@RequiredArgsConstructor
 public class StudentScheduleController {
 
-    private final ScheduleService scheduleService;
+    @Autowired
+    private StudentScheduleService scheduleService;
 
-    @GetMapping
-    public String list(Model model) {
-        model.addAttribute("schedules", scheduleService.findAll());
-        return "student/schedule/list";
+    @GetMapping("/student/schedules")
+    public String viewSchedule(Model model) {
+        List<Schedule> schedules = scheduleService.getStudentSchedule();
+        
+        // Group by day
+        Map<String, List<Schedule>> scheduleMap = schedules.stream()
+            .collect(Collectors.groupingBy(s -> s.getDayOfWeek().name()));
+        
+        model.addAttribute("scheduleMap", scheduleMap);
+        model.addAttribute("schedules", schedules);
+        return "student/schedule/schedule";
     }
 }
-    
