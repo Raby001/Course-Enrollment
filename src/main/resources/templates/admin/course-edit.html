@@ -4,36 +4,79 @@
     <title>Edit Course</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-gray-100">
 
-<div class="bg-white p-8 rounded shadow w-full max-w-xl">
+<div class="flex">
+    <!-- LEFT PANEL PLACEHOLDER -->
+    <div class="w-64 bg-gray-800 text-white p-6">
+        <!-- side panel component later -->
+        <p class="text-sm opacity-60">Side Panel</p>
+    </div>
 
-    <h2 class="text-xl font-bold mb-6">Edit Course</h2>
+    <!-- MAIN CONTENT -->
+    <div class="flex-1 p-10">
+        <h1 class="text-2xl font-bold mb-6">Edit Course</h1>
 
-    <form th:action="@{/admin/courses/edit/{id}(id=${course.id})}"
-          th:object="${course}"
-          method="post"
-          class="space-y-4">
+        <form th:action="@{/admin/courses/edit/{id}(id=${course.id})}"
+              th:object="${course}"
+              method="post"
+              enctype="multipart/form-data"
+              class="bg-white p-6 rounded shadow space-y-4">
 
-        <input th:field="*{courseName}" class="w-full p-2 border rounded"/>
-        <input th:field="*{courseCode}" class="w-full p-2 border rounded"/>
-        <textarea th:field="*{description}" class="w-full p-2 border rounded"></textarea>
+            <div>
+                <label class="font-semibold">Course Name</label>
+                <input th:field="*{courseName}" class="w-full border p-2 rounded"/>
+            </div>
 
-        <div class="grid grid-cols-2 gap-4">
-            <input th:field="*{credits}" type="number" class="p-2 border rounded"/>
-            <input th:field="*{maxCapacity}" type="number" class="p-2 border rounded"/>
-        </div>
+            <div>
+                <label class="font-semibold">Course Code</label>
+                <input th:field="*{courseCode}" class="w-full border p-2 rounded"/>
+            </div>
 
-        <input th:field="*{courseImage}" class="w-full p-2 border rounded"/>
+            <div>
+                <label class="font-semibold">Description</label>
+                <textarea th:field="*{description}" class="w-full border p-2 rounded"></textarea>
+            </div>
 
-        <div class="flex justify-end space-x-3">
-            <a href="/admin/courses" class="border px-4 py-2 rounded">Cancel</a>
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Update
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label>Credits</label>
+                    <input type="number" th:field="*{credits}" class="w-full border p-2 rounded"/>
+                </div>
+                <div>
+                    <label>Max Capacity</label>
+                    <input type="number" th:field="*{maxCapacity}" class="w-full border p-2 rounded"/>
+                </div>
+            </div>
+
+            <!-- STATUS -->
+            <div>
+                <label>Status</label>
+                <select th:field="*{status}" class="w-full border p-2 rounded">
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${s}">
+                    </option>
+                </select>
+            </div>
+
+<!-- IMAGE PREVIEW -->
+<div>
+    <label class="font-semibold">Current Image</label>
+
+    <img th:if="${course.courseImage}"
+         th:src="${course.courseImage}"
+         class="h-32 rounded mb-2 border"/>
+
+    <input type="file" name="imageFile" class="w-full"/>
+</div>
+
+            <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                Update Course
             </button>
-        </div>
 
-    </form>
+        </form>
+    </div>
 </div>
 
 </body>

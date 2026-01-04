@@ -1,35 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Student | Courses</title>
+    <title>Courses</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 p-8">
 
 <h1 class="text-2xl font-bold mb-6">Available Courses</h1>
 
+<!-- SEARCH -->
+<form method="get" class="flex gap-2 mb-6">
+    <input type="text" name="keyword"
+           th:value="${keyword}"
+           placeholder="Search course..."
+           class="border px-3 py-2 rounded w-64"/>
+    <button class="bg-green-600 text-white px-4 rounded">Search</button>
+</form>
+
+<!-- COURSES -->
 <div class="grid md:grid-cols-3 gap-6">
+    <div th:each="c : ${courses.content}"
+         class="bg-white rounded shadow p-4">
 
-    <div th:each="c : ${courses}" class="bg-white rounded shadow p-4">
-        <img th:if="${c.courseImage != null}"
-             th:src="${c.courseImage}"
-             class="h-40 w-full object-cover rounded mb-3"/>
+        <a th:href="@{/student/courses/{id}(id=${c.id})}">
+            <img th:src="${c.courseImage}"
+                 class="h-40 w-full object-cover rounded mb-3"/>
+        </a>
 
-        <h2 class="font-semibold text-lg" th:text="${c.courseName}"></h2>
-        <p class="text-gray-600" th:text="${c.courseCode}"></p>
+        <h3 class="font-semibold text-lg" th:text="${c.courseName}"></h3>
+        <p class="text-gray-500 text-sm" th:text="${c.courseCode}"></p>
 
-        <form th:action="@{/student/enrollments/enroll}"
-              method="post"
-              class="mt-4">
-
+        <!-- ENROLL BUTTON -->
+        <form th:action="@{/student/enrollments/enroll}" method="post" class="mt-4">
             <input type="hidden" name="courseId" th:value="${c.id}"/>
 
-            <button class="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700">
+            <button th:if="${c.currentEnrollmentCount < c.maxCapacity}"
+                    class="bg-blue-600 text-white w-full py-2 rounded hover:bg-blue-700">
                 Enroll
+            </button>
+
+            <button th:if="${c.currentEnrollmentCount >= c.maxCapacity}"
+                    disabled
+                    class="bg-gray-400 text-white w-full py-2 rounded cursor-not-allowed">
+                Full
             </button>
         </form>
     </div>
+</div>
 
+<!-- PAGINATION -->
+<div class="flex justify-center gap-2 mt-8">
+    <a th:if="${courses.hasPrevious()}"
+       th:href="@{/student/courses(page=${courses.number-1},keyword=${keyword})}"
+       class="px-4 py-2 bg-gray-300 rounded">Prev</a>
+
+    <span class="px-4 py-2 bg-blue-600 text-white rounded"
+          th:text="${courses.number + 1}"></span>
+
+    <a th:if="${courses.hasNext()}"
+       th:href="@{/student/courses(page=${courses.number+1},keyword=${keyword})}"
+       class="px-4 py-2 bg-gray-300 rounded">Next</a>
 </div>
 
 </body>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${course.courseName}"></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<div class="max-w-5xl mx-auto p-8 bg-white shadow rounded">
+
+    <img th:src="${course.courseImage}"
+         class="w-full h-72 object-cover rounded mb-6"/>
+
+    <h1 class="text-3xl font-bold" th:text="${course.courseName}"></h1>
+    <p class="text-gray-600 mb-4" th:text="${course.courseCode}"></p>
+
+    <p class="mb-4" th:text="${course.description}"></p>
+
+    <div class="flex gap-6 text-sm mb-6">
+        <span>Credits: <b th:text="${course.credits}"></b></span>
+        <span>Capacity:
+            <b th:text="${course.currentEnrollmentCount}"></b> /
+            <b th:text="${course.maxCapacity}"></b>
+        </span>
+    </div>
+
+    <form th:action="@{/student/enrollments/enroll}" method="post">
+        <input type="hidden" name="courseId" th:value="${course.id}"/>
+
+        <button th:if="${course.currentEnrollmentCount < course.maxCapacity}"
+                class="bg-blue-600 text-white px-6 py-3 rounded">
+            Enroll Now
+        </button>
+
+        <button th:if="${course.currentEnrollmentCount >= course.maxCapacity}"
+                disabled
+                class="bg-gray-400 text-white px-6 py-3 rounded">
+            Course Full
+        </button>
+    </form>
+
+</div>
+</body>
+</html>
