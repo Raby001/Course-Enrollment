@@ -8,7 +8,7 @@ public class UserListDto {
     private String email;
     private String role;
     private String status;
-    private String profileImage;
+    private String userImage;
 
     // ===== GETTERS & SETTERS =====
 
@@ -30,6 +30,6 @@ public class UserListDto {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
-    public String getProfileImage() { return profileImage; }
-    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
+    public String getProfileImage() { return userImage; }
+    public void setProfileImage(String userImage) { this.userImage = userImage; }
 }
