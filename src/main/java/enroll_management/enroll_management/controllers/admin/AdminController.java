@@ -5,14 +5,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import enroll_management.enroll_management.Entities.Enrollment;
-import enroll_management.enroll_management.services.common.UserService;
+import enroll_management.enroll_management.services.common.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Controller
 public class AdminController {
 
     @Autowired
-    private UserService userService;
+    private UserDetailService userService;
 
     @Autowired
     private enroll_management.enroll_management.services.admin.CourseService courseService;
@@ -22,6 +22,7 @@ public class AdminController {
     
         @GetMapping("/admin/adminDashboard")
             public String adminDashboard(Model model){
+            model.addAttribute("activePage", "adminDashboard");
             model.addAttribute("title", "Admin Dashboard");
 
             // Count statistics
@@ -48,11 +49,12 @@ public class AdminController {
                 model.addAttribute("lastEnrollmentDate", null);
             }
 
-            return "admin/dashboard";
+            return "admin/adminDashboard";
         }
 
         @GetMapping("/classrooms")
         public String classroomList(Model model) {
+            model.addAttribute("activePage", "classrooms");
             return "admin/classroom/list";
         }
 

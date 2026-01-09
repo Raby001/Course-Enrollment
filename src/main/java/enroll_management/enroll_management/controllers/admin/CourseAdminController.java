@@ -29,33 +29,33 @@ public class CourseAdminController {
     // VIEW ALL COURSES
     // =========================
    @GetMapping
-public String listCourses(
-        @RequestParam(name = "keyword", defaultValue = "") String keyword,
-        @RequestParam(name = "page" ,defaultValue = "0") int page,
-        Model model) {
+    public String listCourses(
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "page" ,defaultValue = "0") int page,
+            Model model) {
 
-    Page<CourseDto> courses = courseService.searchCourses(keyword, page);
+        Page<CourseDto> courses = courseService.searchCourses(keyword, page);
 
-    model.addAttribute("courses", courses);
-    model.addAttribute("keyword", keyword);
+        model.addAttribute("courses", courses);
+        model.addAttribute("keyword", keyword);
 
-    return "admin/courses";
-}
+        return "admin/course/courses";
+    }
 
 
     // =========================
     // SHOW CREATE FORM
     // =========================
-  @GetMapping("/create")
-public String showCreateForm(Model model) {
-    model.addAttribute("course", new CourseCreateUpdateDto());
-    // fetch lecturers directly
-    model.addAttribute(
-        "lecturers",
-        userRepository.findByRole_Name(RoleName.LECTURER)
-    );
-    return "admin/course-create";
-}
+    @GetMapping("/create")
+    public String showCreateForm(Model model) {
+        model.addAttribute("course", new CourseCreateUpdateDto());
+        // fetch lecturers directly
+        model.addAttribute(
+            "lecturers",
+            userRepository.findByRole_Name(RoleName.LECTURER)
+        );
+        return "admin/course/course-create";
+    }
 
     // =========================
     // HANDLE CREATE
@@ -65,21 +65,21 @@ public String showCreateForm(Model model) {
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.createCourse(courseDto);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 
     // =========================
     // SHOW EDIT FORM
     // =========================
    @GetMapping("/edit/{id}")
-public String showEditForm(
-        @PathVariable("id") Long id,
-        Model model) {
+    public String showEditForm(
+            @PathVariable("id") Long id,
+            Model model) {
 
-    model.addAttribute("course", courseService.getCourseById(id));
-    model.addAttribute("statuses", CourseStatus.values());
-    return "admin/course-edit";
-}
+        model.addAttribute("course", courseService.getCourseById(id));
+        model.addAttribute("statuses", CourseStatus.values());
+        return "admin/course/course-edit";
+    }
 
 
     // =========================
@@ -91,7 +91,7 @@ public String showEditForm(
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.updateCourse(id, courseDto);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 
     // =========================
@@ -101,6 +101,6 @@ public String showEditForm(
     public String deleteCourse(@PathVariable("id") Long id) {
 
         courseService.deleteCourse(id);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 }
