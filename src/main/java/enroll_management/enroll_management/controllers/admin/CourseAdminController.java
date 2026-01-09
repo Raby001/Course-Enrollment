@@ -39,7 +39,7 @@ public String listCourses(
     model.addAttribute("courses", courses);
     model.addAttribute("keyword", keyword);
 
-    return "admin/courses";
+    return "admin/course/courses";
 }
 
 
@@ -54,7 +54,7 @@ public String showCreateForm(Model model) {
         "lecturers",
         userRepository.findByRole_Name(RoleName.LECTURER)
     );
-    return "admin/course-create";
+    return "admin/course/course-create";
 }
 
     // =========================
@@ -78,7 +78,7 @@ public String showEditForm(
 
     model.addAttribute("course", courseService.getCourseById(id));
     model.addAttribute("statuses", CourseStatus.values());
-    return "admin/course-edit";
+    return "admin/course/course-edit";
 }
 
 
@@ -91,7 +91,7 @@ public String showEditForm(
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.updateCourse(id, courseDto);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 
     // =========================
@@ -101,6 +101,6 @@ public String showEditForm(
     public String deleteCourse(@PathVariable("id") Long id) {
 
         courseService.deleteCourse(id);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 }
