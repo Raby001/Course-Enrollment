@@ -138,9 +138,6 @@ public class User {
     
     public Role getRole() { return role; }
     public void setRole(Role role) { this.role = role; }
-
-    public String getProfileImage() { return profileImage; }
-    public void setProfileImage(String profileImage) { this.profileImage = profileImage; }
     
     public UserStatus getStatus() { return status; }
     public void setStatus(UserStatus status) { this.status = status; }

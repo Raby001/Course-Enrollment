@@ -22,6 +22,7 @@ public class AdminController {
     
         @GetMapping("/admin/adminDashboard")
             public String adminDashboard(Model model){
+            model.addAttribute("activePage", "dashboard");
             model.addAttribute("title", "Admin Dashboard");
 
             // Count statistics
@@ -48,11 +49,12 @@ public class AdminController {
                 model.addAttribute("lastEnrollmentDate", null);
             }
 
-            return "admin/dashboard";
+            return "admin/adminDashboard";
         }
 
         @GetMapping("/classrooms")
         public String classroomList(Model model) {
+            model.addAttribute("activePage", "classrooms");
             return "admin/classroom/list";
         }
 

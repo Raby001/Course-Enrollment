@@ -106,7 +106,7 @@ public class UserService {
         dto.setEmail(user.getEmail());
         dto.setRole(user.getRole().getName().name());
         dto.setStatus(user.getStatus().name());
-        dto.setProfileImage(user.getProfileImage());
+        dto.setUserImage(user.getUserImage());
         return dto;
     }
 }

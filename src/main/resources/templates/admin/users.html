@@ -5,13 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Management</title>
   <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+      <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link.active {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+            border-right: 3px solid #3b82f6;
+        }
+        
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+    </style>
 </head>
 
 <body class="bg-gray-50">
-
-<!-- ===== HEADER ===== -->
-<div th:replace="layout/header :: header"></div>
-
+  <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
 <section class="max-w-7xl mx-auto px-6 mt-10">
 
   <!-- ===== TITLE & ACTION ===== -->
@@ -51,7 +75,7 @@
 
           <!-- PROFILE IMAGE -->
           <td class="px-4 py-3">
-            <img th:src="${u.profileImage != null ? u.profileImage : 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
+            <img th:src="${u.userImage != null ? u.userImage : 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
                 alt="Profile Image"
                 class="w-10 h-10 rounded-full">
           </td>
@@ -131,8 +155,6 @@
 
 </section>
 
-<!-- ===== FOOTER ===== -->
-<div th:replace="layout/footer :: footer"></div>
 
 </body>
 </html>
