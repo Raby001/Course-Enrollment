@@ -48,8 +48,7 @@
 
           <!-- PROFILE IMAGE -->
           <td class="px-4 py-3">
-            <img
-                th:src="${u.profileImage !=null ? u.profileImage: 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
+            <img th:src="${u.userImage != null ? u.userImage : 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
                 alt="Profile Image"
                 class="w-10 h-10 rounded-full">
           </td>

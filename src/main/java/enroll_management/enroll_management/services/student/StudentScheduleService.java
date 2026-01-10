@@ -1,0 +1,40 @@
+package enroll_management.enroll_management.services.student;
+
+import enroll_management.enroll_management.Entities.Schedule;
+import enroll_management.enroll_management.Entities.User;
+import enroll_management.enroll_management.repositories.EnrollmentRepository;
+import enroll_management.enroll_management.repositories.ScheduleRepository;
+import enroll_management.enroll_management.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class StudentScheduleService {
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<Schedule> getStudentSchedule() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        // Get all course IDs the student is enrolled in
+        List<Long> courseIds = enrollmentRepository.findByStudentId(student.getId()).stream()
+                .map(enrollment -> enrollment.getCourse().getId())
+                .collect(Collectors.toList());
+
+        // Get schedules for those courses
+        return scheduleRepository.findByCourseIdIn(courseIds);
+    }
+}

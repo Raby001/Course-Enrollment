@@ -30,6 +30,11 @@ public class UserListDto {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
+<<<<<<< HEAD
     public String getProfileImage() { return userImage; }
     public void setProfileImage(String userImage) { this.userImage = userImage; }
+=======
+    public String getUserImage() { return userImage; }
+    public void setUserImage(String userImage) { this.userImage = userImage; }
+>>>>>>> origin/temp-main
 }

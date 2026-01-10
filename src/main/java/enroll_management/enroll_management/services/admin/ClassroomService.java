@@ -1,7 +1,8 @@
-package enroll_management.enroll_management.services;
+package enroll_management.enroll_management.services.admin;
+
 
 import enroll_management.enroll_management.Entities.Classroom;
-import enroll_management.enroll_management.dto.ClassroomDTO;
+import enroll_management.enroll_management.dto.admin.ClassroomDTO;
 import enroll_management.enroll_management.repositories.ClassroomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

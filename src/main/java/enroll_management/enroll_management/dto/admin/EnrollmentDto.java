@@ -17,6 +17,7 @@ public class EnrollmentDto {
     private Long courseId;
     private String courseCode;
     private String courseName;
+    private Integer credits;
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -35,4 +36,6 @@ public class EnrollmentDto {
     public void setCourseCode(String courseCode) { this.courseCode = courseCode; }
     public String getCourseName() { return courseName; }
     public void setCourseName(String courseName) { this.courseName = courseName; }
+    public Integer getCredits() { return credits; }
+    public void setCredits(Integer credits) { this.credits = credits; }
 }

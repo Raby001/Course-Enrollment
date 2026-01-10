@@ -1,27 +1,39 @@
 package enroll_management.enroll_management.services.admin;
 
+
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
 import enroll_management.enroll_management.dto.admin.CourseDto;
 import enroll_management.enroll_management.enums.CourseStatus;
+import enroll_management.enroll_management.enums.RoleName;
 import enroll_management.enroll_management.exception.ResourceNotFoundException;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
+import enroll_management.enroll_management.services.common.ImageUploadService;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
 
+    private static final String String = null;
+
     @Autowired
     private CourseRepository courseRepository;
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     // =========================
     // READ
@@ -41,23 +53,48 @@ public class CourseService {
         return convertToDto(course);
     }
 
+    public List<CourseDto> getActiveCourses() {
+        return courseRepository.findByStatus(CourseStatus.ACTIVE)
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
     // =========================
     // CREATE
     // =========================
 
     public CourseDto createCourse(CourseCreateUpdateDto dto) {
 
-        Course course = convertToEntity(dto);
+        Course course = new Course();
 
-        // lecturer is REQUIRED in your DB
+        // ===== BASIC FIELDS =====
+        course.setCourseCode(dto.getCourseCode());
+        course.setCourseName(dto.getCourseName());
+        course.setDescription(dto.getDescription());
+        course.setCredits(dto.getCredits());
+        course.setMaxCapacity(dto.getMaxCapacity());
+
+        // ===== STATUS =====
+        course.setStatus(
+                dto.getStatus() != null ? dto.getStatus() : CourseStatus.DRAFT
+        );
+
+        // ===== LECTURER =====
         User lecturer = userRepository.findById(dto.getLecturerId())
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User", "id", dto.getLecturerId()));
-
         course.setLecturer(lecturer);
 
-        // default status when created
-        course.setStatus(CourseStatus.DRAFT);
+        // ===== IMAGE UPLOAD (TRY–CATCH) =====
+        if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
+            try {
+                String imageUrl = imageUploadService.uploadImage(dto.getImageFile());
+                course.setCourseImage(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload course image", e);
+            }
+        }
 
         Course saved = courseRepository.save(course);
         return convertToDto(saved);
@@ -73,14 +110,19 @@ public class CourseService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Course", "id", id));
 
+        // ===== BASIC FIELDS =====
         course.setCourseCode(dto.getCourseCode());
         course.setCourseName(dto.getCourseName());
         course.setDescription(dto.getDescription());
         course.setCredits(dto.getCredits());
         course.setMaxCapacity(dto.getMaxCapacity());
-        course.setCourseImage(dto.getCourseImage());
 
-        // update lecturer only if changed
+        // ===== STATUS =====
+        if (dto.getStatus() != null) {
+            course.setStatus(dto.getStatus());
+        }
+
+        // ===== LECTURER =====
         if (dto.getLecturerId() != null &&
                 !course.getLecturer().getId().equals(dto.getLecturerId())) {
 
@@ -90,6 +132,17 @@ public class CourseService {
 
             course.setLecturer(lecturer);
         }
+
+        // ===== IMAGE REPLACEMENT (TRY–CATCH) =====
+        if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
+            try {
+                String imageUrl = imageUploadService.uploadImage(dto.getImageFile());
+                course.setCourseImage(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload course image", e);
+            }
+        }
+        // else → keep old image automatically
 
         Course updated = courseRepository.save(course);
         return convertToDto(updated);
@@ -107,7 +160,20 @@ public class CourseService {
     }
 
     // =========================
-    // MAPPING METHODS
+    // SEARCH + PAGINATION
+    // =========================
+
+    public Page<CourseDto> searchCourses(String keyword, int page) {
+        return courseRepository
+                .findByCourseNameContainingIgnoreCase(
+                        keyword,
+                        PageRequest.of(page, 5)
+                )
+                .map(this::convertToDto);
+    }
+
+    // =========================
+    // DTO MAPPING
     // =========================
 
     private CourseDto convertToDto(Course course) {
@@ -150,5 +216,18 @@ public class CourseService {
         course.setCourseImage(dto.getCourseImage());
 
         return course;
+    }
+
+    // Count total courses
+   public long getTotalCourses() {
+        return courseRepository.count();
+    }
+
+    public long getDraftCourses() {
+        return courseRepository.countByStatus(CourseStatus.DRAFT);
+    }
+
+    public long getPendingCourses() {
+        return courseRepository.countByStatus(CourseStatus.PENDING);
     }
 }

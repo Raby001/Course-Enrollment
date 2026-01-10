@@ -10,7 +10,6 @@ import enroll_management.enroll_management.exception.ResourceNotFoundException;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.EnrollmentRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -32,8 +31,7 @@ public class EnrollmentService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ModelMapper modelMapper;
+
 
     // =========================
     // READ OPERATIONS
@@ -76,14 +74,15 @@ public class EnrollmentService {
     // =========================
     // CREATE ENROLLMENT
     // =========================
-
     public EnrollmentDto createEnrollment(EnrollmentCreateDto dto,
-                                          Authentication authentication) {
+                                        Authentication authentication) {
 
         boolean isAdmin = hasRole(authentication, "ROLE_ADMIN");
         User student;
 
-        // STUDENT: force ownership
+        // =========================
+        // DETERMINE STUDENT
+        // =========================
         if (!isAdmin) {
             student = getLoggedInUser(authentication);
         } else {
@@ -96,25 +95,41 @@ public class EnrollmentService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Course", "id", dto.getCourseId()));
 
-        // Business rule: already enrolled
-        if (enrollmentRepository.findByStudentIdAndCourseId(
-                student.getId(), course.getId()).isPresent()) {
-            throw new IllegalStateException("Student is already enrolled in this course.");
+        // =========================
+        // BUSINESS RULE 1: DUPLICATE
+        // =========================
+        if (enrollmentRepository.existsByStudentIdAndCourseId(
+                student.getId(), course.getId())) {
+
+            throw new IllegalStateException(
+                    "Student is already enrolled in this course.");
         }
 
-        // Business rule: course full
-        if (course.isFull()) {
+        // =========================
+        // BUSINESS RULE 2: CAPACITY
+        // =========================
+        long enrolledCount =
+                enrollmentRepository.countByCourseIdAndStatus(
+                        course.getId(), EnrollmentStatus.ENROLLED);
+
+        if (enrolledCount >= course.getMaxCapacity()) {
             throw new IllegalStateException(
                     "Course '" + course.getCourseName() + "' is already full.");
         }
 
+        // =========================
+        // CREATE ENROLLMENT
+        // =========================
         Enrollment enrollment = new Enrollment();
         enrollment.setStudent(student);
         enrollment.setCourse(course);
         enrollment.setStatus(EnrollmentStatus.ENROLLED);
         enrollment.setEnrollmentDate(LocalDateTime.now());
 
-        return convertToDto(enrollmentRepository.save(enrollment));
+        Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+
+        // ✅ ALWAYS RETURN
+        return convertToDto(savedEnrollment);
     }
 
     // =========================
@@ -157,15 +172,40 @@ public class EnrollmentService {
                 .anyMatch(a -> a.getAuthority().equals(role));
     }
 
-    private EnrollmentDto convertToDto(Enrollment enrollment) {
-        EnrollmentDto dto = modelMapper.map(enrollment, EnrollmentDto.class);
+  private EnrollmentDto convertToDto(Enrollment enrollment) {
 
+        EnrollmentDto dto = new EnrollmentDto();
+
+        dto.setId(enrollment.getId());
+        dto.setEnrollmentDate(enrollment.getEnrollmentDate());
+
+        dto.setStatus(enrollment.getStatus());
+
+        // Student info
         dto.setStudentId(enrollment.getStudent().getId());
         dto.setStudentName(enrollment.getStudent().getFullName());
+
+        // Course info
         dto.setCourseId(enrollment.getCourse().getId());
         dto.setCourseCode(enrollment.getCourse().getCourseCode());
         dto.setCourseName(enrollment.getCourse().getCourseName());
 
         return dto;
     }
+
+
+    // count enrollments by status
+    public long getPendingEnrollmentsCount() {
+        return enrollmentRepository.countByStatus(EnrollmentStatus.PENDING);
+    }
+
+    public long getResolvedToday() {
+        return enrollmentRepository.countResolvedToday();
+    }
+
+    public Enrollment getLatestEnrollment() {
+        return enrollmentRepository.findTopByOrderByEnrollmentDateDesc()
+                .orElse(null);  // Return null if no enrollments
+    }
+    
 }

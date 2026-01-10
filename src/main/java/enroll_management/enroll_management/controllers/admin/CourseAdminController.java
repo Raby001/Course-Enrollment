@@ -1,8 +1,13 @@
 package enroll_management.enroll_management.controllers.admin;
 
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
+import enroll_management.enroll_management.dto.admin.CourseDto;
+import enroll_management.enroll_management.enums.CourseStatus;
+import enroll_management.enroll_management.enums.RoleName;
+import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.admin.CourseService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,15 +21,27 @@ public class CourseAdminController {
 
     @Autowired
     private CourseService courseService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     // =========================
     // VIEW ALL COURSES
     // =========================
-    @GetMapping
-    public String listCourses(Model model) {
-        model.addAttribute("courses", courseService.getAllCourses());
-        return "admin/courses";
+   @GetMapping
+    public String listCourses(
+            @RequestParam(name = "keyword", defaultValue = "") String keyword,
+            @RequestParam(name = "page" ,defaultValue = "0") int page,
+            Model model) {
+
+        Page<CourseDto> courses = courseService.searchCourses(keyword, page);
+
+        model.addAttribute("courses", courses);
+        model.addAttribute("keyword", keyword);
+
+        return "admin/course/courses";
     }
+
 
     // =========================
     // SHOW CREATE FORM
@@ -32,7 +49,12 @@ public class CourseAdminController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("course", new CourseCreateUpdateDto());
-        return "admin/course-create";
+        // fetch lecturers directly
+        model.addAttribute(
+            "lecturers",
+            userRepository.findByRole_Name(RoleName.LECTURER)
+        );
+        return "admin/course/course-create";
     }
 
     // =========================
@@ -43,40 +65,42 @@ public class CourseAdminController {
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.createCourse(courseDto);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 
     // =========================
     // SHOW EDIT FORM
     // =========================
-    @GetMapping("/edit/{id}")
+   @GetMapping("/edit/{id}")
     public String showEditForm(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             Model model) {
 
         model.addAttribute("course", courseService.getCourseById(id));
-        return "admin/course-edit";
+        model.addAttribute("statuses", CourseStatus.values());
+        return "admin/course/course-edit";
     }
+
 
     // =========================
     // HANDLE UPDATE
     // =========================
     @PostMapping("/edit/{id}")
     public String updateCourse(
-            @PathVariable Long id,
+            @PathVariable("id") Long id,
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.updateCourse(id, courseDto);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 
     // =========================
     // DELETE COURSE
     // =========================
     @PostMapping("/delete/{id}")
-    public String deleteCourse(@PathVariable Long id) {
+    public String deleteCourse(@PathVariable("id") Long id) {
 
         courseService.deleteCourse(id);
-        return "redirect:/admin/courses";
+        return "redirect:/admin/course/courses";
     }
 }

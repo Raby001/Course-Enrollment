@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>My Enrollments</title>
+  <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+</head>
+
+<body class="bg-gray-50">
+
+<!-- ===== HEADER ===== -->
+<div th:replace="~{layout/header :: header}"></div>
+
+<!-- ===== BREADCRUMB ===== -->
+<section class="max-w-7xl mx-auto px-6 mt-8">
+  <nav class="text-sm text-gray-500">
+    <a href="/student/home">Home</a> > My Enrollments
+  </nav>
+</section>
+
+<!-- ===== ENROLLMENTS LIST ===== -->
+<section class="max-w-7xl mx-auto px-6 mt-6">
+  <h2 class="text-xl font-semibold mb-4">📚 My Enrolled Courses</h2>
+
+  <!-- Success/Error Messages -->
+  <div th:if="${param.success}" class="mb-4 p-3 bg-green-100 text-green-800 rounded-lg">
+    ✅ <span th:text="${param.success[0]}">Successfully dropped course!</span>
+  </div>
+  <div th:if="${param.error}" class="mb-4 p-3 bg-red-100 text-red-800 rounded-lg">
+    ❌ <span th:text="${param.error[0]}">Error: You are not enrolled in this course</span>
+  </div>
+
+  <!-- Enrolled Courses List -->
+  <div th:if="${#lists.isEmpty(enrollments)}" class="text-center py-8 text-gray-500">
+    You haven't enrolled in any courses yet.
+  </div>
+
+  <div th:unless="${#lists.isEmpty(enrollments)}" class="space-y-4">
+    <div th:each="enrollment : ${enrollments}" 
+         class="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-300">
+      <div class="mb-2 sm:mb-0">
+        <div class="font-medium" th:text="${enrollment.course.courseName}">Course Name</div>
+        <div class="text-sm text-gray-600" th:text="${enrollment.course.credits} + ' credits'">3 credits</div>
+        <div class="text-xs text-gray-500" th:text="${#temporals.format(enrollment.enrollmentDate, 'dd/MM/yyyy')}">29/12/2025</div>
+      </div>
+      <form th:action="@{/student/enrollments/drop/{id}(id=${enrollment.id})}" method="post" class="flex space-x-2">
+        <button type="submit" 
+                class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm font-medium"
+                onclick="return confirm('Are you sure you want to drop this course?')">
+          Drop Course
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<div th:replace="~{layout/footer :: footer}"></div>
+
+</body>
+</html>

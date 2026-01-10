@@ -1,37 +1,102 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin Schedules</title>
+    <title>Schedules Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
 
-<h1>Schedules (Admin)</h1>
+<div class="flex min-h-screen">
 
-<a href="/admin/schedules/new">➕ Create Schedule</a>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 p-8">
+        <div class="bg-white rounded-lg shadow p-6">
 
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Course</th>
-        <th>Classroom</th>
-        <th>Day</th>
-        <th>Time</th>
-        <th>Actions</th>
-    </tr>
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Schedules Management</h2>
+                <a href="/admin/schedules/new"
+                   class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                    + Add schedule
+                </a>
+            </div>
 
-    <tr th:each="s : ${schedules}">
-        <td th:text="${s.id}"></td>
-        <td th:text="${s.course.courseName}"></td>
-        <td th:text="${s.classroom.roomNumber}"></td>
-        <td th:text="${s.dayOfWeek}"></td>
-        <td th:text="${s.startTime} + ' - ' + ${s.endTime}"></td>
-        <td>
-            <a th:href="@{/admin/schedules/{id}/edit(id=${s.id})}">Edit</a>
-            |
-            <a th:href="@{/admin/schedules/{id}/delete(id=${s.id})}">Delete</a>
-        </td>
-    </tr>
-</table>
+            <!-- Table -->
+            <table class="w-full border text-sm">
+                <thead class="bg-gray-100 text-left">
+                <tr>
+                    <th class="p-2 border">Course</th>
+                    <th class="p-2 border">Classroom</th>
+                    <th class="p-2 border">Day</th>
+                    <th class="p-2 border">Time</th>
+                    <th class="p-2 border">Semester</th>
+                    <th class="p-2 border">Year</th>
+                    <th class="p-2 border">Status</th>
+                    <th class="p-2 border text-center">Action</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="s : ${schedules}" class="hover:bg-gray-50">
+                    <td class="p-2 border font-semibold"
+                        th:text="${s.course.courseCode}"></td>
+
+                    <td class="p-2 border"
+                        th:text="${s.classroom.building + '-' + s.classroom.roomNumber}"></td>
+
+                    <td class="p-2 border"
+                        th:text="${s.dayOfWeek}"></td>
+
+                    <td class="p-2 border"
+                        th:text="${s.startTime + ' - ' + s.endTime}"></td>
+
+                    <td class="p-2 border"
+                        th:text="${s.semester}"></td>
+
+                    <td class="p-2 border"
+                        th:text="${s.academicYear}"></td>
+
+                    <!-- Status Badge -->
+                    <td class="p-2 border">
+                        <span class="px-2 py-1 rounded text-white text-xs"
+                              th:text="${s.status}"
+                              th:classappend="
+                                ${s.status == 'SCHEDULED'} ? 'bg-green-500' :
+                                (${s.status == 'CANCELLED'} ? 'bg-red-500' :
+                                'bg-gray-400')">
+                        </span>
+                    </td>
+
+                    <!-- Actions -->
+                    <td class="p-2 border text-center space-x-2">
+                        <a th:href="@{/admin/schedules/{id}/edit(id=${s.id})}"
+                           class="text-yellow-500 hover:text-yellow-600">
+                            ✏️
+                        </a>
+
+                        <form th:action="@{/admin/schedules/{id}/delete(id=${s.id})}"
+                              method="post" class="inline">
+                            <button type="submit"
+                                    class="text-red-500 hover:text-red-600">
+                                🗑️
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Empty state -->
+                <tr th:if="${#lists.isEmpty(schedules)}">
+                    <td colspan="8" class="text-center p-6 text-gray-500">
+                        No schedules found
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </main>
+</div>
 
 </body>
 </html>
