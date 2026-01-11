@@ -23,6 +23,7 @@ public class AdminScheduleController {
     // LIST
     @GetMapping
     public String list(Model model) {
+        model.addAttribute("activePage", "schedules");
         model.addAttribute("schedules", scheduleService.findAll());
         return "admin/schedule/list";
     }

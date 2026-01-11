@@ -38,6 +38,13 @@
 <body class="bg-gray-50">
   <!-- Main Container -->
     <div class="flex min-h-screen">
+      <!-- user.html content -->
+      <div class="p-6">
+          <h1 class="text-2xl font-bold">Users Management</h1>
+          <button id="open-create" class="bg-blue-600 text-white px-4 py-2 rounded">
+              Add New User
+          </button>
+
         <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
 
         <main class="flex-1">
@@ -71,8 +78,7 @@
           <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-semibold">User Management</h1>
 
-            <a href="javascript:void(0);" 
-              id="openCreateUser"
+            <a th:href="@{/admin/users/create}"
               class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
               + Create User
             </a>
@@ -183,37 +189,72 @@
             </div>
           </section>
         </main>
-    </div>
+      </div>
 
-  <!-- MODAL CONTAINER -->
-  <div id="createUserModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
-      <!-- Modal content will be loaded here -->
-  </div>
+      <!-- Overlay for user-create.html -->
+      <div id="create-user-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white w-full max-w-lg p-6 rounded shadow">
+            <h2 class="text-2xl font-bold mb-6 text-center">Create User</h2>
 
+            <form th:action="@{/admin/users/create}"
+                th:object="${user}"
+                method="post"
+                class="space-y-4">
 
-    <script>
-        document.getElementById('openCreateUser').addEventListener('click', function() {
-            const modal = document.getElementById('createUserModal');
+                <input th:field="*{username}" placeholder="Username"
+                    class="w-full border px-3 py-2 rounded" required>
 
-            // Fetch the create-user form
-            fetch('/admin/users/create')  // your controller should return the fragment or HTML
-                .then(response => response.text())
-                .then(html => {
-                    modal.innerHTML = html;
-                    modal.classList.remove('hidden');
+                <input th:field="*{email}" type="email" placeholder="Email"
+                    class="w-full border px-3 py-2 rounded" required>
 
-                    // Add close functionality
-                    const closeBtn = modal.querySelector('#closeModal');
-                    if (closeBtn) {
-                        closeBtn.addEventListener('click', () => {
-                            modal.classList.add('hidden');
-                            modal.innerHTML = '';
-                        });
-                    }
-                });
-        });
-    </script>
-    </body>
+                <input th:field="*{firstName}" placeholder="First Name"
+                    class="w-full border px-3 py-2 rounded" required>
+
+                <input th:field="*{lastName}" placeholder="Last Name"
+                    class="w-full border px-3 py-2 rounded" required>
+
+                <input th:field="*{password}" type="password"
+                    placeholder="Password"
+                    class="w-full border px-3 py-2 rounded" required>
+
+                <select th:field="*{roleId}" class="w-full border px-3 py-2 rounded">
+                    <option value="">Select Role</option>
+                    <option th:each="r : ${roles}"
+                            th:value="${r.id}"
+                            th:text="${r.name}">
+                    </option>
+                </select>
+
+                <select th:field="*{status}" class="w-full border px-3 py-2 rounded">
+                    <option th:each="s : ${statuses}"
+                            th:value="${s}"
+                            th:text="${s}">
+                    </option>
+                </select>
+
+                <div class="flex justify-between">
+                    <a th:href="@{/admin/users}"
+                    class="px-4 py-2 bg-gray-400 text-white rounded">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded">
+                        Create User
+                    </button>
+                </div>
+            </form>
+        </div>
+      </div>
+
+      <script>
+          const openBtn = document.getElementById('open-create');
+          const modal = document.getElementById('create-user-modal');
+          const closeBtn = document.getElementById('close-modal');
+
+          openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+          closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+      </script>
 
 </body>
 </html>

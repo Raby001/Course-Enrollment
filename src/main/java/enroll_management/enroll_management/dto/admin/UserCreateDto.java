@@ -9,9 +9,9 @@ public class UserCreateDto {
     private String firstName;
     private String lastName;
 
-    private String password;     // 🔑 REQUIRED
-    private Long roleId;          // 🔑 REQUIRED
-    private UserStatus status;    // 🔑 REQUIRED
+    private String password;
+    private Long roleId;
+    private UserStatus status;
 
     // ===== GETTERS & SETTERS =====
     public String getUsername() { return username; }

@@ -38,6 +38,7 @@ public class CourseAdminController {
 
         model.addAttribute("courses", courses);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("activePage", "courses");
 
         return "admin/course/courses";
     }

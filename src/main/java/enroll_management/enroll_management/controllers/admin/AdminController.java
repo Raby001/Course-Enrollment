@@ -51,7 +51,7 @@ public class AdminController {
 
         @GetMapping("/classrooms")
         public String classroomList(Model model) {
-            model.addAttribute("activePage", "classrooms");
+            model.addAttribute("activePage", "classes");
             return "admin/classroom/list";
         }
 

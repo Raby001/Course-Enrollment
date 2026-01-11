@@ -21,8 +21,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
-                       RoleRepository roleRepository,
-                       PasswordEncoder passwordEncoder) {
+                        RoleRepository roleRepository,
+                        PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -60,7 +60,7 @@ public class UserService {
         user.setFirstName(dto.getFirstName());
         user.setLastName(dto.getLastName());
 
-        // 🔐 HASH PASSWORD
+        // HASH PASSWORD
         user.setPasswordHash(passwordEncoder.encode(dto.getPassword()));
 
         user.setRole(role);

@@ -2,8 +2,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrightCode - Admin Dashboard</title>
-
-
     <link rel="stylesheet" th:href="@{/css/tailwind.css}">
 
     <!-- Font Awesome -->
@@ -11,12 +9,11 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
 
         .sidebar-link.active {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
-            border-right: 3px solid #3b82f6;
+            background: linear-gradient(90deg, #3b82f61a 0%, transparent 100%);
+            /* border-right: 3px solid #3b82f6; */
         }
 
         .stat-card {
@@ -35,15 +32,18 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-50">
-    <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
-    <div class="ml-64 min-h-screen">
+    <div class="flex min-h-screen">
+        <!-- Sidebar -->
+        <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
+
         <main class="flex-1">
             <!-- Top Bar -->
             <header class="bg-white shadow-sm border-b px-8 py-4">
                 <div class="flex justify-between items-center">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
+                        <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
                         <p class="text-gray-600">Welcome back, Administrator</p>
                     </div>
                     <div class="flex items-center space-x-4">
@@ -356,9 +356,8 @@
                     </div>
                 </div>
             </div>
-        </main>        
+        </main>  
     </div>
-
 
     <script>
         document.querySelector('.sidebar-link.active').classList.add('text-white', 'bg-gray-800');
@@ -373,4 +372,7 @@
         });
     </script>
 </body>
+
+
+
 </html>

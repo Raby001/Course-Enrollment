@@ -24,6 +24,7 @@ public class AdminUserController {
 
     @GetMapping
     public String list(Model model) {
+        model.addAttribute("activePage", "users");
         model.addAttribute("users", userService.getAllUsers());
         return "admin/users";
     }
@@ -32,11 +33,8 @@ public class AdminUserController {
     public String createForm(Model model) {
         model.addAttribute("user", new UserCreateDto());
         model.addAttribute("roles", roleRepository.findAll());
-        model.addAttribute(
-            "statuses",
-            enroll_management.enroll_management.enums.UserStatus.values()
-        );
-        return "admin/user-create";
+        model.addAttribute("statuses", enroll_management.enroll_management.enums.UserStatus.values());
+        return "admin/user-create"; // returns only the div fragment
     }
     
     @PostMapping("/create")
@@ -46,13 +44,13 @@ public class AdminUserController {
     }
 
     @PostMapping("/{id}/status")
-    public String toggleStatus(@PathVariable Long id) {
+    public String toggleStatus(@PathVariable("id") Long id) {
         userService.toggleUserStatus(id);
         return "redirect:/admin/users";
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         userService.deleteUser(id);
         return "redirect:/admin/users";
     }
