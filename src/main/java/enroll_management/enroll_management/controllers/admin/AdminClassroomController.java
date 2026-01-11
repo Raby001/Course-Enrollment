@@ -1,7 +1,7 @@
 package enroll_management.enroll_management.controllers.admin;
 
-import enroll_management.enroll_management.dto.ClassroomDTO;
-import enroll_management.enroll_management.services.ClassroomService;
+import enroll_management.enroll_management.dto.admin.ClassroomDTO;
+import enroll_management.enroll_management.services.admin.ClassroomService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -37,7 +37,7 @@ public class AdminClassroomController {
     }
 
     @GetMapping("/{id}/edit")
-    public String edit(@PathVariable Long id, Model model) {
+    public String edit(@PathVariable("id") Long id, Model model) {
         var c = service.findById(id);
         ClassroomDTO dto = new ClassroomDTO();
         dto.setId(c.getId());
@@ -53,7 +53,7 @@ public class AdminClassroomController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable Long id,
+    public String update(@PathVariable("id") Long id,
                          @Valid @ModelAttribute("classroom") ClassroomDTO dto,
                          BindingResult result) {
         if (result.hasErrors()) return "admin/classroom/form";
@@ -62,7 +62,7 @@ public class AdminClassroomController {
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         service.delete(id);
         return "redirect:/admin/classrooms";
     }

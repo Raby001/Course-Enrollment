@@ -1,9 +1,9 @@
-package enroll_management.enroll_management.services;
+package enroll_management.enroll_management.services.common;
 
 import enroll_management.enroll_management.Entities.Classroom;
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.Schedule;
-import enroll_management.enroll_management.dto.ScheduleDTO;
+import enroll_management.enroll_management.dto.admin.ScheduleDTO;
 import enroll_management.enroll_management.repositories.ClassroomRepository;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.ScheduleRepository;
@@ -51,6 +51,8 @@ public class ScheduleService {
 
     public Schedule create(ScheduleDTO dto) {
 
+        validateConflict(dto);
+
         Course course = courseRepository.findById(dto.getCourseId())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
 
@@ -68,13 +70,16 @@ public class ScheduleService {
         schedule.setStatus(dto.getStatus() != null ? dto.getStatus() : "SCHEDULED");
 
         return scheduleRepository.save(schedule);
+
+        
     }
-
-
 
     /* ===================== UPDATE ===================== */
 
     public void update(Long id, ScheduleDTO dto) {
+        
+        validateConflict(dto);
+
         Schedule existing = findById(id);
 
         Course course = courseRepository.findById(dto.getCourseId())
@@ -100,4 +105,22 @@ public class ScheduleService {
     public void delete(Long id) {
         scheduleRepository.deleteById(id);
     }
+
+    /* ===================== VALIDATION ===================== */
+    private void validateConflict(ScheduleDTO dto) {        
+
+        Classroom classroom = classroomRepository.findById(dto.getClassroomId())
+                .orElseThrow(() -> new RuntimeException("Classroom not found"));
+
+        boolean conflict = scheduleRepository.existsByClassroomAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(
+            classroom,
+            dto.getDayOfWeek(),
+            dto.getEndTime(),
+            dto.getStartTime()
+        );
+        if (conflict) {
+            throw new IllegalStateException("Schedule conflict: Classroom already in use");
+        }
+    }
+
 }

@@ -1,5 +1,6 @@
 package enroll_management.enroll_management.services.admin;
 
+
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
@@ -11,7 +12,6 @@ import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.EnrollmentRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.common.ImageUploadService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
+
 
     @Autowired
     private CourseRepository courseRepository;
@@ -212,5 +213,19 @@ dto.setCurrentEnrollmentCount((int) enrolledCount);
 
 
         return dto;
+    }
+
+
+    // Count total courses
+   public long getTotalCourses() {
+        return courseRepository.count();
+    }
+
+    public long getDraftCourses() {
+        return courseRepository.countByStatus(CourseStatus.DRAFT);
+    }
+
+    public long getPendingCourses() {
+        return courseRepository.countByStatus(CourseStatus.PENDING);
     }
 }

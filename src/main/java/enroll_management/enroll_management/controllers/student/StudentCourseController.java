@@ -1,52 +1,57 @@
 package enroll_management.enroll_management.controllers.student;
 
-import enroll_management.enroll_management.Entities.Course;
-import enroll_management.enroll_management.enums.CourseStatus;
-import enroll_management.enroll_management.exception.ResourceNotFoundException;
-import enroll_management.enroll_management.repositories.CourseRepository;
+import enroll_management.enroll_management.Entities.User;
+import enroll_management.enroll_management.dto.admin.CourseDto;
+import enroll_management.enroll_management.repositories.EnrollmentRepository;
+import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.admin.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.data.domain.Page;
-
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/student/courses")
-@PreAuthorize("hasRole('STUDENT')")
+@PreAuthorize("hasRole('ROLE_STUDENT')") 
 public class StudentCourseController {
 
-    @Autowired
-    private CourseRepository courseRepository;
+    // @Autowired
+    // private CourseRepository courseRepository;
 
     @Autowired
     private CourseService courseService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
     // =========================
     // VIEW ALL ACTIVE COURSES
     // =========================
-   @GetMapping
-public String listCourses(
-        @RequestParam(name = "keyword" ,defaultValue = "") String keyword,
-        @RequestParam(name = "page" ,defaultValue = "0") int page,
-        Model model) {
+    @GetMapping
+    public String viewAllCourses(Authentication auth, Model model) {
+        String username = auth.getName();
+        User student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
-    Page<Course> courses = courseRepository
-            .findByStatusAndCourseNameContainingIgnoreCase(
-                    CourseStatus.ACTIVE,
-                    keyword,
-                    PageRequest.of(page, 6)
-            );
+        List<CourseDto> courses = courseService.getAllCourses().stream()
+                .peek(course -> {
+                    boolean isEnrolled = enrollmentRepository.existsByStudentIdAndCourseId(
+                        student.getId(), course.getId()
+                    );
+                    course.setEnrolled(isEnrolled);
+                })
+                .collect(Collectors.toList());
 
-    model.addAttribute("courses", courses);
-    model.addAttribute("keyword", keyword);
-
-    return "student/courses";
-}
+        model.addAttribute("courses", courses);
+        return "student/course/courses";
+    }
 
     // =========================
     // VIEW COURSE DETAILS (ACTIVE ONLY)
@@ -54,22 +59,33 @@ public String listCourses(
     @GetMapping("/{id}")
     public String viewCourseDetail(
             @PathVariable("id") Long id,
+            Authentication auth,
             Model model) {
 
-        Course course = courseRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Course", "id", id));
+        String username = auth.getName();
+        User student = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        // 🚫 Block non-active courses
-        if (course.getStatus() != CourseStatus.ACTIVE) {
-            throw new AccessDeniedException("Course not available");
-        }
-
-        model.addAttribute(
-                "course",
-                courseService.getCourseById(id)
+        CourseDto course = courseService.getCourseById(id);
+        boolean isEnrolled = enrollmentRepository.existsByStudentIdAndCourseId(
+            student.getId(), id
         );
+        course.setEnrolled(isEnrolled);
 
-        return "student/course-detail";
+        // Get other courses (exclude current one)
+        List<CourseDto> otherCourses = courseService.getAllCourses().stream()
+                .filter(c -> !c.getId().equals(id))
+                .limit(3)
+                .peek(c -> {
+                    boolean otherEnrolled = enrollmentRepository.existsByStudentIdAndCourseId(
+                        student.getId(), c.getId()
+                    );
+                    c.setEnrolled(otherEnrolled);
+                })
+                .collect(Collectors.toList());
+
+        model.addAttribute("course", course);
+        model.addAttribute("otherCourses", otherCourses);
+        return "student/course/course-details";
     }
 }

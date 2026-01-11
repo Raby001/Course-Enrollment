@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>My Schedule</title>
+  <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+</head>
+
+<body class="bg-gray-50">
+  <div th:replace="~{layout/header :: header}"></div>
+
+  <div class="max-w-7xl mx-auto px-6 py-8">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">📅 My Weekly Schedule</h1>
+
+    <!-- WEEKLY TIMETABLE -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div class="grid grid-cols-6 gap-px bg-gray-200">
+        <!-- Header -->
+        <div class="bg-gray-50 px-4 py-3 text-center text-sm font-medium text-gray-700">Time</div>
+        <div class="bg-gray-50 px-4 py-3 text-center text-sm font-medium text-gray-700">Monday</div>
+        <div class="bg-gray-50 px-4 py-3 text-center text-sm font-medium text-gray-700">Tuesday</div>
+        <div class="bg-gray-50 px-4 py-3 text-center text-sm font-medium text-gray-700">Wednesday</div>
+        <div class="bg-gray-50 px-4 py-3 text-center text-sm font-medium text-gray-700">Thursday</div>
+        <div class="bg-gray-50 px-4 py-3 text-center text-sm font-medium text-gray-700">Friday</div>
+
+        <!-- 8:00 AM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">8:00 AM</div>
+        <div class="bg-white p-3">
+          <div th:each="schedule : ${schedules}" th:if="${schedule.dayOfWeek.name() == 'MONDAY'}">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-2 rounded">
+              <div class="font-medium text-sm" th:text="${schedule.course.courseName}">Course</div>
+              <div class="text-xs text-gray-600 mt-1">
+                <span th:text="${#temporals.format(schedule.startTime, 'h:mm a')}">9:00 AM</span> - 
+                <span th:text="${#temporals.format(schedule.endTime, 'h:mm a')}">11:00 AM</span>
+              </div>
+              <div class="text-xs text-gray-500 mt-1" 
+                   th:text="${schedule.classroom.building + '-' + schedule.classroom.roomNumber}">A-101</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-3">
+          <div th:each="schedule : ${schedules}" th:if="${schedule.dayOfWeek.name() == 'TUESDAY'}">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-2 rounded">
+              <div class="font-medium text-sm" th:text="${schedule.course.courseName}">Course</div>
+              <div class="text-xs text-gray-600 mt-1">
+                <span th:text="${#temporals.format(schedule.startTime, 'h:mm a')}">9:00 AM</span> - 
+                <span th:text="${#temporals.format(schedule.endTime, 'h:mm a')}">11:00 AM</span>
+              </div>
+              <div class="text-xs text-gray-500 mt-1" 
+                   th:text="${schedule.classroom.building + '-' + schedule.classroom.roomNumber}">A-101</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-3">
+          <div th:each="schedule : ${schedules}" th:if="${schedule.dayOfWeek.name() == 'WEDNESDAY'}">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-2 rounded">
+              <div class="font-medium text-sm" th:text="${schedule.course.courseName}">Course</div>
+              <div class="text-xs text-gray-600 mt-1">
+                <span th:text="${#temporals.format(schedule.startTime, 'h:mm a')}">9:00 AM</span> - 
+                <span th:text="${#temporals.format(schedule.endTime, 'h:mm a')}">11:00 AM</span>
+              </div>
+              <div class="text-xs text-gray-500 mt-1" 
+                   th:text="${schedule.classroom.building + '-' + schedule.classroom.roomNumber}">A-101</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-3">
+          <div th:each="schedule : ${schedules}" th:if="${schedule.dayOfWeek.name() == 'THURSDAY'}">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-2 rounded">
+              <div class="font-medium text-sm" th:text="${schedule.course.courseName}">Course</div>
+              <div class="text-xs text-gray-600 mt-1">
+                <span th:text="${#temporals.format(schedule.startTime, 'h:mm a')}">9:00 AM</span> - 
+                <span th:text="${#temporals.format(schedule.endTime, 'h:mm a')}">11:00 AM</span>
+              </div>
+              <div class="text-xs text-gray-500 mt-1" 
+                   th:text="${schedule.classroom.building + '-' + schedule.classroom.roomNumber}">A-101</div>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-3">
+          <div th:each="schedule : ${schedules}" th:if="${schedule.dayOfWeek.name() == 'FRIDAY'}">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-2 rounded">
+              <div class="font-medium text-sm" th:text="${schedule.course.courseName}">Course</div>
+              <div class="text-xs text-gray-600 mt-1">
+                <span th:text="${#temporals.format(schedule.startTime, 'h:mm a')}">9:00 AM</span> - 
+                <span th:text="${#temporals.format(schedule.endTime, 'h:mm a')}">11:00 AM</span>
+              </div>
+              <div class="text-xs text-gray-500 mt-1" 
+                   th:text="${schedule.classroom.building + '-' + schedule.classroom.roomNumber}">A-101</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 9:00 AM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">9:00 AM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+
+        <!-- 10:00 AM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">10:00 AM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+
+        <!-- 11:00 AM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">11:00 AM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+
+        <!-- 12:00 PM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">12:00 PM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+
+        <!-- 1:00 PM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">1:00 PM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+
+        <!-- 2:00 PM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">2:00 PM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+
+        <!-- 3:00 PM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">3:00 PM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+
+        <!-- 4:00 PM Row -->
+        <div class="bg-white px-4 py-3 text-gray-600 text-sm">4:00 PM</div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+        <div class="bg-white p-3"></div>
+      </div>
+    </div>
+
+    <!-- SIMPLE LIST VIEW -->
+    <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">📋 Schedule Summary</h2>
+      <div th:if="${#lists.isEmpty(schedules)}" class="text-gray-500 text-center py-4">
+        No scheduled classes yet.
+      </div>
+      <div th:unless="${#lists.isEmpty(schedules)}" class="space-y-4">
+        <div th:each="schedule : ${schedules}" class="flex items-start space-x-4 p-4 bg-blue-50 rounded-lg">
+          <div class="flex-shrink-0 w-3 h-3 bg-blue-500 rounded-full mt-2"></div>
+          <div>
+            <div class="font-medium text-gray-800" th:text="${schedule.course.courseName}">Course Name</div>
+            <div class="text-sm text-gray-600 mt-1">
+              <span class="inline-block bg-gray-200 px-2 py-1 rounded mr-2" 
+                    th:text="${schedule.dayOfWeek}">MONDAY</span>
+              <span class="inline-block bg-gray-200 px-2 py-1 rounded mr-2"
+                    th:text="${#temporals.format(schedule.startTime, 'h:mm a')}">9:00 AM</span>
+              <span class="inline-block bg-gray-200 px-2 py-1 rounded"
+                    th:text="${schedule.classroom.building + ' ' + schedule.classroom.roomNumber}">A 101</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:replace="~{layout/footer :: footer}"></div>
+</body>
+</html>

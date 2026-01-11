@@ -74,62 +74,64 @@ public class EnrollmentService {
     // =========================
     // CREATE ENROLLMENT
     // =========================
-public EnrollmentDto createEnrollment(EnrollmentCreateDto dto,
-                                      Authentication authentication) {
+    public EnrollmentDto createEnrollment(EnrollmentCreateDto dto,
+                                        Authentication authentication) {
 
-    boolean isAdmin = hasRole(authentication, "ROLE_ADMIN");
-    User student;
+        boolean isAdmin = hasRole(authentication, "ROLE_ADMIN");
+        User student;
 
-    // =========================
-    // DETERMINE STUDENT
-    // =========================
-    if (!isAdmin) {
-        student = getLoggedInUser(authentication);
-    } else {
-        student = userRepository.findById(dto.getStudentId())
+        // =========================
+        // DETERMINE STUDENT
+        // =========================
+        if (!isAdmin) {
+            student = getLoggedInUser(authentication);
+        } else {
+            student = userRepository.findById(dto.getStudentId())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("User", "id", dto.getStudentId()));
+        }
+
+        Course course = courseRepository.findById(dto.getCourseId())
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("User", "id", dto.getStudentId()));
+                        new ResourceNotFoundException("Course", "id", dto.getCourseId()));
+
+        // =========================
+        // BUSINESS RULE 1: DUPLICATE
+        // =========================
+        if (enrollmentRepository.existsByStudentIdAndCourseId(
+                student.getId(), course.getId())) {
+
+            throw new IllegalStateException(
+                    "Student is already enrolled in this course.");
+        }
+
+        // =========================
+        // BUSINESS RULE 2: CAPACITY
+        // =========================
+        long enrolledCount =
+                enrollmentRepository.countByCourseIdAndStatus(
+                        course.getId(), EnrollmentStatus.ENROLLED);
+
+        if (enrolledCount >= course.getMaxCapacity()) {
+            throw new IllegalStateException(
+                    "Course '" + course.getCourseName() + "' is already full.");
+        }
+
+        // =========================
+        // CREATE ENROLLMENT
+        // =========================
+        Enrollment enrollment = new Enrollment();
+        enrollment.setStudent(student);
+        enrollment.setCourse(course);
+        enrollment.setStatus(EnrollmentStatus.ENROLLED);
+        enrollment.setEnrollmentDate(LocalDateTime.now());
+
+        Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+
+        // ✅ ALWAYS RETURN
+        return convertToDto(savedEnrollment);
     }
 
-    Course course = courseRepository.findById(dto.getCourseId())
-            .orElseThrow(() ->
-                    new ResourceNotFoundException("Course", "id", dto.getCourseId()));
-
-    // =========================
-    // BUSINESS RULE 1: DUPLICATE
-    // =========================
-    if (enrollmentRepository.existsByStudentIdAndCourseId(
-            student.getId(), course.getId())) {
-
-        throw new IllegalStateException(
-                "Student is already enrolled in this course.");
-    }
-
-    // =========================
-    // BUSINESS RULE 2: CAPACITY (CRITICAL FIX)
-    // =========================
-    long enrolledCount =
-            enrollmentRepository.countByCourseIdAndStatus(
-                    course.getId(), EnrollmentStatus.ENROLLED);
-
-    if (enrolledCount >= course.getMaxCapacity()) {
-        throw new IllegalStateException(
-                "Course '" + course.getCourseName() + "' is already full.");
-    }
-
-    // =========================
-    // CREATE ENROLLMENT
-    // =========================
-    Enrollment enrollment = new Enrollment();
-    enrollment.setStudent(student);
-    enrollment.setCourse(course);
-    enrollment.setStatus(EnrollmentStatus.ENROLLED);
-    enrollment.setEnrollmentDate(LocalDateTime.now());
-
-    return convertToDto(enrollmentRepository.save(enrollment));
-}
-
-   
     // =========================
     // DELETE ENROLLMENT
     // =========================
@@ -172,24 +174,38 @@ public EnrollmentDto createEnrollment(EnrollmentCreateDto dto,
 
   private EnrollmentDto convertToDto(Enrollment enrollment) {
 
-    EnrollmentDto dto = new EnrollmentDto();
+        EnrollmentDto dto = new EnrollmentDto();
 
-    dto.setId(enrollment.getId());
-    dto.setEnrollmentDate(enrollment.getEnrollmentDate());
+        dto.setId(enrollment.getId());
+        dto.setEnrollmentDate(enrollment.getEnrollmentDate());
 
-    dto.setStatus(enrollment.getStatus());
+        dto.setStatus(enrollment.getStatus());
 
-    // Student info
-    dto.setStudentId(enrollment.getStudent().getId());
-    dto.setStudentName(enrollment.getStudent().getFullName());
+        // Student info
+        dto.setStudentId(enrollment.getStudent().getId());
+        dto.setStudentName(enrollment.getStudent().getFullName());
 
-    // Course info
-    dto.setCourseId(enrollment.getCourse().getId());
-    dto.setCourseCode(enrollment.getCourse().getCourseCode());
-    dto.setCourseName(enrollment.getCourse().getCourseName());
+        // Course info
+        dto.setCourseId(enrollment.getCourse().getId());
+        dto.setCourseCode(enrollment.getCourse().getCourseCode());
+        dto.setCourseName(enrollment.getCourse().getCourseName());
 
-    return dto;
-}
+        return dto;
+    }
 
 
+    // count enrollments by status
+    public long getPendingEnrollmentsCount() {
+        return enrollmentRepository.countByStatus(EnrollmentStatus.PENDING);
+    }
+
+    public long getResolvedToday() {
+        return enrollmentRepository.countResolvedToday();
+    }
+
+    public Enrollment getLatestEnrollment() {
+        return enrollmentRepository.findTopByOrderByEnrollmentDateDesc()
+                .orElse(null);  // Return null if no enrollments
+    }
+    
 }

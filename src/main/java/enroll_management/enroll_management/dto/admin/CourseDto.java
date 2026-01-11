@@ -16,6 +16,10 @@ public class CourseDto {
     private LocalDateTime updatedAt;
     private Integer currentEnrollmentCount;
     private String courseImage;
+    private boolean enrolled = false;
+
+    public boolean isEnrolled() { return enrolled; }
+    public void setEnrolled(boolean enrolled) { this.enrolled = enrolled; }
 
     // Getters and Setters
     public Long getId() { return id; }
