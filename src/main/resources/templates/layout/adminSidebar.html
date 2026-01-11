@@ -2,13 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-    <aside th:fragment="sidebar" class="w-64 bg-gray-900 text-white flex flex-col min-h-screen">
+    <aside th:fragment="sidebar" class="w-64 bg-gradient-to-b from-[#92C9FF] to-[#9FF0EA] text-white flex flex-col min-h-screen">
         <div class="p-6 border-b border-gray-800">
-            <h1 class="text-2xl font-bold flex items-center">
-                <i class="fas fa-code text-blue-400 mr-2"></i>
-                <span class="text-blue-400">Bright</span><span class="text-white">Code</span>
+            <h1 class="flex items-center">
+                <img
+                    src="https://image2url.com/r2/default/images/1766936034816-102a1246-3811-43dd-b076-46bf91e4b3e7.png"
+                    class="w-13 h-13 rounded mr-3"
+                    alt="Logo"
+                >
             </h1>
-            <p class="text-gray-400 text-sm mt-1">Course Enrollment System</p>
+            <p class="text-black text-sm mt-1">Course Enrollment System</p>
         </div>
 
         <nav class="flex-1 py-6">
@@ -16,41 +19,41 @@
                 <ul class="space-y-2">
                     <li>
                         <a th:href="@{/admin/adminDashboard}" 
-                           th:classappend="${activePage == 'dashboard'} ? 'text-white bg-gray-800 active' : 'text-gray-300'"
-                           class="sidebar-link flex items-center px-4 py-3 hover:text-white hover:bg-gray-800 rounded-lg transition">
-                            <i class="fas fa-tachometer-alt mr-3 text-gray-400"></i>
+                           th:classappend="${activePage == 'adminDashboard'} ? 'text-white bg-[#152259] active' : 'text-white bg-[#509CDB]'"
+                           class="flex items-center px-4 py-3 hover:text-white hover:bg-[#152259] rounded-lg transition">
+                            <i class="fas fa-tachometer-alt mr-3 text-white"></i>
                             Overview
                         </a>
                     </li>
                     <li>
                         <a th:href="@{/admin/users}" 
-                           th:classappend="${activePage == 'users'} ? 'text-white bg-gray-800 active' : 'text-gray-300'"
-                           class="sidebar-link flex items-center px-4 py-3 hover:text-white hover:bg-gray-800 rounded-lg transition">
-                            <i class="fas fa-users mr-3 text-gray-400"></i>
+                           th:classappend="${activePage == 'users'} ? 'text-white bg-[#152259] active' : 'text-white bg-[#509CDB]'"
+                           class="flex items-center px-4 py-3 hover:text-white hover:bg-[#152259] rounded-lg transition">
+                            <i class="fas fa-users mr-3 text-white"></i>
                             Users Management
                         </a>
                     </li>
                     <li>
                         <a th:href="@{/admin/courses}" 
-                           th:classappend="${activePage == 'courses'} ? 'text-white bg-gray-800 active' : 'text-gray-300'"
-                           class="sidebar-link flex items-center px-4 py-3 hover:text-white hover:bg-gray-800 rounded-lg transition">
-                            <i class="fas fa-book mr-3 text-gray-400"></i>
+                           th:classappend="${activePage == 'courses'} ? 'text-white bg-[#152259] active' : 'text-white bg-[#509CDB]'"
+                           class="flex items-center px-4 py-3 hover:text-white hover:bg-[#152259] rounded-lg transition">
+                            <i class="fas fa-book mr-3 text-white"></i>
                             Courses Management
                         </a>
                     </li>
                     <li>
                         <a th:href="@{/admin/classrooms}" 
-                           th:classappend="${activePage == 'classes'} ? 'text-white bg-gray-800 active' : 'text-gray-300'"
-                           class="sidebar-link flex items-center px-4 py-3 hover:text-white hover:bg-gray-800 rounded-lg transition">
-                            <i class="fas fa-school mr-3 text-gray-400"></i>
+                           th:classappend="${activePage == 'classes'} ? 'text-white bg-[#152259] active' : 'text-white bg-[#509CDB]'"
+                           class="flex items-center px-4 py-3 hover:text-white hover:bg-[#152259] rounded-lg transition">
+                            <i class="fas fa-school mr-3 text-white"></i>
                             Classes Management
                         </a>
                     </li>
                     <li>
                         <a th:href="@{/admin/schedules}" 
-                           th:classappend="${activePage == 'schedules'} ? 'text-white bg-gray-800 active' : 'text-gray-300'"
-                           class="sidebar-link flex items-center px-4 py-3 hover:text-white hover:bg-gray-800 rounded-lg transition">
-                            <i class="fas fa-calendar-alt mr-3 text-gray-400"></i>
+                           th:classappend="${activePage == 'schedules'} ? 'text-white bg-[#152259] active' : 'text-white bg-[#509CDB]'"
+                           class="flex items-center px-4 py-3 hover:text-white hover:bg-[#152259] rounded-lg transition">
+                            <i class="fas fa-calendar-alt mr-3 text-white"></i>
                             Schedule Management
                         </a>
                     </li>
