@@ -49,13 +49,13 @@ public String enrollCourse(
         enrollmentService.createEnrollment(dto, authentication);
 
         redirectAttributes.addFlashAttribute(
-                "success",
+                "successMessage",
                 "Successfully enrolled in course");
 
     } catch (IllegalStateException ex) {
 
         redirectAttributes.addFlashAttribute(
-                "error",
+                "errorMessage",
                 ex.getMessage());
     }
 

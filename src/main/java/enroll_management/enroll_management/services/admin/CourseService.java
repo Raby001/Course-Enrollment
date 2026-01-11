@@ -5,8 +5,10 @@ import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
 import enroll_management.enroll_management.dto.admin.CourseDto;
 import enroll_management.enroll_management.enums.CourseStatus;
+import enroll_management.enroll_management.enums.EnrollmentStatus;
 import enroll_management.enroll_management.exception.ResourceNotFoundException;
 import enroll_management.enroll_management.repositories.CourseRepository;
+import enroll_management.enroll_management.repositories.EnrollmentRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.common.ImageUploadService;
 
@@ -30,6 +32,10 @@ public class CourseService {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
 
     // =========================
     // READ
@@ -195,7 +201,15 @@ public class CourseService {
             dto.setLecturerName("Not assigned");
         }
 
-        dto.setCurrentEnrollmentCount(course.getCurrentEnrollmentCount());
+
+       long enrolledCount =
+        enrollmentRepository.countByCourseIdAndStatus(
+                course.getId(),
+                EnrollmentStatus.ENROLLED
+        );
+
+dto.setCurrentEnrollmentCount((int) enrolledCount);
+
 
         return dto;
     }
