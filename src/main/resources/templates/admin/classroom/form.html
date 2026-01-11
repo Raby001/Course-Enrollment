@@ -1,65 +1,51 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Classroom Form</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100">
-    <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
-    <div class="ml-64 min-h-screen">
-        <div class="max-w-xl mx-auto mt-10 bg-white p-6 rounded shadow">
-            <h2 class="text-xl font-bold mb-4">Classroom Form</h2>
+<!-- templates/admin/classroom/form.html -->
+<div th:fragment="classroomForm" class="bg-white w-full max-w-xl p-6 rounded shadow relative">
 
-            <form th:object="${classroom}"
-                th:action="${classroom.id == null} ? @{/admin/classrooms} : @{/admin/classrooms/{id}(id=${classroom.id})}"
-                method="post">
+  <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl font-bold">&times;</button>
 
-                <div class="mb-3">
-                    <label>Building</label>
-                    <input type="text" th:field="*{building}" class="w-full border p-2 rounded">
-                </div>
+  <h2 class="text-xl font-bold mb-4" th:text="${classroom.id == null} ? 'Add Classroom' : 'Edit Classroom'"></h2>
 
-                <div class="mb-3">
-                    <label>Room Number</label>
-                    <input type="text" th:field="*{roomNumber}" class="w-full border p-2 rounded">
-                </div>
+  <form th:object="${classroom}"
+        th:action="${classroom.id == null} ? @{/admin/classrooms} : @{/admin/classrooms/{id}(id=${classroom.id})}"
+        method="post">
 
-                <div class="mb-3">
-                    <label>Capacity</label>
-                    <input type="number" th:field="*{capacity}" class="w-full border p-2 rounded">
-                </div>
-
-                <!-- Equipment -->
-                <div class="mb-3">
-                    <label class="block">Equipment</label>
-                    <label>
-                        <input type="checkbox" th:field="*{hasComputer}"> Computer
-                    </label>
-                    <label class="ml-4">
-                        <input type="checkbox" th:field="*{hasProjector}"> Projector
-                    </label>
-                </div>
-
-                <!-- Status -->
-                <div class="mb-3">
-                    <label>Status</label>
-                    <select th:field="*{status}" class="w-full border p-2 rounded">
-                        <option value="AVAILABLE">AVAILABLE</option>
-                        <option value="MAINTENANCE">MAINTENANCE</option>
-                        <option value="CLOSED">CLOSED</option>
-                    </select>
-                </div>
-
-                <div class="flex justify-end space-x-2">
-                    <a href="/admin/classrooms" class="px-4 py-2 bg-gray-400 text-white rounded">
-                        Cancel
-                    </a>
-                    <button class="px-4 py-2 bg-green-600 text-white rounded">
-                        Save
-                    </button>
-                </div>
-            </form>
-        </div>    
+    <div class="mb-3">
+      <label>Building</label>
+      <input type="text" th:field="*{building}" class="w-full border p-2 rounded">
     </div>
-</body>
-</html>
+
+    <div class="mb-3">
+      <label>Room Number</label>
+      <input type="text" th:field="*{roomNumber}" class="w-full border p-2 rounded">
+    </div>
+
+    <div class="mb-3">
+      <label>Capacity</label>
+      <input type="number" th:field="*{capacity}" class="w-full border p-2 rounded">
+    </div>
+
+    <div class="mb-3">
+      <label class="block">Equipment</label>
+      <label>
+        <input type="checkbox" th:field="*{hasComputer}"> Computer
+      </label>
+      <label class="ml-4">
+        <input type="checkbox" th:field="*{hasProjector}"> Projector
+      </label>
+    </div>
+
+    <div class="mb-3">
+      <label>Status</label>
+      <select th:field="*{status}" class="w-full border p-2 rounded">
+        <option value="AVAILABLE">AVAILABLE</option>
+        <option value="MAINTENANCE">MAINTENANCE</option>
+        <option value="CLOSED">CLOSED</option>
+      </select>
+    </div>
+
+    <div class="flex justify-end space-x-2 mt-4">
+      <button type="button" id="cancelModal" class="px-4 py-2 bg-gray-400 text-white rounded">Cancel</button>
+      <button class="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+    </div>
+  </form>
+</div>

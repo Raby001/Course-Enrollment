@@ -3,22 +3,21 @@ package enroll_management.enroll_management.Entities;
 import jakarta.persistence.*;
 
 import java.time.LocalTime;
-
-import enroll_management.enroll_management.enums.DayOfWeek;
+import java.time.DayOfWeek;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "schedules",
        uniqueConstraints = {
-           // Prevent double-booking a classroom
-           @UniqueConstraint(columnNames = {"classroom_id", "academic_year", 
-                                           "semester", "day_of_week", "start_time"},
-                            name = "uk_classroom_schedule"),
-           // Prevent scheduling same course at same time
-           @UniqueConstraint(columnNames = {"course_id", "academic_year", 
-                                           "semester", "day_of_week", "start_time"},
-                            name = "uk_course_schedule")
+        // Prevent double-booking a classroom
+        @UniqueConstraint(columnNames = {"classroom_id", "academic_year", 
+                                        "semester", "day_of_week", "start_time"},
+                        name = "uk_classroom_schedule"),
+        // Prevent scheduling same course at same time
+        @UniqueConstraint(columnNames = {"course_id", "academic_year", 
+                                        "semester", "day_of_week", "start_time"},
+                        name = "uk_course_schedule")
        },
        indexes = {
            @Index(columnList = "course_id", name = "idx_schedule_course"),
@@ -53,8 +52,8 @@ public class Schedule {
     private String semester;  // e.g., "FALL", "SPRING", "SUMMER"
     
     @Enumerated(EnumType.STRING)
-    @Column(name = "day_of_week", nullable = false, length = 10)
-    private DayOfWeek dayOfWeek;  // MONDAY, TUESDAY, etc.
+    @Column(nullable = false)
+    private DayOfWeek dayOfWeek;
     
     @Column(name = "start_time", nullable = false)
     private LocalTime startTime;

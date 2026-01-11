@@ -2,19 +2,74 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Classrooms Management</title>
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+        <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link.active {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+            border-right: 3px solid #3b82f6;
+        }
+        
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+    </style>
 </head>
-<body class="bg-gray-100">
-    <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
-    <div class="ml-64 min-h-screen">
-        <main class="flex-1 p-8">
+
+<body class="bg-gray-50">
+  <!-- Main Container -->
+    <div class="flex min-h-screen">
+        <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
+
+        <main class="flex-1">
+
+            <header class="bg-white shadow-sm border-b px-8 py-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+                            <p class="text-gray-600">Welcome back, Administrator</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <input type="text" placeholder="Search..." 
+                                    class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                            <button class="relative p-2 text-gray-600 hover:text-gray-800">
+                                <i class="fas fa-bell text-xl"></i>
+                                <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                            </button>
+                            <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+            </header>
+
             <div class="bg-white rounded-lg shadow p-6">
 
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-bold">Classrooms Management</h2>
-                    <a href="/admin/classrooms/new"
+                    <a href="javascript:void(0);" 
+                    id="openCreateClassroom"
                     class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                        + Add classroom
+                    + Add classroom
                     </a>
                 </div>
 
@@ -54,8 +109,11 @@
 
                         <!-- Actions -->
                         <td class="p-2 border space-x-2">
-                            <a th:href="@{/admin/classrooms/{id}/edit(id=${c.id})}"
-                            class="text-yellow-500">✏️</a>
+                        <a href="javascript:void(0);"
+                        class="text-yellow-500 editClassroomBtn"
+                        th:attr="data-url=@{/admin/classrooms/{id}/edit(id=${c.id})}">
+                        ✏️
+                        </a>
 
                             <form th:action="@{/admin/classrooms/{id}/delete(id=${c.id})}"
                                 method="post" class="inline">
@@ -70,5 +128,51 @@
         </main>
     </div>
 
+    <!-- Modal container -->
+    <div id="createClassroomModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50"></div>
+
+    <script>
+    function openClassroomModal(url) {
+        const modal = document.getElementById('createClassroomModal');
+        
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                modal.innerHTML = html;
+                modal.classList.remove('hidden');
+
+                // Close buttons
+                const closeBtn = modal.querySelector('#closeModal');
+                const cancelBtn = modal.querySelector('#cancelModal');
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', () => {
+                        modal.classList.add('hidden');
+                        modal.innerHTML = '';
+                    });
+                }
+
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', () => {
+                        modal.classList.add('hidden');
+                        modal.innerHTML = '';
+                    });
+                }
+            });
+    }
+
+    // Open Add modal
+    document.getElementById('openCreateClassroom')
+        .addEventListener('click', () => openClassroomModal('/admin/classrooms/new'));
+
+    // Open Edit modal
+    document.querySelectorAll('.editClassroomBtn').forEach(btn => {
+        btn.addEventListener('click', () => openClassroomModal(btn.getAttribute('data-url')));
+    });
+    </script>
+
+
+
 </body>
+
 </html>

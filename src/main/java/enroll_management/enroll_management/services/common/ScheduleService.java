@@ -4,12 +4,17 @@ import enroll_management.enroll_management.Entities.Classroom;
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.Schedule;
 import enroll_management.enroll_management.dto.admin.ScheduleDTO;
+import enroll_management.enroll_management.dto.admin.TimeTableRowDTO;
 import enroll_management.enroll_management.repositories.ClassroomRepository;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -122,5 +127,27 @@ public class ScheduleService {
             throw new IllegalStateException("Schedule conflict: Classroom already in use");
         }
     }
+
+    // ========================= BUILD WEEKLY TIMETABLE DTO ==========================
+    public List<TimeTableRowDTO> buildWeeklyTimetable(List<Schedule> schedules) {
+
+        Map<String, TimeTableRowDTO> rows = new LinkedHashMap<>();
+
+        for (Schedule s : schedules) {
+            String key = s.getStartTime() + "-" + s.getEndTime();
+
+            rows.putIfAbsent(
+                key,
+                new TimeTableRowDTO(s.getStartTime(), s.getEndTime())
+            );
+
+            rows.get(key)
+                .getSchedulesByDay()
+                .put(s.getDayOfWeek(), s);
+        }
+
+        return new ArrayList<>(rows.values());
+    }
+
 
 }

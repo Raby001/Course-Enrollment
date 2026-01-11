@@ -28,25 +28,25 @@ public class AdminScheduleController {
         return "admin/schedule/list";
     }
 
-    // CREATE FORM (MUST BE ABOVE {id})
+    // CREATE FORM (Modal)
     @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute("schedule", new ScheduleDTO());
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("classrooms", classroomService.findAll());
-        return "admin/schedule/form";
+        return "admin/schedule/form :: scheduleForm"; // Return fragment
     }
 
     // CREATE SUBMIT
     @PostMapping
     public String create(@Valid @ModelAttribute("schedule") ScheduleDTO dto,
-                        BindingResult result,
-                        Model model) {
+                         BindingResult result,
+                         Model model) {
 
         if (result.hasErrors()) {
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form";
+            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
         }
 
         try {
@@ -55,33 +55,32 @@ public class AdminScheduleController {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form";
+            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
         }
 
-        return "redirect:/admin/schedules";
+        return "redirect:/admin/schedules"; // Full reload after successful save
     }
 
-
-    // EDIT FORM
+    // EDIT FORM (Modal)
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable("id") Long id, Model model) {
         model.addAttribute("schedule", scheduleService.getDTOById(id));
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("classrooms", classroomService.findAll());
-        return "admin/schedule/form";
+        return "admin/schedule/form :: scheduleForm"; // Return fragment
     }
 
-    // UPDATE
+    // UPDATE SUBMIT
     @PostMapping("/{id}")
     public String update(@PathVariable("id") Long id,
-                        @Valid @ModelAttribute("schedule") ScheduleDTO dto,
-                        BindingResult result,
-                        Model model) {
+                         @Valid @ModelAttribute("schedule") ScheduleDTO dto,
+                         BindingResult result,
+                         Model model) {
 
         if (result.hasErrors()) {
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form";
+            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
         }
 
         try {
@@ -90,12 +89,11 @@ public class AdminScheduleController {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form";
+            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
         }
 
         return "redirect:/admin/schedules";
     }
-
 
     // DELETE
     @PostMapping("/{id}/delete")

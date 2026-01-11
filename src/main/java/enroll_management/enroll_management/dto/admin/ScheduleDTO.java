@@ -2,8 +2,9 @@ package enroll_management.enroll_management.dto.admin;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.time.DayOfWeek;
 import java.time.LocalTime;
-import enroll_management.enroll_management.enums.DayOfWeek;
 
 @Data
 public class ScheduleDTO {

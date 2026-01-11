@@ -19,19 +19,26 @@ public class AdminClassroomController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("classrooms", service.findAll());
+        // model.addAttribute("activePage", "classes"); // ADD THIS
+        // model.addAttribute("pageTitle", "Classrooms Management"); // ADD THIS
         return "admin/classroom/list";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("classroom", new ClassroomDTO());
-        return "admin/classroom/form";
+        return "admin/classroom/form :: classroomForm";
     }
 
     @PostMapping
     public String create(@Valid @ModelAttribute("classroom") ClassroomDTO dto,
-                         BindingResult result) {
-        if (result.hasErrors()) return "admin/classroom/form";
+                         BindingResult result, Model model) {
+                            
+        if (result.hasErrors()){
+            // model.addAttribute("activePage", "classes"); // ADD THIS
+            return "admin/classroom/form";
+        }
+
         service.create(dto);
         return "redirect:/admin/classrooms";
     }
@@ -49,14 +56,17 @@ public class AdminClassroomController {
         dto.setStatus(c.getStatus());
 
         model.addAttribute("classroom", dto);
-        return "admin/classroom/form";
+        return "admin/classroom/form :: classroomForm";
     }
 
     @PostMapping("/{id}")
     public String update(@PathVariable("id") Long id,
                          @Valid @ModelAttribute("classroom") ClassroomDTO dto,
-                         BindingResult result) {
-        if (result.hasErrors()) return "admin/classroom/form";
+                         BindingResult result, Model model) {
+        if (result.hasErrors()){
+            // model.addAttribute("activePage", "classes"); // ADD THIS
+            return "admin/classroom/form";
+        } 
         service.update(id, dto);
         return "redirect:/admin/classrooms";
     }
