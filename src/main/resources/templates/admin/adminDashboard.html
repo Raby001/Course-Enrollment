@@ -1,24 +1,24 @@
-<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrightCode - Admin Dashboard</title>
-    
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
+
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; }
-        
+
         .sidebar-link.active {
             background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
             border-right: 3px solid #3b82f6;
         }
-        
+
         .stat-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -26,7 +26,7 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-        
+
         .btn-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -36,11 +36,8 @@
     </style>
 </head>
 <body class="bg-gray-50">
-    <!-- Main Container -->
-    <div class="flex min-h-screen">
-        <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
-
-        <!-- Main Content -->
+    <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
+    <div class="ml-64 min-h-screen">
         <main class="flex-1">
             <!-- Top Bar -->
             <header class="bg-white shadow-sm border-b px-8 py-4">
@@ -359,17 +356,13 @@
                     </div>
                 </div>
             </div>
-        </main>
+        </main>        
     </div>
 
-    <!-- JavaScript for interactivity -->
-    <script>
 
-        // Initialize first link as active
+    <script>
         document.querySelector('.sidebar-link.active').classList.add('text-white', 'bg-gray-800');
 
-
-        // Add hover effects to action cards
         document.querySelectorAll('.stat-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 this.style.transform = 'translateY(-5px)';

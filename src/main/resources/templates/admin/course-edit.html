@@ -7,13 +7,9 @@
 <body class="bg-gray-100">
 
 <div class="flex">
-    <!-- LEFT PANEL PLACEHOLDER -->
-    <div class="w-64 bg-gray-800 text-white p-6">
-        <!-- side panel component later -->
-        <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
-    </div>
+    <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
 
-    <!-- MAIN CONTENT -->
+<div class="ml-64 min-h-screen">
     <div class="flex-1 p-10">
         <h1 class="text-2xl font-bold mb-6">Edit Course</h1>
 
@@ -23,60 +19,62 @@
               enctype="multipart/form-data"
               class="bg-white p-6 rounded shadow space-y-4">
 
-            <div>
-                <label class="font-semibold">Course Name</label>
-                <input th:field="*{courseName}" class="w-full border p-2 rounded"/>
-            </div>
-
-            <div>
-                <label class="font-semibold">Course Code</label>
-                <input th:field="*{courseCode}" class="w-full border p-2 rounded"/>
-            </div>
-
-            <div>
-                <label class="font-semibold">Description</label>
-                <textarea th:field="*{description}" class="w-full border p-2 rounded"></textarea>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label>Credits</label>
-                    <input type="number" th:field="*{credits}" class="w-full border p-2 rounded"/>
+                    <label class="font-semibold">Course Name</label>
+                    <input th:field="*{courseName}" class="w-full border p-2 rounded"/>
                 </div>
+
                 <div>
-                    <label>Max Capacity</label>
-                    <input type="number" th:field="*{maxCapacity}" class="w-full border p-2 rounded"/>
+                    <label class="font-semibold">Course Code</label>
+                    <input th:field="*{courseCode}" class="w-full border p-2 rounded"/>
                 </div>
-            </div>
 
-            <!-- STATUS -->
-            <div>
-                <label>Status</label>
-                <select th:field="*{status}" class="w-full border p-2 rounded">
-                    <option th:each="s : ${statuses}"
-                            th:value="${s}"
-                            th:text="${s}">
-                    </option>
-                </select>
-            </div>
+                <div>
+                    <label class="font-semibold">Description</label>
+                    <textarea th:field="*{description}" class="w-full border p-2 rounded"></textarea>
+                </div>
 
-<!-- IMAGE PREVIEW -->
-<div>
-    <label class="font-semibold">Current Image</label>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label>Credits</label>
+                        <input type="number" th:field="*{credits}" class="w-full border p-2 rounded"/>
+                    </div>
+                    <div>
+                        <label>Max Capacity</label>
+                        <input type="number" th:field="*{maxCapacity}" class="w-full border p-2 rounded"/>
+                    </div>
+                </div>
 
-    <img th:if="${course.courseImage}"
-         th:src="${course.courseImage}"
-         class="h-32 rounded mb-2 border"/>
+                <!-- STATUS -->
+                <div>
+                    <label>Status</label>
+                    <select th:field="*{status}" class="w-full border p-2 rounded">
+                        <option th:each="s : ${statuses}"
+                                th:value="${s}"
+                                th:text="${s}">
+                        </option>
+                    </select>
+                </div>
 
-    <input type="file" name="imageFile" class="w-full"/>
-</div>
+                <!-- IMAGE PREVIEW -->
+                <div>
+                    <label class="font-semibold">Current Image</label>
 
-            <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                Update Course
-            </button>
+                    <img th:if="${course.courseImage}"
+                        th:src="${course.courseImage}"
+                        class="h-32 rounded mb-2 border"/>
 
-        </form>
+                    <input type="file" name="imageFile" class="w-full"/>
+                </div>
+
+                <button class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                    Update Course
+                </button>
+
+            </form>
+        </div>    
     </div>
+
 </div>
 
 </body>

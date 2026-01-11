@@ -47,7 +47,7 @@ public class StudentProfileController {
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "student/profile";
+            return "student/profile"; // ⚠ Make sure "profile" attribute is still in model
         }
 
         profileService.updateProfile(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getDob());

@@ -8,9 +8,8 @@
 </head>
 
 <body class="bg-gray-50">
+<div th:replace="~{layout/adminSidebar :: sidebar}"></div>
 
-<!-- ===== HEADER ===== -->
-<div th:replace="layout/header :: header"></div>
 
 <section class="max-w-7xl mx-auto px-6 mt-10">
 
@@ -130,9 +129,6 @@
   </div>
 
 </section>
-
-<!-- ===== FOOTER ===== -->
-<div th:replace="layout/footer :: footer"></div>
 
 </body>
 </html>

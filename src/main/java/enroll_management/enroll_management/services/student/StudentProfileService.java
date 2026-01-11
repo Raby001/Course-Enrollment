@@ -60,7 +60,12 @@ public class StudentProfileService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-        user.setDob(dob);
+
+        // ✅ Only update DOB if provided
+        if (dob != null) {
+            user.setDob(dob);
+        }
+
         userRepository.save(user);
     }
 

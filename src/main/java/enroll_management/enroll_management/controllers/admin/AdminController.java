@@ -21,7 +21,7 @@ public class AdminController {
     private enroll_management.enroll_management.services.admin.EnrollmentService enrollmentService;
     
         @GetMapping("/admin/adminDashboard")
-            public String adminDashboard(Model model){
+        public String adminDashboard(Model model){
             model.addAttribute("activePage", "adminDashboard");
             model.addAttribute("title", "Admin Dashboard");
 
@@ -33,24 +33,21 @@ public class AdminController {
             model.addAttribute("pendingRequests", enrollmentService.getPendingEnrollmentsCount());
             model.addAttribute("resolvedToday", enrollmentService.getResolvedToday());
 
-            // Course statistics
+            // Course statistics (all are now numbers)
             model.addAttribute("totalCourses", courseService.getTotalCourses());
-            model.addAttribute("activeCourses", courseService.getActiveCourses());
+            model.addAttribute("activeCourses", courseService.getActiveCoursesCount());
             model.addAttribute("draftCourses", courseService.getDraftCourses());
             model.addAttribute("pendingCourses", courseService.getPendingCourses());
 
 
             // Enrollment statistics
             Enrollment latestEnrollment = enrollmentService.getLatestEnrollment();
-
-            if (latestEnrollment != null) {
-                model.addAttribute("lastEnrollmentDate", latestEnrollment.getEnrollmentDate());
-            } else {
-                model.addAttribute("lastEnrollmentDate", null);
-            }
+            model.addAttribute("lastEnrollmentDate", 
+                latestEnrollment != null ? latestEnrollment.getEnrollmentDate() : null);
 
             return "admin/adminDashboard";
         }
+
 
         @GetMapping("/classrooms")
         public String classroomList(Model model) {
