@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-    <aside th:fragment="sidebar" class="w-64 bg-gradient-to-b from-[#92C9FF] to-[#9FF0EA] text-white flex flex-col min-h-screen">
+    <aside th:fragment="sidebar" class="w-70 bg-gradient-to-b from-[#92C9FF] to-[#9FF0EA] text-white flex flex-col min-h-screen">
         <div class="p-6 border-b border-gray-800">
             <h1 class="flex items-center">
                 <img
@@ -41,6 +41,14 @@
                             Courses Management
                         </a>
                     </li>
+                     <li>
+                        <a th:href="@{/admin/enrollments}" 
+                           th:classappend="${activePage == 'enrollment'} ? 'text-white bg-[#152259] active' : 'text-white bg-[#509CDB]'"
+                           class="flex items-center px-4 py-3 hover:text-white hover:bg-[#152259] rounded-lg transition">
+                            <i class="fas fa-book mr-3 text-white"></i>
+                            Enrollments Management
+                        </a>
+                    </li>
                     <li>
                         <a th:href="@{/admin/classrooms}" 
                            th:classappend="${activePage == 'classes'} ? 'text-white bg-[#152259] active' : 'text-white bg-[#509CDB]'"
@@ -59,49 +67,25 @@
                     </li>
                 </ul>
             </div>
-            
-            <div class="px-4 mb-8">
-                <h2 class="text-xs uppercase text-gray-500 font-semibold tracking-wider mb-3">
-                    <i class="fas fa-bolt mr-2"></i>Quick Actions
-                </h2>
-                <ul class="space-y-2">
-                    <li>
-                        <a th:href="@{/admin/users/create}" class="flex items-center px-4 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-lg transition shadow-md">
-                            <i class="fas fa-user-plus mr-3"></i>
-                            Add New User
-                        </a>
-                    </li>
-                    <li>
-                        <a th:href="@{/admin/courses/create}" class="flex items-center px-4 py-3 bg-green-600 text-white hover:bg-green-700 rounded-lg transition shadow-md">
-                            <i class="fas fa-book-medical mr-3"></i>
-                            Add New Course
-                        </a>
-                    </li>
-                    <li>
-                        <a th:href="@{/admin/schedules/create}" class="flex items-center px-4 py-3 bg-purple-600 text-white hover:bg-purple-700 rounded-lg transition shadow-md">
-                            <i class="fas fa-calendar-plus mr-3"></i>
-                            Add Schedule
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </nav>
 
-
-
-    <!-- ===== Admin Info ===== -->
-    <div class="p-4 border-t border-gray-800">
-        <div class="flex items-center">
-            <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
-                <span class="font-bold text-white">A</span>
-            </div>
-            <div class="ml-3 overflow-hidden">
-                <p class="font-medium text-sm truncate">System Admin</p>
-                <p class="text-xs text-gray-400 truncate">admin@brightcode.edu</p>
+        <!-- ===== Admin Info ===== -->
+        <div class="p-4 border-t border-gray-800">
+            <div class="flex items-center">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center">
+                    <span class="font-bold text-white"
+                        th:text="${currentUser != null && currentUser.fullName != null ? currentUser.fullName.substring(0,1) : 'A'}">A</span>
+                </div>
+                <div class="ml-3 overflow-hidden">
+                    <p class="font-medium text-sm truncate"
+                    th:text="${currentUser != null && currentUser.fullName != null ? currentUser.fullName : 'System Admin'}">System Admin</p>
+                    <p class="text-xs text-gray-400 truncate"
+                    th:text="${currentUser != null && currentUser.email != null ? currentUser.email : 'admin@brightcode.edu'}">admin@brightcode.edu</p>
+                </div>
             </div>
         </div>
-    </div>
 
+ 
 </aside>
 
 </body>

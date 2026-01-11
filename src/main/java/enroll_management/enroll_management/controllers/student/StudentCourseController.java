@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -57,7 +56,7 @@ public class StudentCourseController {
             courses = courses.stream()
                     .filter(course -> course.getCourseName().toLowerCase().contains(searchTerm))
                     .collect(Collectors.toList());
-            model.addAttribute("query", keyword); // Keep search term in input field
+            model.addAttribute("query", keyword); 
         }
 
         model.addAttribute("courses", courses);

@@ -45,15 +45,6 @@
                         <p class="text-gray-600">Welcome back, Administrator</p>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <input type="text" placeholder="Search..." 
-                                class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
-                            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                        </div>
-                        <button class="relative p-2 text-gray-600 hover:text-gray-800">
-                            <i class="fas fa-bell text-xl"></i>
-                            <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-                        </button>
                         <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
                             Logout
                         </a>
@@ -121,77 +112,11 @@
                         </div>
                     </div>
 
-                    <!-- Total Requests Card -->
-                    <div class="stat-card bg-white rounded-xl shadow p-6">
-                        <div class="flex items-start justify-between">
-                            <div>
-                                <p class="text-gray-600 text-sm font-medium mb-1">Total Requests</p>
-                                <p class="text-4xl font-bold text-gray-800" th:text="${pendingRequests}">0</p>
-                                <div class="mt-2">
-                                    <span class="text-yellow-600 text-sm font-medium">
-                                        <i class="fas fa-exclamation-circle text-yellow-500 mr-1"></i>
-                                        Requires Attention
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="p-3 rounded-lg bg-yellow-100">
-                                <i class="fas fa-inbox text-2xl text-yellow-600"></i>
-                            </div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t">
-                            <p class="text-gray-500 text-sm">
-                                <i class="fas fa-inbox text-blue-500 mr-2"></i>
-                                <span th:text="${pendingRequests}">0</span> pending, 
-                                <span th:text="${resolvedToday}">0</span> resolved today
-                            </p>
-                        </div>
-                    </div>
+
                 </div>
 
                 <!-- Action Cards Section -->
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Add Users Card -->
-                    <div id="add-users" class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl shadow-lg p-6 border border-blue-200">
-                        <div class="flex items-center mb-6">
-                            <div class="p-3 rounded-full bg-blue-500 text-white">
-                                <i class="fas fa-user-plus text-xl"></i>
-                            </div>
-                            <h2 class="ml-4 text-xl font-bold text-gray-800">Add Users</h2>
-                        </div>
-                        <p class="text-gray-700 mb-6">
-                            Give enrollment to students, and assign lecturers to courses. Manage user roles and permissions efficiently.
-                        </p>
-                        <div class="space-y-4">
-                            <button onclick="window.location.href='admin/enrollment-create'" class="w-full btn-gradient text-white py-3 rounded-lg font-medium hover:shadow-lg transition">
-                                <i class="fas fa-user-graduate mr-2"></i>Enroll New Student
-                            </button>
-                            <button class="w-full bg-white text-blue-600 border border-blue-300 py-3 rounded-lg font-medium hover:bg-blue-50 transition">
-                                <i class="fas fa-chalkboard-teacher mr-2"></i>Assign Lecturer
-                            </button>
-                            <button class="w-full bg-white text-gray-700 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50 transition">
-                                <i class="fas fa-users-cog mr-2"></i>Bulk User Import
-                            </button>
-                        </div>
-                        <!-- <div class="mt-6 pt-6 border-t border-blue-200">
-                            <p class="text-sm text-gray-600">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Last enrollment: Today, 10:30 AM
-                            </p>
-                        </div> -->
-                        <div class="mt-6 pt-6 border-t border-blue-200">
-                            <p class="text-sm text-gray-600">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                Last enrollment: 
-                                <span th:if="${lastEnrollmentDate != null}" 
-                                    th:text="${#temporals.format(lastEnrollmentDate, 'MMM dd, yyyy hh:mm a')}">
-                                    Jan 04, 2026 10:30 AM
-                                </span>
-                                <span th:if="${lastEnrollmentDate == null}">
-                                    No enrollments yet
-                                </span>
-                            </p>
-                        </div>
-                    </div>
 
                     <!-- Add Classes/Schedule Card -->
                     <div id="add-schedule" class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-lg p-6 border border-purple-200">
@@ -255,104 +180,7 @@
                     </div>
                 </div>
 
-                <!-- Recent Activity & Quick Tables -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
-                    <!-- Recent Users -->
-                    <div class="bg-white rounded-xl shadow p-6">
-                        <h3 class="text-lg font-bold mb-4 flex items-center">
-                            <i class="fas fa-user-clock mr-2 text-blue-600"></i>
-                            Recent User Activity
-                        </h3>
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="border-b">
-                                        <th class="py-3 text-left text-gray-600">User</th>
-                                        <th class="py-3 text-left text-gray-600">Role</th>
-                                        <th class="py-3 text-left text-gray-600">Action</th>
-                                        <th class="py-3 text-left text-gray-600">Time</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="py-3">
-                                            <div class="flex items-center">
-                                                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                                                    <span class="text-blue-600 font-medium text-sm">JS</span>
-                                                </div>
-                                                <span>John Smith</span>
-                                            </div>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">Student</span>
-                                        </td>
-                                        <td class="py-3">Enrolled in CS101</td>
-                                        <td class="py-3 text-gray-500">10 min ago</td>
-                                    </tr>
-                                    <tr class="border-b hover:bg-gray-50">
-                                        <td class="py-3">
-                                            <div class="flex items-center">
-                                                <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                                                    <span class="text-green-600 font-medium text-sm">EC</span>
-                                                </div>
-                                                <span>Dr. Emily Chen</span>
-                                            </div>
-                                        </td>
-                                        <td class="py-3">
-                                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">Lecturer</span>
-                                        </td>
-                                        <td class="py-3">Created MATH201</td>
-                                        <td class="py-3 text-gray-500">1 hour ago</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
 
-                    <!-- Upcoming Classes -->
-                    <div class="bg-white rounded-xl shadow p-6">
-                        <h3 class="text-lg font-bold mb-4 flex items-center">
-                            <i class="fas fa-calendar-check mr-2 text-purple-600"></i>
-                            Today's Classes
-                        </h3>
-                        <div class="space-y-4">
-                            <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                                <div>
-                                    <h4 class="font-medium">CS101 - Programming Basics</h4>
-                                    <p class="text-sm text-gray-600">Room 201 • 9:00 AM - 11:00 AM</p>
-                                </div>
-                                <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">Ongoing</span>
-                            </div>
-                            <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                                <div>
-                                    <h4 class="font-medium">MATH201 - Calculus</h4>
-                                    <p class="text-sm text-gray-600">Room 305 • 1:00 PM - 3:00 PM</p>
-                                </div>
-                                <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Upcoming</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quick Stats Footer -->
-                <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-white rounded-lg shadow p-4 text-center">
-                        <div class="text-2xl font-bold text-blue-600">98%</div>
-                        <div class="text-sm text-gray-600">System Uptime</div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-4 text-center">
-                        <div class="text-2xl font-bold text-green-600">24/7</div>
-                        <div class="text-sm text-gray-600">Support Available</div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-4 text-center">
-                        <div class="text-2xl font-bold text-purple-600">0</div>
-                        <div class="text-sm text-gray-600">Critical Issues</div>
-                    </div>
-                    <div class="bg-white rounded-lg shadow p-4 text-center">
-                        <div class="text-2xl font-bold text-yellow-600">5.2s</div>
-                        <div class="text-sm text-gray-600">Avg. Response Time</div>
-                    </div>
-                </div>
             </div>
         </main>  
     </div>

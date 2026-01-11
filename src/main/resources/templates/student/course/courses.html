@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Courses</title>
-  <link rel="stylesheet" th:href="@{/css/tailwind.css}">
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Courses</title>
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}" />
+  </head>
 
 <body class="bg-gray-50">
 <div th:if="${param.success}" class="max-w-7xl mx-auto px-6 mb-4">
@@ -23,70 +23,69 @@
 </section>
 
 <!-- ===== COURSE LIST ===== -->
-<section class="max-w-7xl mx-auto px-6 mt-6">
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-    <h2 class="text-xl font-semibold">All Courses</h2>
-    
-    <!-- Search Form -->
-    <form th:action="@{/student/courses}" method="get" class="flex bg-white rounded overflow-hidden w-full sm:max-w-md border-2">
-      <input 
-        type="text" 
-        name="q" 
-        th:value="${query}" 
-        placeholder="Search for courses"
-        class="flex-1 px-4 py-2 outline-none"
-      />
-      <button type="submit" class="text-black px-4">
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            width="24" height="24" viewBox="0 0 24 24" fill="none" 
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-            stroke-linejoin="round" class="lucide lucide-search">
-            <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
-      </button>
-    </form>
-  </div>
-
-  <!-- No Results Message -->
-  <div th:if="${#lists.isEmpty(courses)}" class="text-center py-8 text-gray-500">
-    <p>No courses found matching your search.</p>
-    <a href="/student/courses" class="text-blue-600 hover:underline mt-2 inline-block">Clear search</a>
-  </div>
-
-  <!-- Course Cards -->
-  <div th:unless="${#lists.isEmpty(courses)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div th:each="course : ${courses}" class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-      <!-- Clickable Card → Details -->
-      <a th:href="@{/student/courses/{id}(id=${course.id})}" class="block">
-        <img 
-          th:src="${course.courseImage ?: 'https://via.placeholder.com/300x150?text=No+Image'}"
-          th:alt="${course.courseName}"
-          class="rounded-t-lg h-44 w-full object-cover"
-        >
-        <div class="p-4">
-          <h3 class="font-semibold text-lg" th:text="${course.courseName}">Course Name</h3>
-          <p class="text-sm text-gray-500" th:text="${course.credits} + ' credits'">3 credits</p>
-          <div class="text-yellow-500 text-sm mt-1">★★★★☆</div>
-        </div>
-      </a>
+  <section class="max-w-7xl mx-auto px-6 mt-6">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <h2 class="text-xl font-semibold">All Courses</h2>
       
-      <!-- Enroll Button -->
-      <div class="px-4 pb-4">
-        <form th:if="${!course.enrolled}" th:action="@{/student/enrollments/enroll}" method="post">
-          <input type="hidden" name="courseId" th:value="${course.id}" />
-          <button type="submit" class="w-full bg-[#009FAA] hover:bg-teal-700 text-white py-2 rounded-lg font-medium transition">
-            Enroll Now
-          </button>
-        </form>
-        <div th:if="${course.enrolled}" class="w-full bg-green-100 text-green-800 py-2 rounded-lg font-medium text-center">
-          Enrolled
+      <!-- Search Form -->
+      <form th:action="@{/student/courses}" method="get" class="flex bg-white rounded overflow-hidden w-full sm:max-w-md border-2">
+        <input 
+          type="text" 
+          name="q" 
+          th:value="${query}" 
+          placeholder="Search for courses"
+          class="flex-1 px-4 py-2 outline-none"
+        />
+        <button type="submit" class="text-black px-4">
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              width="24" height="24" viewBox="0 0 24 24" fill="none" 
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+              stroke-linejoin="round" class="lucide lucide-search">
+              <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- No Results Message -->
+    <div th:if="${#lists.isEmpty(courses)}" class="text-center py-8 text-gray-500">
+      <p>No courses found matching your search.</p>
+      <a href="/student/courses" class="text-blue-600 hover:underline mt-2 inline-block">Clear search</a>
+    </div>
+
+    <!-- Course Cards -->
+    <div th:unless="${#lists.isEmpty(courses)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div th:each="course : ${courses}" class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+        <!-- Clickable Card → Details -->
+        <a th:href="@{/student/courses/{id}(id=${course.id})}" class="block">
+          <img 
+            th:src="${course.courseImage ?: 'https://via.placeholder.com/300x150?text=No+Image'}"
+            th:alt="${course.courseName}"
+            class="rounded-t-lg h-44 w-full object-cover"
+          >
+          <div class="p-4">
+            <h3 class="font-semibold text-lg" th:text="${course.courseName}">Course Name</h3>
+            <p class="text-sm text-gray-500" th:text="${course.credits} + ' credits'">3 credits</p>
+            <div class="text-yellow-500 text-sm mt-1">★★★★☆</div>
+          </div>
+        </a>
+        
+        <!-- Enroll Button -->
+        <div class="px-4 pb-4">
+          <form th:if="${!course.enrolled}" th:action="@{/student/enrollments/enroll}" method="post">
+            <input type="hidden" name="courseId" th:value="${course.id}" />
+            <button type="submit" class="w-full bg-[#009FAA] hover:bg-teal-700 text-white py-2 rounded-lg font-medium transition">
+              Enroll Now
+            </button>
+          </form>
+          <div th:if="${course.enrolled}" class="w-full bg-green-100 text-green-800 py-2 rounded-lg font-medium text-center">
+            Enrolled
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ===== FOOTER ===== -->
-<div th:replace="~{layout/footer :: footer}"></div>
-
+    
+  </section>
+  <div th:replace="~{layout/footer :: footer}"></div>
 </body>
+
 </html>

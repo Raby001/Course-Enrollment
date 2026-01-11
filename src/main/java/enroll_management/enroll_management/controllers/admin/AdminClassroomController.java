@@ -19,8 +19,8 @@ public class AdminClassroomController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("classrooms", service.findAll());
-        // model.addAttribute("activePage", "classes"); // ADD THIS
-        // model.addAttribute("pageTitle", "Classrooms Management"); // ADD THIS
+        model.addAttribute("activePage", "classes"); 
+        model.addAttribute("pageTitle", "Classrooms Management"); 
         return "admin/classroom/list";
     }
 
@@ -35,7 +35,6 @@ public class AdminClassroomController {
                          BindingResult result, Model model) {
                             
         if (result.hasErrors()){
-            // model.addAttribute("activePage", "classes"); // ADD THIS
             return "admin/classroom/form";
         }
 
@@ -64,7 +63,6 @@ public class AdminClassroomController {
                          @Valid @ModelAttribute("classroom") ClassroomDTO dto,
                          BindingResult result, Model model) {
         if (result.hasErrors()){
-            // model.addAttribute("activePage", "classes"); // ADD THIS
             return "admin/classroom/form";
         } 
         service.update(id, dto);

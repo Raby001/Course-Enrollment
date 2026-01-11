@@ -1,7 +1,6 @@
 package enroll_management.enroll_management.controllers.student;
 
 import enroll_management.enroll_management.Entities.User;
-import enroll_management.enroll_management.dto.admin.CourseDto;
 import enroll_management.enroll_management.dto.admin.EnrollmentDto;
 import enroll_management.enroll_management.dto.student.StudentProfileDto;
 import enroll_management.enroll_management.services.student.StudentProfileService;

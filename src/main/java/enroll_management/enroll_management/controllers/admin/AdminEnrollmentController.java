@@ -27,6 +27,7 @@ public class AdminEnrollmentController {
                 "enrollments",
                 enrollmentService.getAllEnrollments()
         );
+        model.addAttribute("activePage", "enrollment");
         return "admin/enrollments"; 
     }
 
@@ -42,6 +43,7 @@ public class AdminEnrollmentController {
                 "enrollments",
                 enrollmentService.getEnrollmentsByStudentId(studentId)
         );
+        model.addAttribute("activePage", "enrollment");
         return "admin/enrollments";
     }
 
@@ -51,6 +53,7 @@ public class AdminEnrollmentController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("enrollment", new EnrollmentCreateDto());
+        model.addAttribute("activePage", "enrollment");
         return "admin/enrollment-create";
     }
 

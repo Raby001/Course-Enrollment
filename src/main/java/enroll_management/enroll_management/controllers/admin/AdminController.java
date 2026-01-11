@@ -20,31 +20,27 @@ public class AdminController {
     @Autowired
     private enroll_management.enroll_management.services.admin.EnrollmentService enrollmentService;
     
-        @GetMapping("/admin/adminDashboard")
-        public String adminDashboard(Model model){
-            model.addAttribute("activePage", "adminDashboard");
-            model.addAttribute("title", "Admin Dashboard");
+    @GetMapping("/admin/adminDashboard")
+    public String adminDashboard(Model model){
+        model.addAttribute("activePage", "adminDashboard");
+        model.addAttribute("title", "Admin Dashboard");
 
-            // Count statistics
-            model.addAttribute("totalUsers", userService.getTotalUsers());
-            model.addAttribute("totalStudents", userService.getTotalStudents());
-            model.addAttribute("totalLecturers", userService.getTotalLecturers());
-            model.addAttribute("newUsersThisWeek", userService.getNewUsersThisWeek());
-            model.addAttribute("pendingRequests", enrollmentService.getPendingEnrollmentsCount());
-            model.addAttribute("resolvedToday", enrollmentService.getResolvedToday());
+        // Statistics
+        model.addAttribute("totalUsers", userService.getTotalUsers());
+        model.addAttribute("totalStudents", userService.getTotalStudents());
+        model.addAttribute("totalLecturers", userService.getTotalLecturers());
+        model.addAttribute("newUsersThisWeek", userService.getNewUsersThisWeek());
+        model.addAttribute("pendingRequests", enrollmentService.getPendingEnrollmentsCount());
+        model.addAttribute("resolvedToday", enrollmentService.getResolvedToday());
 
-            // Course statistics (all are now numbers)
-            model.addAttribute("totalCourses", courseService.getTotalCourses());
-            model.addAttribute("activeCourses", courseService.getActiveCoursesCount());
-            model.addAttribute("draftCourses", courseService.getDraftCourses());
-            model.addAttribute("pendingCourses", courseService.getPendingCourses());
+        model.addAttribute("totalCourses", courseService.getTotalCourses());
+        model.addAttribute("activeCourses", courseService.getActiveCoursesCount());
+        model.addAttribute("draftCourses", courseService.getDraftCourses());
+        model.addAttribute("pendingCourses", courseService.getPendingCourses());
 
-
-            // Enrollment statistics
-            Enrollment latestEnrollment = enrollmentService.getLatestEnrollment();
-            model.addAttribute("lastEnrollmentDate", 
-                latestEnrollment != null ? latestEnrollment.getEnrollmentDate() : null);
-
+        Enrollment latestEnrollment = enrollmentService.getLatestEnrollment();
+        model.addAttribute("lastEnrollmentDate", 
+            latestEnrollment != null ? latestEnrollment.getEnrollmentDate() : null);
             return "admin/adminDashboard";
         }
 

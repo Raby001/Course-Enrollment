@@ -7,9 +7,7 @@ import enroll_management.enroll_management.repositories.EnrollmentRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.admin.EnrollmentService;
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -38,16 +36,14 @@ public class StudentEnrollmentController {
     @GetMapping
     public String myEnrollments(Authentication authentication, Model model) {
 
-        // Get current student
-        String username = authentication.getName();
-        User student = userRepository.findByUsername(username)
+        User student = userRepository.findByUsername(authentication.getName())
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        // Get enrollments for this student
-        List<Enrollment> enrollments = enrollmentRepository.findByStudentId(student.getId());
+        List<Enrollment> enrollments =
+                enrollmentRepository.findByStudentId(student.getId());
 
         model.addAttribute("enrollments", enrollments);
-        return "student/enrollments"; // ← Template path
+        return "student/enrollment/enrollments";
     }
 
     // =========================
@@ -55,7 +51,7 @@ public class StudentEnrollmentController {
     // =========================
     @PostMapping("/enroll")
     public String enrollCourse(
-        @RequestParam("courseId") Long courseId,
+            @RequestParam("courseId") Long courseId,
             Authentication authentication,
             HttpServletRequest request,
             RedirectAttributes redirectAttributes) {
@@ -67,31 +63,42 @@ public class StudentEnrollmentController {
             enrollmentService.createEnrollment(dto, authentication);
 
             redirectAttributes.addFlashAttribute(
-                    "success",
+                    "successMessage",
                     "Successfully enrolled in course");
 
         } catch (IllegalStateException ex) {
             redirectAttributes.addFlashAttribute(
-                    "error",
+                    "errorMessage",
                     ex.getMessage());
         }
-        String referer = request.getHeader("Referer");
-        if (referer != null && !referer.isEmpty()) {
-            return "redirect:" + referer;
-        }
 
-        return "redirect:/student/home"; 
+        String referer = request.getHeader("Referer");
+
+        return "redirect:" + (referer != null ? referer : "/student/courses");
     }
 
     // =========================
-    // DROP (DELETE) ENROLLMENT
+    // DROP ENROLLMENT
     // =========================
     @PostMapping("/drop/{id}")
     public String dropEnrollment(
             @PathVariable("id") Long id,
-            Authentication authentication) {
+            Authentication authentication,
+            HttpServletRequest request,
+            RedirectAttributes redirectAttributes) {
 
-        enrollmentService.deleteEnrollment(id, authentication);
-        return "redirect:/student/enrollments";
+        try {
+            enrollmentService.deleteEnrollment(id, authentication);
+            redirectAttributes.addFlashAttribute(
+                    "successMessage",
+                    "Enrollment dropped");
+        } catch (IllegalStateException ex) {
+            redirectAttributes.addFlashAttribute(
+                    "errorMessage",
+                    ex.getMessage());
+        }
+
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/student/enrollments");
     }
 }
