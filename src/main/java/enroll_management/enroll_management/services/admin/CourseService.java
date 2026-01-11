@@ -6,12 +6,12 @@ import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
 import enroll_management.enroll_management.dto.admin.CourseDto;
 import enroll_management.enroll_management.enums.CourseStatus;
-import enroll_management.enroll_management.enums.RoleName;
+import enroll_management.enroll_management.enums.EnrollmentStatus;
 import enroll_management.enroll_management.exception.ResourceNotFoundException;
 import enroll_management.enroll_management.repositories.CourseRepository;
+import enroll_management.enroll_management.repositories.EnrollmentRepository;
 import enroll_management.enroll_management.repositories.UserRepository;
 import enroll_management.enroll_management.services.common.ImageUploadService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,8 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class CourseService {
 
-    private static final String String = null;
-
     @Autowired
     private CourseRepository courseRepository;
 
@@ -34,6 +32,10 @@ public class CourseService {
 
     @Autowired
     private ImageUploadService imageUploadService;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
 
     // =========================
     // READ
@@ -199,29 +201,28 @@ public class CourseService {
             dto.setLecturerName("Not assigned");
         }
 
-        dto.setCurrentEnrollmentCount(course.getCurrentEnrollmentCount());
+
+       long enrolledCount =
+        enrollmentRepository.countByCourseIdAndStatus(
+                course.getId(),
+                EnrollmentStatus.ENROLLED
+        );
+
+dto.setCurrentEnrollmentCount((int) enrolledCount);
+
 
         return dto;
     }
 
-    private Course convertToEntity(CourseCreateUpdateDto dto) {
 
-        Course course = new Course();
-
-        course.setCourseCode(dto.getCourseCode());
-        course.setCourseName(dto.getCourseName());
-        course.setDescription(dto.getDescription());
-        course.setCredits(dto.getCredits());
-        course.setMaxCapacity(dto.getMaxCapacity());
-        course.setCourseImage(dto.getCourseImage());
-
-        return course;
-    }
-
-    // Count total courses
-   public long getTotalCourses() {
+    public long getTotalCourses() {
         return courseRepository.count();
     }
+
+    public long getActiveCoursesCount() {
+        return courseRepository.countByStatus(CourseStatus.ACTIVE);
+    }
+
 
     public long getDraftCourses() {
         return courseRepository.countByStatus(CourseStatus.DRAFT);
@@ -230,4 +231,5 @@ public class CourseService {
     public long getPendingCourses() {
         return courseRepository.countByStatus(CourseStatus.PENDING);
     }
+
 }

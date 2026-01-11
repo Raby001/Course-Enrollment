@@ -19,17 +19,15 @@ public class AdminClassroomController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("classrooms", service.findAll());
-        // model.addAttribute("activePage", "classes"); // ADD THIS
-        // model.addAttribute("pageTitle", "Classrooms Management"); // ADD THIS
+        model.addAttribute("activePage", "classes"); 
+        model.addAttribute("pageTitle", "Classrooms Management"); 
         return "admin/classroom/list";
     }
 
     @GetMapping("/new")
     public String form(Model model) {
         model.addAttribute("classroom", new ClassroomDTO());
-        // model.addAttribute("activePage", "classes"); // ADD THIS
-        // model.addAttribute("pageTitle", "Add Classroom"); // ADD THIS
-        return "admin/classroom/form";
+        return "admin/classroom/form :: classroomForm";
     }
 
     @PostMapping
@@ -37,7 +35,6 @@ public class AdminClassroomController {
                          BindingResult result, Model model) {
                             
         if (result.hasErrors()){
-            // model.addAttribute("activePage", "classes"); // ADD THIS
             return "admin/classroom/form";
         }
 
@@ -58,9 +55,7 @@ public class AdminClassroomController {
         dto.setStatus(c.getStatus());
 
         model.addAttribute("classroom", dto);
-        // model.addAttribute("activePage", "classes"); // ADD THIS
-        // model.addAttribute("pageTitle", "Edit Classroom"); // ADD THIS
-        return "admin/classroom/form";
+        return "admin/classroom/form :: classroomForm";
     }
 
     @PostMapping("/{id}")
@@ -68,7 +63,6 @@ public class AdminClassroomController {
                          @Valid @ModelAttribute("classroom") ClassroomDTO dto,
                          BindingResult result, Model model) {
         if (result.hasErrors()){
-            // model.addAttribute("activePage", "classes"); // ADD THIS
             return "admin/classroom/form";
         } 
         service.update(id, dto);

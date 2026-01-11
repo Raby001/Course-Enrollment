@@ -20,9 +20,8 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
     // Find all enrollments for a specific course
     List<Enrollment> findByCourseId(Long courseId);
     
-     boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
+    boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
 
-    
     long countByCourseIdAndStatus(Long courseId, EnrollmentStatus status);
     // Check if a specific student is already enrolled in a specific course
     // This is crucial for preventing duplicate enrollments!

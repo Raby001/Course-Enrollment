@@ -38,6 +38,7 @@ public class CourseAdminController {
 
         model.addAttribute("courses", courses);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("activePage", "courses");
 
         return "admin/course/courses";
     }
@@ -46,6 +47,7 @@ public class CourseAdminController {
     // =========================
     // SHOW CREATE FORM
     // =========================
+
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("course", new CourseCreateUpdateDto());
@@ -57,6 +59,7 @@ public class CourseAdminController {
         return "admin/course/course-create";
     }
 
+
     // =========================
     // HANDLE CREATE
     // =========================
@@ -65,7 +68,7 @@ public class CourseAdminController {
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.createCourse(courseDto);
-        return "redirect:/admin/course/courses";
+        return "redirect:/admin/courses";
     }
 
     // =========================
@@ -91,7 +94,7 @@ public class CourseAdminController {
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
 
         courseService.updateCourse(id, courseDto);
-        return "redirect:/admin/course/courses";
+        return "redirect:/admin/courses";
     }
 
     // =========================
@@ -101,6 +104,6 @@ public class CourseAdminController {
     public String deleteCourse(@PathVariable("id") Long id) {
 
         courseService.deleteCourse(id);
-        return "redirect:/admin/course/courses";
+        return "redirect:/admin/courses";
     }
 }

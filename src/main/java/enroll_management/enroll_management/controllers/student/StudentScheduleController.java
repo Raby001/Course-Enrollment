@@ -2,10 +2,8 @@ package enroll_management.enroll_management.controllers.student;
 
 import enroll_management.enroll_management.Entities.Schedule;
 import enroll_management.enroll_management.dto.admin.TimeTableRowDTO;
-import enroll_management.enroll_management.enums.DayOfWeek;
 import enroll_management.enroll_management.services.student.StudentScheduleService;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;

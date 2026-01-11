@@ -27,16 +27,26 @@
         Your learning journey starts with one course
       </p>
 
-      <div class="flex bg-white rounded overflow-hidden w-full max-w-md">
-        <input class="flex-1 px-4 py-2 outline-none" placeholder="Search for courses">
-        <button class="text-black px-4" title="Search">
-            <svg xmlns="http://www.w3.org/2000/svg" 
-            width="24" height="24" viewBox="0 0 24 24" fill="none" 
-            stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-            stroke-linejoin="round" class="lucide lucide-search">
-            <path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+      <form th:action="@{/student/courses}" method="get"
+            class="flex bg-white rounded overflow-hidden w-full max-w-md">
+
+        <input
+          type="text"
+          name="q"
+          placeholder="Search for courses"
+          class="flex-1 px-4 py-2 outline-none"
+        />
+
+        <button type="submit" class="text-black px-4" title="Search">
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              width="24" height="24" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m21 21-4.34-4.34"/>
+            <circle cx="11" cy="11" r="8"/>
+          </svg>
         </button>
-      </div>
+
+      </form>
     </div>
 
     <img src="https://image2url.com/r2/default/images/1766935312273-50a34d90-c041-4c5b-bbb9-52da614ba6c1.png" 

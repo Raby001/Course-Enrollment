@@ -2,128 +2,83 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Schedule Form</title>
-      <link rel="stylesheet" th:href="@{/css/tailwind.css}">
+    <link rel="stylesheet" th:href="@{/css/tailwind.css}">
 </head>
 
-<body class="bg-black/40 flex items-center justify-center min-h-screen">
-<div class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
+<body>
+<div th:fragment="scheduleForm" class="bg-white w-full max-w-lg rounded-lg shadow-lg p-6">
 
     <!-- Header -->
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-lg font-bold text-gray-800">
-            Schedule Management
-        </h2>
-        <a href="/admin/schedules"
-           class="text-gray-400 hover:text-gray-600 text-xl">&times;</a>
+        <h2 class="text-lg font-bold text-gray-800">Schedule Management</h2>
+        <button type="button" id="modalCloseBtn" class="text-gray-400 hover:text-gray-600 text-xl">&times;</button>
     </div>
 
     <!-- Error Message -->
-    <div th:if="${error}"
-         class="mb-4 bg-red-100 text-red-700 px-4 py-2 rounded">
+    <div th:if="${error}" class="mb-4 bg-red-100 text-red-700 px-4 py-2 rounded">
         <span th:text="${error}"></span>
     </div>
 
     <!-- Form -->
     <form th:object="${schedule}"
-      th:action="${schedule.id} == null ?
-                 @{/admin/schedules} :
-                 @{/admin/schedules/{id}(id=${schedule.id})}"
-      method="post"
-      class="space-y-4">
+          th:action="${schedule.id} == null ? @{/admin/schedules} : @{/admin/schedules/{id}(id=${schedule.id})}"
+          method="post"
+          class="space-y-4">
 
         <!-- Course -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Course
-            </label>
-            <select th:field="*{courseId}"
-                    class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Course</label>
+            <select th:field="*{courseId}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
                 <option value="">-- Select course --</option>
-                <option th:each="c : ${courses}"
-                        th:value="${c.id}"
-                        th:text="${c.courseCode}">
-                </option>
+                <option th:each="c : ${courses}" th:value="${c.id}" th:text="${c.courseCode}"></option>
             </select>
         </div>
 
         <!-- Classroom -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Classroom
-            </label>
-            <select th:field="*{classroomId}"
-                    class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Classroom</label>
+            <select th:field="*{classroomId}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
                 <option value="">-- Select classroom --</option>
-                <option th:each="r : ${classrooms}"
-                        th:value="${r.id}"
-                        th:text="${r.building + '-' + r.roomNumber}">
-                </option>
+                <option th:each="r : ${classrooms}" th:value="${r.id}" th:text="${r.building + '-' + r.roomNumber}"></option>
             </select>
         </div>
 
         <!-- Day -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Day
-            </label>
-            <select th:field="*{dayOfWeek}"
-                    class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
-                <option th:each="d : ${T(java.time.DayOfWeek).values()}"
-                        th:value="${d}"
-                        th:text="${d}">
-                </option>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Day</label>
+            <select th:field="*{dayOfWeek}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
+                <option th:each="d : ${T(java.time.DayOfWeek).values()}" th:value="${d}" th:text="${d}"></option>
             </select>
         </div>
 
         <!-- Time -->
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Start Time
-                </label>
-                <input type="time"
-                       th:field="*{startTime}"
-                       class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Start Time</label>
+                <input type="time" th:field="*{startTime}" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    End Time
-                </label>
-                <input type="time"
-                       th:field="*{endTime}"
-                       class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">End Time</label>
+                <input type="time" th:field="*{endTime}" class="w-full border rounded px-3 py-2">
             </div>
         </div>
 
         <!-- Semester & Year -->
         <div class="grid grid-cols-2 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Semester
-                </label>
-                <input type="number"
-                       th:field="*{semester}"
-                       class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Semester</label>
+                <input type="number" th:field="*{semester}" class="w-full border rounded px-3 py-2">
             </div>
-
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Academic Year
-                </label>
-                <input type="number"
-                       th:field="*{academicYear}"
-                       class="w-full border rounded px-3 py-2">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Academic Year</label>
+                <input type="number" th:field="*{academicYear}" class="w-full border rounded px-3 py-2">
             </div>
         </div>
 
         <!-- Status -->
         <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Status
-            </label>
-            <select th:field="*{status}"
-                    class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select th:field="*{status}" class="w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300">
                 <option value="">-- Select status --</option>
                 <option value="CANCELLED">CANCELLED</option>
                 <option value="SCHEDULED">SCHEDULED</option>
@@ -132,18 +87,10 @@
 
         <!-- Buttons -->
         <div class="flex justify-end gap-3 pt-4">
-            <a th:href="@{/admin/schedules}"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
-                Cancel
-            </a>
-
-            <button type="submit"
-                    class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-                Save Changes
-            </button>
+            <button type="button" id="cancelModal" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Save Changes</button>
         </div>
     </form>
 </div>
-
 </body>
 </html>

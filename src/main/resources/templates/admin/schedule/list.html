@@ -3,9 +3,7 @@
 <head>
     <title>Schedules Management</title>
     <link rel="stylesheet" th:href="@{/css/tailwind.css}">    
-    <!-- Tailwind CSS via CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -14,7 +12,6 @@
             background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
             border-right: 3px solid #3b82f6;
         }
-        
         .stat-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -22,7 +19,6 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
         }
-        
         .btn-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
@@ -31,100 +27,157 @@
         }
     </style>
 </head>
+<body class="bg-gray-50">
+    <div class="flex min-h-screen">
+        <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
 
-<body>
+        <main class="flex-1">
 
-<div class="flex min-h-screen">
+            <header class="bg-white shadow-sm border-b px-8 py-4">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
+                            <p class="text-gray-600">Welcome back, Administrator</p>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+            </header>
 
-    <div th:replace="~{layout/adminSidebar :: sidebar}"></div>
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="flex-1 p-8">
-        <div class="bg-white rounded-lg shadow p-6">
+            <div class="bg-white rounded-lg shadow p-6">
 
-            <!-- Header -->
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold">Schedules Management</h2>
-                <a href="/admin/schedules/new"
-                   class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                    + Add schedule
-                </a>
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">Schedules Management</h2>
+                    <a href="javascript:void(0);" 
+                       id="openCreateSchedule"
+                       class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+                        + Add schedule
+                    </a>
+                </div>
+
+                <!-- Table -->
+                <table class="w-full border text-sm">
+                    <thead class="bg-gray-100 text-left">
+                        <tr>
+                            <th class="p-2 border">Course</th>
+                            <th class="p-2 border">Classroom</th>
+                            <th class="p-2 border">Day</th>
+                            <th class="p-2 border">Time</th>
+                            <th class="p-2 border">Semester</th>
+                            <th class="p-2 border">Year</th>
+                            <th class="p-2 border">Status</th>
+                            <th class="p-2 border text-center">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="s : ${schedules}" class="hover:bg-gray-50">
+                            <td class="p-2 border font-semibold" th:text="${s.course.courseCode}"></td>
+                            <td class="p-2 border" th:text="${s.classroom.building + '-' + s.classroom.roomNumber}"></td>
+                            <td class="p-2 border" th:text="${s.dayOfWeek}"></td>
+                            <td class="p-2 border" th:text="${s.startTime + ' - ' + s.endTime}"></td>
+                            <td class="p-2 border" th:text="${s.semester}"></td>
+                            <td class="p-2 border" th:text="${s.academicYear}"></td>
+
+                            <!-- Status Badge -->
+                            <td class="p-2 border">
+                                <span class="px-2 py-1 rounded text-white text-xs"
+                                      th:text="${s.status}"
+                                      th:classappend="
+                                      ${s.status == 'SCHEDULED'} ? 'bg-green-500' :
+                                      (${s.status == 'CANCELLED'} ? 'bg-red-500' : 'bg-gray-400')">
+                                </span>
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="p-2 border text-center space-x-2">
+                                <a href="javascript:void(0);" 
+                                   class="text-yellow-500 hover:text-yellow-600 editScheduleBtn"
+                                   th:attr="data-url=@{/admin/schedules/{id}/edit(id=${s.id})}">
+                                   ✏️
+                                </a>
+
+                                <form th:action="@{/admin/schedules/{id}/delete(id=${s.id})}" method="post" class="inline">
+                                    <button type="submit" class="text-red-500 hover:text-red-600">🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(schedules)}">
+                            <td colspan="8" class="text-center p-6 text-gray-500">
+                                No schedules found
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        </main>        
+    </div>
 
-            <!-- Table -->
-            <table class="w-full border text-sm">
-                <thead class="bg-gray-100 text-left">
-                <tr>
-                    <th class="p-2 border">Course</th>
-                    <th class="p-2 border">Classroom</th>
-                    <th class="p-2 border">Day</th>
-                    <th class="p-2 border">Time</th>
-                    <th class="p-2 border">Semester</th>
-                    <th class="p-2 border">Year</th>
-                    <th class="p-2 border">Status</th>
-                    <th class="p-2 border text-center">Action</th>
-                </tr>
-                </thead>
+    <!-- Modal container -->
+    <div id="scheduleModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50"></div>
 
-                <tbody>
-                <tr th:each="s : ${schedules}" class="hover:bg-gray-50">
-                    <td class="p-2 border font-semibold"
-                        th:text="${s.course.courseCode}"></td>
+    <script>
+        function openScheduleModal(url) {
+            const modal = document.getElementById('scheduleModal');
+            
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    modal.innerHTML = html;
+                    modal.classList.remove('hidden');
 
-                    <td class="p-2 border"
-                        th:text="${s.classroom.building + '-' + s.classroom.roomNumber}"></td>
+                    // Close buttons
+                    const closeBtn = modal.querySelector('#modalCloseBtn');
+                    const cancelBtn = modal.querySelector('button#cancelModal');
 
-                    <td class="p-2 border"
-                        th:text="${s.dayOfWeek}"></td>
+                    if (closeBtn) {
+                        closeBtn.addEventListener('click', () => {
+                            modal.classList.add('hidden');
+                            modal.innerHTML = '';
+                        });
+                    }
 
-                    <td class="p-2 border"
-                        th:text="${s.startTime + ' - ' + s.endTime}"></td>
+                    if (cancelBtn) {
+                        cancelBtn.addEventListener('click', () => {
+                            modal.classList.add('hidden');
+                            modal.innerHTML = '';
+                        });
+                    }
 
-                    <td class="p-2 border"
-                        th:text="${s.semester}"></td>
+                    const form = modal.querySelector('form');
+                    if(form){
+                        form.addEventListener('submit', function(e){
+                            e.preventDefault();
+                            fetch(form.action, {
+                                method: form.method,
+                                body: new FormData(form)
+                            }).then(res=>{
+                                if(res.redirected){
+                                    window.location.href = res.url;
+                                } else {
+                                    return res.text();
+                                }
+                            }).then(newHtml=>{
+                                if(newHtml) modal.innerHTML = newHtml;
+                            });
+                        });
+                    }
+                });
+        }
 
-                    <td class="p-2 border"
-                        th:text="${s.academicYear}"></td>
+        // Open Add schedule modal
+        document.getElementById('openCreateSchedule')
+            .addEventListener('click', () => openScheduleModal('/admin/schedules/new'));
 
-                    <!-- Status Badge -->
-                    <td class="p-2 border">
-                        <span class="px-2 py-1 rounded text-white text-xs"
-                              th:text="${s.status}"
-                              th:classappend="
-                                ${s.status == 'SCHEDULED'} ? 'bg-green-500' :
-                                (${s.status == 'CANCELLED'} ? 'bg-red-500' :
-                                'bg-gray-400')">
-                        </span>
-                    </td>
-
-                    <!-- Actions -->
-                    <td class="p-2 border text-center space-x-2">
-                        <a th:href="@{/admin/schedules/{id}/edit(id=${s.id})}"
-                           class="text-yellow-500 hover:text-yellow-600">
-                            ✏️
-                        </a>
-
-                        <form th:action="@{/admin/schedules/{id}/delete(id=${s.id})}"
-                              method="post" class="inline">
-                            <button type="submit"
-                                    class="text-red-500 hover:text-red-600">
-                                🗑️
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-
-                <!-- Empty state -->
-                <tr th:if="${#lists.isEmpty(schedules)}">
-                    <td colspan="8" class="text-center p-6 text-gray-500">
-                        No schedules found
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-        </div>
-    </main>
-</div>
-
+        // Open Edit schedule modal
+        document.querySelectorAll('.editScheduleBtn').forEach(btn => {
+            btn.addEventListener('click', () => openScheduleModal(btn.getAttribute('data-url')));
+        });
+    </script>
 </body>
 </html>
