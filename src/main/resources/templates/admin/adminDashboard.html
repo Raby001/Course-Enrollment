@@ -55,7 +55,7 @@
             <!-- Dashboard Content -->
             <div class="p-8">
                 <!-- Stats Section -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 ">
                     <!-- Total Courses Card -->
                     <div class="stat-card bg-white rounded-xl shadow p-6">
                         <div class="flex items-start justify-between">
@@ -133,12 +133,6 @@
                             <button onclick="window.location.href='/admin/classrooms'" class="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition">
                                 <i class="fas fa-plus-circle mr-2"></i>Create New Class
                             </button>
-                            <button class="w-full bg-white text-purple-600 border border-purple-300 py-3 rounded-lg font-medium hover:bg-purple-50 transition">
-                                <i class="fas fa-link mr-2"></i>Connect Course to Class
-                            </button>
-                            <button class="w-full bg-white text-gray-700 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50 transition">
-                                <i class="fas fa-search mr-2"></i>Check Schedule Conflicts
-                            </button>
                         </div>
                         <div class="mt-6 pt-6 border-t border-purple-200">
                             <p class="text-sm text-gray-600">
@@ -163,12 +157,6 @@
                             <a href="/admin/courses/create" class="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 rounded-lg font-medium hover:shadow-lg transition block text-center">
                                 <i class="fas fa-plus mr-2"></i>Create New Course
                             </a>
-                            <a href="/admin/courses/edit" class="w-full bg-white text-green-600 border border-green-300 py-3 rounded-lg font-medium hover:bg-green-50 transition flex items-center justify-center">
-                                <i class="fas fa-edit mr-2"></i>Edit Course Content
-                            </a>
-                            <button class="w-full bg-white text-gray-700 border border-gray-300 py-3 rounded-lg font-medium hover:bg-gray-50 transition">
-                                <i class="fas fa-copy mr-2"></i>Duplicate Existing Course
-                            </button>
                         </div>
                         <div class="mt-6 pt-6 border-t border-green-200">
                             <p class="text-sm text-gray-600">
