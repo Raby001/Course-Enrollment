@@ -196,7 +196,6 @@ public class ScheduleService {
     }
 
     // Count schedules created this week
-
     public long countCreatedThisWeek() {
         LocalDateTime weekAgo = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
         return scheduleRepository.countByCreatedAtAfter(weekAgo);
