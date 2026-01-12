@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Course Management</title>
     <link rel="stylesheet" th:href="@{/css/tailwind.css}">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
     
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -16,19 +18,52 @@
             border-right: 3px solid #3b82f6;
         }
         
-        .stat-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        
         .btn-gradient {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         .btn-gradient:hover {
             background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+        }
+
+        /* Simple table hover */
+        .table-row:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Status badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        /* Action buttons */
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 0.375rem;
+        }
+
+        /* Search bar */
+        .search-container {
+            position: relative;
+        }
+        .search-container input:focus {
+            outline: none;
+            border-color: #3b82f6;
         }
     </style>
 </head>
@@ -40,161 +75,314 @@
 
         <!-- Main Content -->
         <main class="flex-1">
-            <!-- Top Bar -->
-            <header class="bg-white shadow-sm border-b px-8 py-4">
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b px-8 py-4 sticky top-0 z-40">
                 <div class="flex justify-between items-center">
                     <div>
                         <h1 class="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
                         <p class="text-gray-600">Welcome back, Administrator</p>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+                        <a href="/logout" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2">
+                            <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
                     </div>
                 </div>
             </header>
 
-            <section class="max-w-full mx-auto px-6 mt-10">
+            <!-- Content Area -->
+            <div class="p-8">
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 font-medium">Total Courses</p>
+                                <p class="text-3xl font-bold text-gray-800 mt-2" th:text="${courses.totalElements}">0</p>
+                            </div>
+                            <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-book text-2xl text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- ===== TITLE & ACTION ===== -->
-                <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-semibold">Course Management</h1>
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 font-medium">Active</p>
+                                <p class="text-3xl font-bold text-green-600 mt-2" 
+                                   th:text="${#lists.size(courses.content.?[status.toString() == 'ACTIVE'])}">0</p>
+                            </div>
+                            <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-check-circle text-2xl text-green-600"></i>
+                            </div>
+                        </div>
+                    </div>
 
-                    <a th:href="@{/admin/courses/create}"
-                       class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
-                        + Add Course
-                    </a>
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 font-medium">Draft</p>
+                                <p class="text-3xl font-bold text-blue-600 mt-2" 
+                                   th:text="${#lists.size(courses.content.?[status.toString() == 'DRAFT'])}">0</p>
+                            </div>
+                            <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-file-alt text-2xl text-blue-600"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm text-gray-600 font-medium">Inactive</p>
+                                <p class="text-3xl font-bold text-gray-600 mt-2" 
+                                   th:text="${#lists.size(courses.content.?[status.toString() == 'INACTIVE'])}">0</p>
+                            </div>
+                            <div class="w-14 h-14 bg-gray-100 rounded-xl flex items-center justify-center">
+                                <i class="fas fa-ban text-2xl text-gray-600"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- ===== SEARCH BAR ===== -->
-                <div class="mb-6">
-                    <form method="get" class="relative">
-                        <input type="text" 
-                               name="keyword"
-                               th:value="${keyword}"
-                               placeholder="Search courses..." 
-                               class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full max-w-md">
-                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-                    </form>
+                <!-- Main Content Card -->
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                    <!-- Card Header -->
+                    <div class="px-6 py-5 border-b border-gray-100">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                                    <i class="fas fa-book-open text-blue-600"></i>
+                                    Course Management
+                                </h2>
+                                <p class="text-sm text-gray-600 mt-1">Manage courses and curriculum</p>
+                            </div>
+
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <!-- Search Form -->
+                                <form method="get" class="search-container" id="searchForm">
+                                    <input type="text" 
+                                           id="searchInput"
+                                           name="keyword"
+                                           th:value="${keyword}"
+                                           placeholder="Search courses..." 
+                                           class="w-full sm:w-64 pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                                    <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                                </form>
+
+                                <!-- Add Button -->
+                                <a th:href="@{/admin/courses/create}"
+                                   class="btn-gradient text-white px-5 py-2.5 rounded-lg font-medium flex items-center justify-center gap-2 hover:shadow-lg transition-all whitespace-nowrap">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Add Course</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table Container -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr class="bg-gray-50 border-b border-gray-200">
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-hashtag text-gray-400"></i>
+                                            ID
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-book text-gray-400"></i>
+                                            Course
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-award text-gray-400"></i>
+                                            Credits
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-users text-gray-400"></i>
+                                            Enrollment
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center gap-2">
+                                            <i class="fas fa-info-circle text-gray-400"></i>
+                                            Status
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <i class="fas fa-cog text-gray-400"></i>
+                                            Actions
+                                        </div>
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="courseTableBody">
+                                <!-- Course Row -->
+                                <tr th:each="c : ${courses.content}" class="table-row border-b border-gray-100">
+                                    <!-- ID -->
+                                    <td class="px-6 py-4">
+                                        <span class="text-gray-600 font-medium" th:text="${c.id}">1</span>
+                                    </td>
+
+                                    <!-- Course (Image + Code + Name) -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <img th:src="${c.courseImage != null ? c.courseImage : 'https://via.placeholder.com/150x100?text=No+Image'}"
+                                                 alt="Course"
+                                                 class="w-16 h-12 object-cover rounded-lg border border-gray-200">
+                                            <div>
+                                                <div class="font-semibold text-gray-800" th:text="${c.courseCode}">CS101</div>
+                                                <div class="text-sm text-gray-600" th:text="${c.courseName}">Computer Science 101</div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Credits -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold">
+                                                <i class="fas fa-graduation-cap mr-1"></i>
+                                                <span th:text="${c.credits}">3</span> Credits
+                                            </span>
+                                        </div>
+                                    </td>
+
+                                    <!-- Enrollment -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col gap-1">
+                                            <div class="text-sm font-medium text-gray-700">
+                                                <span th:text="${c.currentEnrollmentCount}">25</span> / <span th:text="${c.maxCapacity}">30</span> students
+                                            </div>
+                                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                                <div class="bg-blue-500 h-2 rounded-full transition-all" 
+                                                     th:style="'width: ' + ${(c.currentEnrollmentCount * 100.0) / c.maxCapacity} + '%'"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <!-- Status -->
+                                    <td class="px-6 py-4">
+                                        <span th:if="${c.status.toString() == 'ACTIVE'}" class="status-badge bg-green-100 text-green-700">
+                                            <i class="fas fa-check-circle"></i>
+                                            Active
+                                        </span>
+                                        <span th:if="${c.status.toString() == 'INACTIVE'}" class="status-badge bg-gray-100 text-gray-700">
+                                            <i class="fas fa-ban"></i>
+                                            Inactive
+                                        </span>
+                                        <span th:if="${c.status.toString() == 'PENDING'}" class="status-badge bg-yellow-100 text-yellow-700">
+                                            <i class="fas fa-clock"></i>
+                                            Pending
+                                        </span>
+                                        <span th:if="${c.status.toString() == 'DRAFT'}" class="status-badge bg-blue-100 text-blue-700">
+                                            <i class="fas fa-file-alt"></i>
+                                            Draft
+                                        </span>
+                                        <span th:if="${c.status.toString() == 'CANCELLED'}" class="status-badge bg-red-100 text-red-700">
+                                            <i class="fas fa-times-circle"></i>
+                                            Cancelled
+                                        </span>
+                                        <span th:if="${c.status.toString() == 'COMPLETED'}" class="status-badge bg-purple-100 text-purple-700">
+                                            <i class="fas fa-check-double"></i>
+                                            Completed
+                                        </span>
+                                    </td>
+
+                                    <!-- Actions -->
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center justify-center gap-2">
+                                            <!-- Edit Button -->
+                                            <a th:href="@{/admin/courses/edit/{id}(id=${c.id})}"
+                                               class="action-btn bg-blue-100 text-blue-700 hover:bg-blue-200">
+                                                <i class="fas fa-edit"></i>
+                                                Edit
+                                            </a>
+
+                                            <!-- Delete Button -->
+                                            <form th:action="@{/admin/courses/delete/{id}(id=${c.id})}"
+                                                  method="post"
+                                                  class="inline"
+                                                  onsubmit="return confirm('Are you sure you want to delete this course?');">
+                                                <button type="submit"
+                                                        class="action-btn bg-red-100 text-red-700 hover:bg-red-200">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Empty State (No Courses at all) -->
+                                <tr th:if="${courses.content.isEmpty() && (keyword == null || keyword.isEmpty())}">
+                                    <td colspan="6" class="px-6 py-12">
+                                        <div class="flex flex-col items-center">
+                                            <i class="fas fa-book-open text-6xl text-gray-300 mb-4"></i>
+                                            <h3 class="text-xl font-semibold text-gray-600 mb-2">No Courses Found</h3>
+                                            <p class="text-gray-400 mb-4">Get started by creating your first course</p>
+                                            <a th:href="@{/admin/courses/create}" 
+                                               class="btn-gradient text-white px-6 py-2.5 rounded-lg font-medium flex items-center gap-2">
+                                                <i class="fas fa-plus"></i>
+                                                Create First Course
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <!-- Empty State (Search returned no results) -->
+                                <tr th:if="${courses.content.isEmpty() && keyword != null && !keyword.isEmpty()}">
+                                    <td colspan="6" class="px-6 py-12">
+                                        <div class="flex flex-col items-center">
+                                            <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
+                                            <h3 class="text-xl font-semibold text-gray-600 mb-2">No Results Found</h3>
+                                            <p class="text-gray-400">Try adjusting your search terms</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination Footer -->
+                    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                        <div class="flex items-center justify-between">
+                            <div class="text-sm text-gray-600">
+                                Showing <span class="font-semibold text-gray-800" th:text="${courses.numberOfElements}">0</span> 
+                                of <span class="font-semibold text-gray-800" th:text="${courses.totalElements}">0</span> courses
+                            </div>
+                            
+                            <!-- Pagination Controls -->
+                            <div class="flex items-center gap-2">
+                                <a th:if="${courses.hasPrevious()}"
+                                   th:href="@{/admin/courses(page=${courses.number-1},keyword=${keyword})}"
+                                   class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700">
+                                    <i class="fas fa-chevron-left"></i> Previous
+                                </a>
+
+                                <span class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg font-medium text-sm">
+                                    Page <span th:text="${courses.number + 1}">1</span> of <span th:text="${courses.totalPages}">1</span>
+                                </span>
+
+                                <a th:if="${courses.hasNext()}"
+                                   th:href="@{/admin/courses(page=${courses.number+1},keyword=${keyword})}"
+                                   class="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium text-gray-700">
+                                    Next <i class="fas fa-chevron-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- ===== COURSE TABLE ===== -->
-                <div class="bg-white rounded-lg shadow overflow-x-auto">
-
-                    <table class="w-full text-sm">
-                        <thead class="bg-gray-100 border-b">
-                            <tr class="text-left">
-                                <th class="px-4 py-3">ID</th>
-                                <th class="px-4 py-3">Image</th>
-                                <th class="px-4 py-3">Course Code</th>
-                                <th class="px-4 py-3">Course Name</th>
-                                <th class="px-4 py-3">Credits</th>
-                                <th class="px-4 py-3">Enrollment</th>
-                                <th class="px-4 py-3">Status</th>
-                                <th class="px-4 py-3 text-center">Actions</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                            <!-- ===== COURSE ROW ===== -->
-                            <tr th:each="c : ${courses.content}" class="border-b hover:bg-gray-50">
-
-                                <!-- ID -->
-                                <td class="px-4 py-3" th:text="${c.id}"></td>
-
-                                <!-- COURSE IMAGE -->
-                                <td class="px-4 py-3">
-                                    <img th:src="${c.courseImage != null ? c.courseImage : 'https://via.placeholder.com/150x100?text=No+Image'}"
-                                         alt="Course Image"
-                                         class="w-16 h-12 object-cover rounded">
-                                </td>
-
-                                <!-- COURSE CODE -->
-                                <td class="px-4 py-3 font-medium" th:text="${c.courseCode}"></td>
-
-                                <!-- COURSE NAME -->
-                                <td class="px-4 py-3" th:text="${c.courseName}"></td>
-
-                                <!-- CREDITS -->
-                                <td class="px-4 py-3" th:text="${c.credits}"></td>
-
-                                <!-- ENROLLMENT (Current / Max) -->
-                                <td class="px-4 py-3">
-                                    <span th:text="${c.currentEnrollmentCount}"></span> / 
-                                    <span th:text="${c.maxCapacity}"></span>
-                                    <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
-                                        <div class="bg-blue-500 h-2 rounded-full" 
-                                             th:style="'width: ' + ${(c.currentEnrollmentCount * 100.0) / c.maxCapacity} + '%'"></div>
-                                    </div>
-                                </td>
-
-                                <!-- STATUS -->
-                                <td class="px-4 py-3">
-                                    <span th:text="${c.status}"
-                                          th:classappend="${c.status == 'ACTIVE' ? 'bg-green-500' :
-                                                           c.status == 'INACTIVE' ? 'bg-gray-400' :
-                                                           c.status == 'PENDING' ? 'bg-yellow-400' :
-                                                           'bg-blue-400'}"
-                                          class="text-white px-3 py-1 rounded text-xs">
-                                    </span>
-                                </td>
-
-                                <!-- ACTIONS -->
-                                <td class="px-4 py-3 text-center space-x-2">
-
-                                    <!-- EDIT -->
-                                    <a th:href="@{/admin/courses/edit/{id}(id=${c.id})}"
-                                       class="px-3 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600">
-                                        Edit
-                                    </a>
-
-                                    <!-- DELETE -->
-                                    <form th:action="@{/admin/courses/delete/{id}(id=${c.id})}"
-                                          method="post"
-                                          class="inline"
-                                          onsubmit="return confirm('Are you sure you want to delete this course?');">
-                                        <button type="submit"
-                                                class="px-3 py-1 bg-red-500 text-white rounded text-xs hover:bg-red-600">
-                                            Delete
-                                        </button>
-                                    </form>
-
-                                </td>
-
-                            </tr>
-
-                            <!-- EMPTY STATE -->
-                            <tr th:if="${courses.content.isEmpty()}">
-                                <td colspan="8" class="text-center py-6 text-gray-500">
-                                    No courses found.
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- ===== PAGINATION ===== -->
-                <div class="flex justify-center gap-2 mt-6">
-                    <a th:if="${courses.hasPrevious()}"
-                       th:href="@{/admin/courses(page=${courses.number-1},keyword=${keyword})}"
-                       class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-colors">
-                        <i class="fas fa-chevron-left mr-1"></i> Prev
-                    </a>
-
-                    <span class="px-4 py-2 bg-blue-600 text-white rounded font-medium"
-                          th:text="${courses.number+1}"></span>
-
-                    <a th:if="${courses.hasNext()}"
-                       th:href="@{/admin/courses(page=${courses.number+1},keyword=${keyword})}"
-                       class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition-colors">
-                        Next <i class="fas fa-chevron-right ml-1"></i>
-                    </a>
-                </div>
-
-            </section>
+            </div>
         </main>
     </div>
 </body>

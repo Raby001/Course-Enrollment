@@ -39,13 +39,13 @@
         <div class="relative group">
           <button class="flex items-center focus:outline-none">
             <img th:if="${currentUser != null}"
-                 th:src="${currentUser.userImage ?: 'https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg'}"
+                 th:src="${currentUser.userImage ?: 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
                  class="w-11 h-11 rounded-full border border-gray-300 shadow-sm
                         hover:ring-2 hover:ring-teal-400 transition"
                  alt="Profile"/>
 
             <img th:if="${currentUser == null}"
-                 src="https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg"
+                 src="https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png"
                  class="w-11 h-11 rounded-full border border-gray-300"
                  alt="Profile"/>
           </button>

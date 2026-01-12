@@ -5,12 +5,15 @@ import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.Schedule;
 import enroll_management.enroll_management.dto.admin.ScheduleDTO;
 import enroll_management.enroll_management.dto.admin.TimeTableRowDTO;
+import enroll_management.enroll_management.enums.ScheduleStatus;
 import enroll_management.enroll_management.repositories.ClassroomRepository;
 import enroll_management.enroll_management.repositories.CourseRepository;
 import enroll_management.enroll_management.repositories.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -33,6 +36,11 @@ public class ScheduleService {
     public Schedule findById(Long id) {
         return scheduleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Schedule not found"));
+    }   
+
+    // Get only active schedules
+        public List<Schedule> findActiveSchedules() {
+        return scheduleRepository.findByStatusNot("CANCELLED");
     }
 
     public ScheduleDTO getDTOById(Long id) {
@@ -56,7 +64,7 @@ public class ScheduleService {
 
     public Schedule create(ScheduleDTO dto) {
 
-        validateConflict(dto);
+        validateConflictForCreate(dto);
 
         Course course = courseRepository.findById(dto.getCourseId())
                 .orElseThrow(() -> new RuntimeException("Course not found"));
@@ -83,7 +91,7 @@ public class ScheduleService {
 
     public void update(Long id, ScheduleDTO dto) {
         
-        validateConflict(dto);
+        validateConflictForUpdate(id, dto);
 
         Schedule existing = findById(id);
 
@@ -112,17 +120,39 @@ public class ScheduleService {
     }
 
     /* ===================== VALIDATION ===================== */
-    private void validateConflict(ScheduleDTO dto) {        
-
+    
+    // For CREATE - check if ANY schedule conflicts
+    private void validateConflictForCreate(ScheduleDTO dto) {        
         Classroom classroom = classroomRepository.findById(dto.getClassroomId())
                 .orElseThrow(() -> new RuntimeException("Classroom not found"));
 
-        boolean conflict = scheduleRepository.existsByClassroomAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(
-            classroom,
-            dto.getDayOfWeek(),
-            dto.getEndTime(),
-            dto.getStartTime()
-        );
+        boolean conflict = scheduleRepository
+                .existsByClassroomAndDayOfWeekAndStartTimeLessThanAndEndTimeGreaterThan(
+                    classroom,
+                    dto.getDayOfWeek(),
+                    dto.getEndTime(),
+                    dto.getStartTime()
+                );
+        
+        if (conflict) {
+            throw new IllegalStateException("Schedule conflict: Classroom already in use");
+        }
+    }
+
+    // For UPDATE - check if any OTHER schedule conflicts (exclude current one)
+    private void validateConflictForUpdate(Long scheduleId, ScheduleDTO dto) {
+        Classroom classroom = classroomRepository.findById(dto.getClassroomId())
+                .orElseThrow(() -> new RuntimeException("Classroom not found"));
+
+        boolean conflict = scheduleRepository
+                .existsByClassroomAndDayOfWeekAndIdNotAndStartTimeLessThanAndEndTimeGreaterThan(
+                    classroom,
+                    dto.getDayOfWeek(),
+                    scheduleId,  // Exclude this schedule from conflict check
+                    dto.getEndTime(),
+                    dto.getStartTime()
+                );
+
         if (conflict) {
             throw new IllegalStateException("Schedule conflict: Classroom already in use");
         }
@@ -149,5 +179,25 @@ public class ScheduleService {
         return new ArrayList<>(rows.values());
     }
 
+     
+    //  Count all schedules
+     
+    public long countAll() {
+        return scheduleRepository.count();
+    }
 
+    // Count schedules by status
+  
+    public long countByStatus(ScheduleStatus status) {
+        List<Schedule> allSchedules = scheduleRepository.findAll();
+        return allSchedules.stream()
+                .filter(s -> status.name().equals(s.getStatus()))
+                .count();
+    }
+
+    // Count schedules created this week
+    public long countCreatedThisWeek() {
+        LocalDateTime weekAgo = LocalDateTime.now().minus(7, ChronoUnit.DAYS);
+        return scheduleRepository.countByCreatedAtAfter(weekAgo);
+    }
 }

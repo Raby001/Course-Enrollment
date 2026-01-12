@@ -28,7 +28,8 @@ public class StudentScheduleService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Schedule> getStudentSchedule() {
+    // NEW METHOD: Get only active schedules (excludes cancelled)
+    public List<Schedule> getActiveStudentSchedule() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
@@ -39,7 +40,12 @@ public class StudentScheduleService {
                 .collect(Collectors.toList());
 
         // Get schedules for those courses
-        return scheduleRepository.findByCourseIdIn(courseIds);
+        List<Schedule> allSchedules = scheduleRepository.findByCourseIdIn(courseIds);
+        
+        // Filter out cancelled schedules
+        return allSchedules.stream()
+                .filter(s -> !"CANCELLED".equals(s.getStatus()))
+                .collect(Collectors.toList());
     }
 
     // Build weekly timetable rows

@@ -32,7 +32,7 @@ public class StudentProfileController {
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
-        dto.setDob(user.getDob());
+        dto.setDob(user.getDob() != null ? user.getDob() : null);
         List<EnrollmentDto> enrolledCourses = profileService.getMyEnrollments();
 
         model.addAttribute("profile", dto);
@@ -42,17 +42,31 @@ public class StudentProfileController {
     }
 
     @PostMapping("/update")
-    public String updateProfile(@Valid @ModelAttribute("profile") StudentProfileDto dto,
-                                BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "student/profile"; // ⚠ Make sure "profile" attribute is still in model
-        }
+    public String updateProfile(
+            @Valid @ModelAttribute("profile") StudentProfileDto dto,
+            BindingResult bindingResult,
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
-        profileService.updateProfile(dto.getFirstName(), dto.getLastName(), dto.getEmail(), dto.getDob());
+            if (bindingResult.hasErrors()) {
+                model.addAttribute("profile", dto); // 🔑 IMPORTANT
+                model.addAttribute("user", profileService.getCurrentUser());
+                model.addAttribute("enrolledCourses", profileService.getMyEnrollments());
+                return "student/profile";
+            }
+
+
+        profileService.updateProfile(
+                dto.getFirstName(),
+                dto.getLastName(),
+                dto.getEmail(),
+                dto.getDob()
+        );
+
         redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
         return "redirect:/student/profile";
     }
+
 
     @PostMapping("/upload-image")
     public String uploadImage(@RequestParam("image") MultipartFile image,
