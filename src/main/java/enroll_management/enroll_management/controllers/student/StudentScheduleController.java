@@ -20,7 +20,8 @@ public class StudentScheduleController {
     @GetMapping("/student/schedules")
     public String viewSchedule(Model model) {
 
-        List<Schedule> schedules = scheduleService.getStudentSchedule();
+        // Changed: Get only active schedules (excludes cancelled)
+        List<Schedule> schedules = scheduleService.getActiveStudentSchedule();
 
         List<TimeTableRowDTO> rows = scheduleService.buildWeeklyTimetable(schedules);
         

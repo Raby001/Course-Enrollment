@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import enroll_management.enroll_management.Entities.Enrollment;
+import enroll_management.enroll_management.enums.ScheduleStatus;
 import enroll_management.enroll_management.services.common.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +20,9 @@ public class AdminController {
 
     @Autowired
     private enroll_management.enroll_management.services.admin.EnrollmentService enrollmentService;
+
+    @Autowired
+    private enroll_management.enroll_management.services.common.ScheduleService scheduleService;
     
     @GetMapping("/admin/adminDashboard")
     public String adminDashboard(Model model){
@@ -37,6 +41,11 @@ public class AdminController {
         model.addAttribute("activeCourses", courseService.getActiveCoursesCount());
         model.addAttribute("draftCourses", courseService.getDraftCourses());
         model.addAttribute("pendingCourses", courseService.getPendingCourses());
+
+        model.addAttribute("totalSchedules", scheduleService.countAll());
+        model.addAttribute("scheduledSchedules", scheduleService.countByStatus(ScheduleStatus.SCHEDULED));
+        model.addAttribute("cancelledSchedules", scheduleService.countByStatus(ScheduleStatus.CANCELLED));
+        model.addAttribute("newSchedulesThisWeek", scheduleService.countCreatedThisWeek());
 
         Enrollment latestEnrollment = enrollmentService.getLatestEnrollment();
         model.addAttribute("lastEnrollmentDate", 
