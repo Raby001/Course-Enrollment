@@ -24,6 +24,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
+        if (user.getStatus() != enroll_management.enroll_management.enums.UserStatus.ACTIVE) {
+            throw new org.springframework.security.authentication.DisabledException(
+                "User account is inactive. Please contact admin."
+            );
+        }
+
         String roleName = user.getRole().getName().name(); // e.g., "ADMIN", "STUDENT"
 
         // Spring Security expects role names to start with "ROLE_"

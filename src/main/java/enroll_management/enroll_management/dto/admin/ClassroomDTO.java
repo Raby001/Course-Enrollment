@@ -8,75 +8,40 @@ public class ClassroomDTO {
 
     private Long id;
 
-    @NotBlank(message = "Building is required")
+    @NotBlank
     private String building;
 
-    @NotBlank(message = "Room number is required")
+    @NotBlank
     private String roomNumber;
 
-    @NotNull(message = "Capacity is required")
-    @Min(value = 1, message = "Capacity must be at least 1")
+    @NotNull
+    @Min(1)
     private Integer capacity;
 
     private Boolean hasProjector;
     private Boolean hasComputer;
     private String status;
 
-    // ===== GETTERS & SETTERS =====
+    // getters & setters
 
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getBuilding() { return building; }
+    public void setBuilding(String building) { this.building = building; }
 
-    public String getBuilding() {
-        return building;
-    }
+    public String getRoomNumber() { return roomNumber; }
+    public void setRoomNumber(String roomNumber) { this.roomNumber = roomNumber; }
 
-    public void setBuilding(String building) {
-        this.building = building;
-    }
+    public Integer getCapacity() { return capacity; }
+    public void setCapacity(Integer capacity) { this.capacity = capacity; }
 
-    public String getRoomNumber() {
-        return roomNumber;
-    }
+    public Boolean getHasProjector() { return hasProjector; }
+    public void setHasProjector(Boolean hasProjector) { this.hasProjector = hasProjector; }
 
-    public void setRoomNumber(String roomNumber) {
-        this.roomNumber = roomNumber;
-    }
+    public Boolean getHasComputer() { return hasComputer; }
+    public void setHasComputer(Boolean hasComputer) { this.hasComputer = hasComputer; }
 
-    public Integer getCapacity() {
-        return capacity;
-    }
-
-    public void setCapacity(Integer capacity) {
-        this.capacity = capacity;
-    }
-
-    public Boolean getHasProjector() {
-        return hasProjector;
-    }
-
-    public void setHasProjector(Boolean hasProjector) {
-        this.hasProjector = hasProjector;
-    }
-
-    public Boolean getHasComputer() {
-        return hasComputer;
-    }
-
-    public void setHasComputer(Boolean hasComputer) {
-        this.hasComputer = hasComputer;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

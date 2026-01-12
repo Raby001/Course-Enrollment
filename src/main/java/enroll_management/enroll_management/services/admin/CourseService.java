@@ -1,16 +1,23 @@
 package enroll_management.enroll_management.services.admin;
 
+
 import enroll_management.enroll_management.Entities.Course;
 import enroll_management.enroll_management.Entities.User;
 import enroll_management.enroll_management.dto.admin.CourseCreateUpdateDto;
 import enroll_management.enroll_management.dto.admin.CourseDto;
+import enroll_management.enroll_management.enums.CourseStatus;
+import enroll_management.enroll_management.enums.EnrollmentStatus;
 import enroll_management.enroll_management.exception.ResourceNotFoundException;
 import enroll_management.enroll_management.repositories.CourseRepository;
-import enroll_management.enroll_management.repositories.UserRepository; // You will need this
-import org.modelmapper.ModelMapper;
+import enroll_management.enroll_management.repositories.EnrollmentRepository;
+import enroll_management.enroll_management.repositories.UserRepository;
+import enroll_management.enroll_management.services.common.ImageUploadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,77 +28,208 @@ public class CourseService {
     private CourseRepository courseRepository;
 
     @Autowired
-    private UserRepository userRepository; 
+    private UserRepository userRepository;
 
     @Autowired
-    private ModelMapper modelMapper;
+    private ImageUploadService imageUploadService;
+
+    @Autowired
+    private EnrollmentRepository enrollmentRepository;
+
+
+    // =========================
+    // READ
+    // =========================
 
     public List<CourseDto> getAllCourses() {
-        return courseRepository.findAll().stream()
+        return courseRepository.findAll()
+                .stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     public CourseDto getCourseById(Long id) {
         Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course", "id", id));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course", "id", id));
         return convertToDto(course);
     }
 
-    public CourseDto createCourse(CourseCreateUpdateDto courseDto) {
-        // Convert DTO to Entity
-        Course newCourse = convertToEntity(courseDto);
-        
-        // Fetch the lecturer (User) and set it
-        User lecturer = userRepository.findById(courseDto.getLecturerId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", courseDto.getLecturerId()));
-        newCourse.setLecturer(lecturer);
-
-        Course savedCourse = courseRepository.save(newCourse);
-        return convertToDto(savedCourse);
+    public List<CourseDto> getActiveCourses() {
+        return courseRepository.findByStatus(CourseStatus.ACTIVE)
+                .stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
-    public CourseDto updateCourse(Long id, CourseCreateUpdateDto courseDetails) {
-        Course existingCourse = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course", "id", id));
+    // =========================
+    // CREATE
+    // =========================
 
-        // Update fields from DTO
-        existingCourse.setCourseCode(courseDetails.getCourseCode());
-        existingCourse.setCourseName(courseDetails.getCourseName());
-        existingCourse.setDescription(courseDetails.getDescription());
-        existingCourse.setCredits(courseDetails.getCredits());
-        existingCourse.setMaxCapacity(courseDetails.getMaxCapacity());
+    public CourseDto createCourse(CourseCreateUpdateDto dto) {
 
-        // Update lecturer if changed
-        if (!existingCourse.getLecturer().getId().equals(courseDetails.getLecturerId())) {
-            User newLecturer = userRepository.findById(courseDetails.getLecturerId())
-                .orElseThrow(() -> new ResourceNotFoundException("User", "id", courseDetails.getLecturerId()));
-            existingCourse.setLecturer(newLecturer);
+        Course course = new Course();
+
+        // ===== BASIC FIELDS =====
+        course.setCourseCode(dto.getCourseCode());
+        course.setCourseName(dto.getCourseName());
+        course.setDescription(dto.getDescription());
+        course.setCredits(dto.getCredits());
+        course.setMaxCapacity(dto.getMaxCapacity());
+
+        // ===== STATUS =====
+        course.setStatus(
+                dto.getStatus() != null ? dto.getStatus() : CourseStatus.DRAFT
+        );
+
+        // ===== LECTURER =====
+        User lecturer = userRepository.findById(dto.getLecturerId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User", "id", dto.getLecturerId()));
+        course.setLecturer(lecturer);
+
+        // ===== IMAGE UPLOAD (TRY–CATCH) =====
+        if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
+            try {
+                String imageUrl = imageUploadService.uploadImage(dto.getImageFile());
+                course.setCourseImage(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload course image", e);
+            }
         }
 
-        Course updatedCourse = courseRepository.save(existingCourse);
-        return convertToDto(updatedCourse);
+        Course saved = courseRepository.save(course);
+        return convertToDto(saved);
     }
+
+    // =========================
+    // UPDATE
+    // =========================
+
+    public CourseDto updateCourse(Long id, CourseCreateUpdateDto dto) {
+
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course", "id", id));
+
+        // ===== BASIC FIELDS =====
+        course.setCourseCode(dto.getCourseCode());
+        course.setCourseName(dto.getCourseName());
+        course.setDescription(dto.getDescription());
+        course.setCredits(dto.getCredits());
+        course.setMaxCapacity(dto.getMaxCapacity());
+
+        // ===== STATUS =====
+        if (dto.getStatus() != null) {
+            course.setStatus(dto.getStatus());
+        }
+
+        // ===== LECTURER =====
+        if (dto.getLecturerId() != null &&
+                !course.getLecturer().getId().equals(dto.getLecturerId())) {
+
+            User lecturer = userRepository.findById(dto.getLecturerId())
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("User", "id", dto.getLecturerId()));
+
+            course.setLecturer(lecturer);
+        }
+
+        // ===== IMAGE REPLACEMENT (TRY–CATCH) =====
+        if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
+            try {
+                String imageUrl = imageUploadService.uploadImage(dto.getImageFile());
+                course.setCourseImage(imageUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to upload course image", e);
+            }
+        }
+        // else → keep old image automatically
+
+        Course updated = courseRepository.save(course);
+        return convertToDto(updated);
+    }
+
+    // =========================
+    // DELETE
+    // =========================
 
     public void deleteCourse(Long id) {
         Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course", "id", id));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Course", "id", id));
         courseRepository.delete(course);
     }
 
-    // --- Helper Methods for Conversion ---
+    // =========================
+    // SEARCH + PAGINATION
+    // =========================
+
+    public Page<CourseDto> searchCourses(String keyword, int page) {
+        return courseRepository
+                .findByCourseNameContainingIgnoreCase(
+                        keyword,
+                        PageRequest.of(page, 5)
+                )
+                .map(this::convertToDto);
+    }
+
+    // =========================
+    // DTO MAPPING
+    // =========================
 
     private CourseDto convertToDto(Course course) {
-        CourseDto courseDto = modelMapper.map(course, CourseDto.class);
-        // Manually map fields that ModelMapper can't handle directly
-        courseDto.setLecturerId(course.getLecturer().getId());
-        courseDto.setLecturerName(course.getLecturer().getFullName()); // Assuming User has getFullName()
-        courseDto.setCurrentEnrollmentCount(course.getCurrentEnrollmentCount());
-        return courseDto;
+
+        CourseDto dto = new CourseDto();
+
+        dto.setId(course.getId());
+        dto.setCourseCode(course.getCourseCode());
+        dto.setCourseName(course.getCourseName());
+        dto.setDescription(course.getDescription());
+        dto.setCredits(course.getCredits());
+        dto.setMaxCapacity(course.getMaxCapacity());
+        dto.setCourseImage(course.getCourseImage());
+
+        if (course.getStatus() != null) {
+            dto.setStatus(course.getStatus().name());
+        }
+
+        if (course.getLecturer() != null) {
+            dto.setLecturerId(course.getLecturer().getId());
+            dto.setLecturerName(course.getLecturer().getFullName());
+        } else {
+            dto.setLecturerName("Not assigned");
+        }
+
+
+       long enrolledCount =
+        enrollmentRepository.countByCourseIdAndStatus(
+                course.getId(),
+                EnrollmentStatus.ENROLLED
+        );
+
+dto.setCurrentEnrollmentCount((int) enrolledCount);
+
+
+        return dto;
     }
 
-    private Course convertToEntity(CourseCreateUpdateDto courseDto) {
-        // We map to a base Course entity, relationships are handled in the service method
-        return modelMapper.map(courseDto, Course.class);
+
+    public long getTotalCourses() {
+        return courseRepository.count();
     }
+
+    public long getActiveCoursesCount() {
+        return courseRepository.countByStatus(CourseStatus.ACTIVE);
+    }
+
+
+    public long getDraftCourses() {
+        return courseRepository.countByStatus(CourseStatus.DRAFT);
+    }
+
+    public long getPendingCourses() {
+        return courseRepository.countByStatus(CourseStatus.PENDING);
+    }
+
 }

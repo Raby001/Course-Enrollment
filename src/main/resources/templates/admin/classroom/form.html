@@ -1,0 +1,130 @@
+<!-- templates/admin/classroom/form.html -->
+<div th:fragment="classroomForm" class="bg-white w-full max-w-2xl rounded-xl shadow-2xl relative">
+
+  <!-- Modal Header -->
+  <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+      <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+        <i class="fas fa-building text-blue-600"></i>
+      </div>
+      <span th:text="${classroom.id == null} ? 'Add Classroom' : 'Edit Classroom'">Add Classroom</span>
+    </h2>
+    <button id="closeModal" 
+            class="text-gray-400 hover:text-gray-600 transition-colors text-2xl font-bold w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100">
+      &times;
+    </button>
+  </div>
+
+  <!-- Modal Body -->
+  <div class="px-6 py-6">
+    <form th:object="${classroom}"
+          th:action="${classroom.id == null} ? @{/admin/classrooms} : @{/admin/classrooms/{id}(id=${classroom.id})}"
+          method="post">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <!-- Building -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fas fa-building text-gray-400 mr-1"></i>
+            Building
+          </label>
+          <input type="text" 
+                 th:field="*{building}" 
+                 class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                 placeholder="e.g., Building A"
+                 required>
+        </div>
+
+        <!-- Room Number -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            <i class="fas fa-door-closed text-gray-400 mr-1"></i>
+            Room Number
+          </label>
+          <input type="text" 
+                 th:field="*{roomNumber}" 
+                 class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                 placeholder="e.g., 101"
+                 required>
+        </div>
+      </div>
+
+      <!-- Capacity -->
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <i class="fas fa-users text-gray-400 mr-1"></i>
+          Capacity
+        </label>
+        <input type="number" 
+               th:field="*{capacity}" 
+               class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+               placeholder="e.g., 30"
+               min="1"
+               required>
+      </div>
+
+      <!-- Equipment -->
+      <div class="mb-4">
+        <label class="block text-sm font-semibold text-gray-700 mb-3">
+          <i class="fas fa-laptop text-gray-400 mr-1"></i>
+          Equipment
+        </label>
+        <div class="flex gap-6">
+          <label class="flex items-center gap-2 cursor-pointer group">
+            <input type="checkbox" 
+                   th:field="*{hasComputer}"
+                   class="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500 cursor-pointer">
+            <span class="text-gray-700 group-hover:text-blue-600 transition-colors flex items-center gap-2">
+              <i class="fas fa-desktop text-blue-600"></i>
+              Computer
+            </span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer group">
+            <input type="checkbox" 
+                   th:field="*{hasProjector}"
+                   class="w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-2 focus:ring-purple-500 cursor-pointer">
+            <span class="text-gray-700 group-hover:text-purple-600 transition-colors flex items-center gap-2">
+              <i class="fas fa-video text-purple-600"></i>
+              Projector
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="mb-6">
+        <label class="block text-sm font-semibold text-gray-700 mb-2">
+          <i class="fas fa-info-circle text-gray-400 mr-1"></i>
+          Status
+        </label>
+        <select th:field="*{status}" 
+                class="w-full border border-gray-300 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white">
+          <option value="AVAILABLE">
+             Available
+          </option>
+          <option value="MAINTENANCE">
+             Maintenance
+          </option>
+          <option value="CLOSED">
+             Closed
+          </option>
+        </select>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-200">
+        <button type="button" 
+                id="cancelModal" 
+                class="px-6 py-2.5 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+          Cancel
+        </button>
+        <button type="submit"
+                class="px-6 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm hover:shadow">
+          <i class="fas fa-save"></i>
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+
+</div>

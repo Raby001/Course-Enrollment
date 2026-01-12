@@ -48,6 +48,9 @@ public class User {
     @Past(message = "Date of birth must be in the past")
     private LocalDate dob;
 
+    @Column(name = "profile_image", length = 500, nullable = true)
+    private String profileImage;
+
     public String getFormattedDob() {
         if (dob == null) {
             return "";

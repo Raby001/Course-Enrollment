@@ -13,7 +13,7 @@
   <!-- IMAGE PANEL -->
   <div id="imagePanel"
        class="absolute top-0 left-0 w-1/2 h-full bg-white rounded-xl flex items-center justify-center transition-transform duration-700 ease-in-out z-20">
-    <img src="https://img.freepik.com/premium-photo/closeup-photo-stack-textbooks_368913-2207.jpg" alt="Auth Image" class="w-[80%] h-[80%] object-contain">
+    <img src="https://image2url.com/r2/default/images/1766941608697-403e1ffc-30cf-44b2-8672-4ca539900c26.png" alt="Auth Image" class="w-[80%] h-[80%] object-contain">
     
   </div>
 
@@ -27,7 +27,7 @@
 
       <!-- ✅ ERROR MESSAGE -->
       <div th:if="${param.error}" class="text-red-600 text-sm text-center mb-4">
-        Invalid username or password.
+        Invalid username or password or inactive account.
       </div>
 
       <form th:action="@{/login}" method="post" class="space-y-4">

@@ -1,5 +1,6 @@
 package enroll_management.enroll_management.services.admin;
 
+
 import enroll_management.enroll_management.Entities.Classroom;
 import enroll_management.enroll_management.dto.admin.ClassroomDTO;
 import enroll_management.enroll_management.repositories.ClassroomRepository;
@@ -12,38 +13,39 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClassroomService {
 
-    private final ClassroomRepository classroomRepository;
+    private final ClassroomRepository repository;
 
-    public List<Classroom> getAll() {
-        return classroomRepository.findAll();
+    public List<Classroom> findAll() {
+        return repository.findAll();
     }
 
-    public Classroom getById(Long id) {
-        return classroomRepository.findById(id).orElseThrow(() -> new RuntimeException("Classroom not found"));
+    public Classroom findById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Classroom not found"));
     }
 
-    public Classroom create(ClassroomDTO dto) {
-        Classroom classroom = new Classroom();
-        mapToEntity(dto, classroom);
-        return classroomRepository.save(classroom);
+    public void create(ClassroomDTO dto) {
+        Classroom c = new Classroom();
+        map(dto, c);
+        repository.save(c);
     }
 
-    public Classroom update(Long id, ClassroomDTO dto) {
-        Classroom classroom = getById(id);
-        mapToEntity(dto, classroom);
-        return classroomRepository.save(classroom);
+    public void update(Long id, ClassroomDTO dto) {
+        Classroom c = findById(id);
+        map(dto, c);
+        repository.save(c);
     }
 
     public void delete(Long id) {
-        classroomRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
-    private void mapToEntity(ClassroomDTO dto, Classroom classroom) {
-        classroom.setBuilding(dto.getBuilding());
-        classroom.setRoomNumber(dto.getRoomNumber());
-        classroom.setCapacity(dto.getCapacity());
-        classroom.setHasProjector(dto.getHasProjector());
-        classroom.setHasComputer(dto.getHasComputer());
-        classroom.setStatus(dto.getStatus() != null ? dto.getStatus() : "AVAILABLE");
+    private void map(ClassroomDTO dto, Classroom c) {
+        c.setBuilding(dto.getBuilding());
+        c.setRoomNumber(dto.getRoomNumber());
+        c.setCapacity(dto.getCapacity());
+        c.setHasProjector(dto.getHasProjector());
+        c.setHasComputer(dto.getHasComputer());
+        c.setStatus(dto.getStatus() == null ? "AVAILABLE" : dto.getStatus());
     }
 }

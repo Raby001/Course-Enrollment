@@ -2,9 +2,10 @@ package enroll_management.enroll_management.dto.student;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
 import java.time.LocalDate;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class StudentProfileDto {
 
@@ -18,9 +19,9 @@ public class StudentProfileDto {
     @Email(message = "Email should be valid")
     private String email;
 
-    @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
-    private LocalDate dob;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate dob; 
 
     // Getters & Setters
     public String getFirstName() {
