@@ -5,6 +5,8 @@ import enroll_management.enroll_management.dto.admin.EnrollmentDto;
 import enroll_management.enroll_management.dto.student.StudentProfileDto;
 import enroll_management.enroll_management.services.student.StudentProfileService;
 import jakarta.validation.Valid;
+
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -48,23 +50,39 @@ public class StudentProfileController {
             Model model,
             RedirectAttributes redirectAttributes) {
 
-            if (bindingResult.hasErrors()) {
-                model.addAttribute("profile", dto); // 🔑 IMPORTANT
-                model.addAttribute("user", profileService.getCurrentUser());
-                model.addAttribute("enrolledCourses", profileService.getMyEnrollments());
-                return "student/profile";
-            }
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("profile", dto);
+            model.addAttribute("user", profileService.getCurrentUser());
+            model.addAttribute("enrolledCourses", profileService.getMyEnrollments());
+            return "student/profile";
+        }
 
+        try {
+            profileService.updateProfile(
+                    dto.getFirstName(),
+                    dto.getLastName(),
+                    dto.getEmail(),
+                    dto.getDob()
+            );
+            redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
+            return "redirect:/student/profile";
 
-        profileService.updateProfile(
-                dto.getFirstName(),
-                dto.getLastName(),
-                dto.getEmail(),
-                dto.getDob()
-        );
+        } catch (IllegalStateException e) {
+            // business validation (your manual check)
+            model.addAttribute("profile", dto);
+            model.addAttribute("user", profileService.getCurrentUser());
+            model.addAttribute("enrolledCourses", profileService.getMyEnrollments());
+            model.addAttribute("error", e.getMessage());
+            return "student/profile";
 
-        redirectAttributes.addFlashAttribute("success", "Profile updated successfully!");
-        return "redirect:/student/profile";
+        } catch (DataIntegrityViolationException e) {
+            // 🔑 database-level safety net
+            model.addAttribute("profile", dto);
+            model.addAttribute("user", profileService.getCurrentUser());
+            model.addAttribute("enrolledCourses", profileService.getMyEnrollments());
+            model.addAttribute("error", "Email is already in use by another account");
+            return "student/profile";
+        }
     }
 
 
