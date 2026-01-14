@@ -1,10 +1,13 @@
 package enroll_management.enroll_management.dto.admin;
 
+import jakarta.validation.constraints.*;
 
-// The client only needs to provide the student and course IDs to create an enrollment.
-// The system will handle the rest.
+
 public class EnrollmentCreateDto {
+
+    @NotNull(message="Student ID is required")
     private Long studentId;
+    @NotNull(message="Course ID is required")
     private Long courseId;
 
     // Getters and Setters

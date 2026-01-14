@@ -1,17 +1,38 @@
 package enroll_management.enroll_management.dto.admin;
 
 import org.springframework.web.multipart.MultipartFile;
+import jakarta.validation.constraints.*;
 
 import enroll_management.enroll_management.enums.CourseStatus;
 
 public class CourseCreateUpdateDto {
+
+    @NotBlank(message="Course code is required")
+    @Size(min=3, max=20, message = "Course code must be 3-20 characters")
     private String courseCode;
+
+    @NotBlank(message="Course name is required")
+    @Size(min=3, max=100, message = "Course name must be 3-100 characters")
     private String courseName;
+
+    @Size(max=500, message = "Description can be up to 500 characters")
     private String description;
+
+    @NotNull(message="Credits are required")
+    @Min(value=1, message="Credits must be at least 1")
+    @Max(value=10, message="Credits cannot exceed 10")
     private Integer credits;
+
+    @NotNull(message="Max capacity is required")
+    @Min(value=1, message="Max capacity must be at least 1")
+    @Max(value=500, message="Max capacity cannot exceed 500")
     private Integer maxCapacity;
+
+
     private String courseImage;
     private MultipartFile imageFile;
+
+    @NotNull(message="Lecturer ID is required")
     private Long lecturerId; // We only need the ID to link the User
     private CourseStatus status;
     // Getters and Setters
