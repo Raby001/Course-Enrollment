@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     @GetMapping("/home")
     public String dashboardRedirect(Authentication auth) {
-        String role = auth.getAuthorities().iterator().next().getAuthority(); // e.g., "ROLE_ADMIN"
+        String role = auth.getAuthorities().iterator().next().getAuthority();
 
         if ("ROLE_ADMIN".equals(role)) {
             return "redirect:/admin/adminDashboard";

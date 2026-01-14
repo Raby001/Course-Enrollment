@@ -1,7 +1,6 @@
 package enroll_management.enroll_management.controllers.student;
 
 import enroll_management.enroll_management.Entities.User;
-import enroll_management.enroll_management.dto.admin.EnrollmentDto;
 import enroll_management.enroll_management.dto.student.StudentProfileDto;
 import enroll_management.enroll_management.services.student.StudentProfileService;
 import jakarta.validation.Valid;
@@ -15,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.List;
 
 @Controller
 @RequestMapping("/student/profile")
@@ -29,19 +27,20 @@ public class StudentProfileController {
 
     @GetMapping
     public String showProfile(Model model) {
-        User user = profileService.getCurrentUser();
+        User user = profileService.getCurrentUser(); // used ONLY to fill DTO
+
         StudentProfileDto dto = new StudentProfileDto();
         dto.setFirstName(user.getFirstName());
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
-        dto.setDob(user.getDob() != null ? user.getDob() : null);
-        List<EnrollmentDto> enrolledCourses = profileService.getMyEnrollments();
+        dto.setDob(user.getDob());
 
         model.addAttribute("profile", dto);
-        model.addAttribute("user", user); 
-        model.addAttribute("enrolledCourses", enrolledCourses);
+        model.addAttribute("enrolledCourses", profileService.getMyEnrollments());
+
         return "student/profile";
     }
+
 
     @PostMapping("/update")
     public String updateProfile(
@@ -68,7 +67,6 @@ public class StudentProfileController {
             return "redirect:/student/profile";
 
         } catch (IllegalStateException e) {
-            // business validation (your manual check)
             model.addAttribute("profile", dto);
             model.addAttribute("user", profileService.getCurrentUser());
             model.addAttribute("enrolledCourses", profileService.getMyEnrollments());
@@ -76,7 +74,6 @@ public class StudentProfileController {
             return "student/profile";
 
         } catch (DataIntegrityViolationException e) {
-            // 🔑 database-level safety net
             model.addAttribute("profile", dto);
             model.addAttribute("user", profileService.getCurrentUser());
             model.addAttribute("enrolledCourses", profileService.getMyEnrollments());

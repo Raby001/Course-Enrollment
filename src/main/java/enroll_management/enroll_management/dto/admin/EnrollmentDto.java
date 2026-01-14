@@ -4,15 +4,13 @@ import java.time.LocalDateTime;
 
 import enroll_management.enroll_management.enums.EnrollmentStatus;
 
-// We enrich the data here to make it more useful for the client.
 public class EnrollmentDto {
     private Long id;
     private EnrollmentStatus status;
     private LocalDateTime enrollmentDate;
     
-    // Instead of just IDs, we include names for better usability
     private Long studentId;
-    private String studentName; // Assuming User has a getFullName() method
+    private String studentName; 
     
     private Long courseId;
     private String courseCode;

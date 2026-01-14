@@ -30,9 +30,6 @@ public class StudentEnrollmentController {
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
-    // =========================
-    // VIEW MY ENROLLMENTS
-    // =========================
     @GetMapping
     public String myEnrollments(Authentication authentication, Model model) {
 
@@ -46,9 +43,6 @@ public class StudentEnrollmentController {
         return "student/enrollment/enrollments";
     }
 
-    // =========================
-    // ENROLL INTO A COURSE
-    // =========================
     @PostMapping("/enroll")
     public String enrollCourse(
             @RequestParam("courseId") Long courseId,
@@ -77,9 +71,6 @@ public class StudentEnrollmentController {
         return "redirect:" + (referer != null ? referer : "/student/courses");
     }
 
-    // =========================
-    // DROP ENROLLMENT
-    // =========================
     @PostMapping("/drop/{id}")
     public String dropEnrollment(
             @PathVariable("id") Long id,

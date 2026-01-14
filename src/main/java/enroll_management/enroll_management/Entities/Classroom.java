@@ -38,7 +38,7 @@ public class Classroom {
     private Boolean hasComputer = false;
     
     @Column(name = "status", length = 20)
-    private String status = "AVAILABLE";  // AVAILABLE, MAINTENANCE, CLOSED
+    private String status = "AVAILABLE";  
     
     // ===== RELATIONSHIPS =====
     @OneToMany(mappedBy = "classroom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

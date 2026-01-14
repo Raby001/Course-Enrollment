@@ -30,14 +30,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             );
         }
 
-        String roleName = user.getRole().getName().name(); // e.g., "ADMIN", "STUDENT"
+        String roleName = user.getRole().getName().name();
 
-        // Spring Security expects role names to start with "ROLE_"
         String authority = "ROLE_" + roleName;
 
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
-                .password(user.getPasswordHash()) // already hashed
+                .password(user.getPasswordHash())
                 .authorities(new SimpleGrantedAuthority(authority))
                 .build();
     }

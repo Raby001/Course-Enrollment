@@ -25,9 +25,6 @@ public class CourseAdminController {
     @Autowired
     private UserRepository userRepository;
 
-    // =========================
-    // VIEW ALL COURSES
-    // =========================
    @GetMapping
     public String listCourses(
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
@@ -44,10 +41,6 @@ public class CourseAdminController {
     }
 
 
-    // =========================
-    // SHOW CREATE FORM
-    // =========================
-
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("course", new CourseCreateUpdateDto());
@@ -59,10 +52,6 @@ public class CourseAdminController {
         return "admin/course/course-create";
     }
 
-
-    // =========================
-    // HANDLE CREATE
-    // =========================
     @PostMapping("/create")
     public String createCourse(
             @Valid @ModelAttribute("course") CourseCreateUpdateDto courseDto) {
@@ -71,9 +60,6 @@ public class CourseAdminController {
         return "redirect:/admin/courses";
     }
 
-    // =========================
-    // SHOW EDIT FORM
-    // =========================
    @GetMapping("/edit/{id}")
     public String showEditForm(
             @PathVariable("id") Long id,
@@ -85,9 +71,6 @@ public class CourseAdminController {
     }
 
 
-    // =========================
-    // HANDLE UPDATE
-    // =========================
     @PostMapping("/edit/{id}")
     public String updateCourse(
             @PathVariable("id") Long id,
@@ -97,9 +80,6 @@ public class CourseAdminController {
         return "redirect:/admin/courses";
     }
 
-    // =========================
-    // DELETE COURSE
-    // =========================
     @PostMapping("/delete/{id}")
     public String deleteCourse(@PathVariable("id") Long id) {
 

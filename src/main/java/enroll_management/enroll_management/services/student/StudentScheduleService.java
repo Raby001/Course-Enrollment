@@ -28,18 +28,15 @@ public class StudentScheduleService {
     @Autowired
     private UserRepository userRepository;
 
-    // NEW METHOD: Get only active schedules (excludes cancelled)
     public List<Schedule> getActiveStudentSchedule() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
 
-        // Get all course IDs the student is enrolled in
         List<Long> courseIds = enrollmentRepository.findByStudentId(student.getId()).stream()
                 .map(enrollment -> enrollment.getCourse().getId())
                 .collect(Collectors.toList());
 
-        // Get schedules for those courses
         List<Schedule> allSchedules = scheduleRepository.findByCourseIdIn(courseIds);
         
         // Filter out cancelled schedules
@@ -48,23 +45,19 @@ public class StudentScheduleService {
                 .collect(Collectors.toList());
     }
 
-    // Build weekly timetable rows
     public List<TimeTableRowDTO> buildWeeklyTimetable(List<Schedule> schedules) {
 
         Map<String, TimeTableRowDTO> rows = new LinkedHashMap<>();
 
         for (Schedule s : schedules) {
 
-            // Key = one row per time slot
             String key = s.getStartTime() + "-" + s.getEndTime();
 
-            // Create row if it does not exist
             TimeTableRowDTO row = rows.computeIfAbsent(
                     key,
                     k -> new TimeTableRowDTO(s.getStartTime(), s.getEndTime())
             );
 
-            // Put schedule into correct day column
             row.getSchedulesByDay().put(s.getDayOfWeek(), s);
         }
 

@@ -12,7 +12,7 @@ public class CourseCreateUpdateDto {
     private Integer maxCapacity;
     private String courseImage;
     private MultipartFile imageFile;
-    private Long lecturerId; // We only need the ID to link the User
+    private Long lecturerId;
     private CourseStatus status;
     // Getters and Setters
     public MultipartFile getImageFile() {

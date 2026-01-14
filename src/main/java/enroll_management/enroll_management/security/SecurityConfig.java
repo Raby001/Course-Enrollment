@@ -26,10 +26,10 @@ public class SecurityConfig {
 
             // Configure login page
             .formLogin(form -> form
-                .loginPage("/login")           // Custom login page URL
-                .loginProcessingUrl("/login")  // Where form submits
-                .defaultSuccessUrl("/home", true) // After login, go here
-                .failureUrl("/login?error=true")      // On fail, show error
+                .loginPage("/login")        
+                .loginProcessingUrl("/login") 
+                .defaultSuccessUrl("/home", true) 
+                .failureUrl("/login?error=true")  
                 .permitAll()
             )
 

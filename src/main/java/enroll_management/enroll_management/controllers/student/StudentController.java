@@ -21,7 +21,6 @@ public class StudentController {
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
 
-    // Constructor Injection (best practice)
     public StudentController(
             CourseService courseService,
             UserRepository userRepository,
@@ -34,15 +33,12 @@ public class StudentController {
     @GetMapping("/student/home")
     public String studentHome(Authentication auth, Model model) {
         String username = auth.getName();
-        
-        // Get current student
+
         User student = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Student not found: " + username));
-        
-        // Get all courses
+
         List<CourseDto> courses = courseService.getAllCourses();
         
-        // Add enrollment status to each course
         for (CourseDto course : courses) {
             boolean isEnrolled = enrollmentRepository.existsByStudentIdAndCourseId(
                 student.getId(), 

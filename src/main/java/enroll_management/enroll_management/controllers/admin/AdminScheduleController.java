@@ -34,7 +34,7 @@ public class AdminScheduleController {
         model.addAttribute("schedule", new ScheduleDTO());
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("classrooms", classroomService.findAll());
-        return "admin/schedule/form :: scheduleForm"; // Return fragment
+        return "admin/schedule/form :: scheduleForm";
     }
 
     // CREATE SUBMIT
@@ -46,7 +46,7 @@ public class AdminScheduleController {
         if (result.hasErrors()) {
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
+            return "admin/schedule/form :: scheduleForm";
         }
 
         try {
@@ -55,10 +55,10 @@ public class AdminScheduleController {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
+            return "admin/schedule/form :: scheduleForm";
         }
 
-        return "redirect:/admin/schedules"; // Full reload after successful save
+        return "redirect:/admin/schedules";
     }
 
     // EDIT FORM (Modal)
@@ -67,7 +67,7 @@ public class AdminScheduleController {
         model.addAttribute("schedule", scheduleService.getDTOById(id));
         model.addAttribute("courses", courseService.getAllCourses());
         model.addAttribute("classrooms", classroomService.findAll());
-        return "admin/schedule/form :: scheduleForm"; // Return fragment
+        return "admin/schedule/form :: scheduleForm";
     }
 
     // UPDATE SUBMIT
@@ -80,7 +80,7 @@ public class AdminScheduleController {
         if (result.hasErrors()) {
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
+            return "admin/schedule/form :: scheduleForm";
         }
 
         try {
@@ -89,7 +89,7 @@ public class AdminScheduleController {
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("courses", courseService.getAllCourses());
             model.addAttribute("classrooms", classroomService.findAll());
-            return "admin/schedule/form :: scheduleForm"; // Return fragment for modal
+            return "admin/schedule/form :: scheduleForm"; 
         }
 
         return "redirect:/admin/schedules";

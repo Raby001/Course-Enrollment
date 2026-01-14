@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 public class StudentProfileService {
 
     private final CourseService courseService;
-
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final ImageUploadService imageUploadService;
@@ -42,9 +41,6 @@ public class StudentProfileService {
         this.courseService = courseService; 
     }
 
-    // =========================
-    // GET CURRENT LOGGED-IN USER
-    // =========================
     public User getCurrentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String username = auth.getName();
@@ -52,16 +48,12 @@ public class StudentProfileService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    // =========================
-    // UPDATE PROFILE INFO
-    // =========================
     public void updateProfile(String firstName, String lastName, String email, LocalDate dob) {
         User user = getCurrentUser();
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
 
-        // ✅ Only update DOB if provided
         if (dob != null) {
             user.setDob(dob);
         }
@@ -69,9 +61,7 @@ public class StudentProfileService {
         userRepository.save(user);
     }
 
-    // =========================
-    // UPLOAD PROFILE IMAGE
-    // =========================
+
     public void uploadProfileImage(MultipartFile image) throws IOException {
         User user = getCurrentUser();
         String imageUrl = imageUploadService.uploadImage(image);
@@ -79,9 +69,7 @@ public class StudentProfileService {
         userRepository.save(user);
     }
 
-    // =========================
-    // CHECK IF STUDENT IS ENROLLED IN A COURSE
-    // =========================
+
     public boolean isEnrolled(Long courseId) {
         User student = getCurrentUser();
         return enrollmentRepository.existsByStudentIdAndCourseId(student.getId(), courseId);

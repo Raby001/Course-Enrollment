@@ -34,7 +34,7 @@ public class AdminUserController {
         model.addAttribute("user", new UserCreateDto());
         model.addAttribute("roles", roleRepository.findAll());
         model.addAttribute("statuses", enroll_management.enroll_management.enums.UserStatus.values());
-        return "admin/user-create"; // returns only the div fragment
+        return "admin/user-create";
     }
     
     @PostMapping("/create")

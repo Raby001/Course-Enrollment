@@ -28,9 +28,6 @@ public class StudentCourseController {
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
-    // =========================
-    // VIEW ALL COURSES WITH SEARCH
-    // =========================
     @GetMapping
     public String viewAllCourses(
            @RequestParam(name = "q", required = false) String keyword,
@@ -50,7 +47,6 @@ public class StudentCourseController {
                 })
                 .collect(Collectors.toList());
 
-        // Apply search filter if query exists
         if (keyword != null && !keyword.trim().isEmpty()) {
             String searchTerm = keyword.toLowerCase().trim();
             courses = courses.stream()
@@ -63,9 +59,6 @@ public class StudentCourseController {
         return "student/course/courses";
     }
 
-    // =========================
-    // VIEW COURSE DETAILS
-    // =========================
     @GetMapping("/{id}")
     public String viewCourseDetail(
             @PathVariable("id") Long id,
@@ -82,7 +75,6 @@ public class StudentCourseController {
         );
         course.setEnrolled(isEnrolled);
 
-        // Get other courses (exclude current one)
         List<CourseDto> otherCourses = courseService.getAllCourses().stream()
                 .filter(c -> !c.getId().equals(id))
                 .limit(3)

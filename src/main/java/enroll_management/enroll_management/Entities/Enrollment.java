@@ -80,7 +80,6 @@ public class Enrollment {
     public Enrollment(User student, Course course) {
         this.student = student;
         this.course = course;
-        // Automatically set dates in @PrePersist
     }
     
     // ===== GETTERS & SETTERS =====

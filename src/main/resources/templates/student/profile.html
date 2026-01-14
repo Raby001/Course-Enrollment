@@ -29,12 +29,12 @@
             <div class="flex flex-col items-center">
 
                 <!-- Profile Image -->
-                <img th:src="${user.userImage ?: 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
+                <img th:src="${currentUser.userImage ?: 'https://image2url.com/r2/default/images/1766936428388-02d719cb-dd68-42e4-9d9e-77743ecb9589.png'}"
                      class="w-32 h-32 rounded-full border-4 shadow-lg object-cover mb-4"/>
 
                 <p class="font-bold text-xl text-gray-800"
-                   th:text="${user.firstName + ' ' + user.lastName}">Student Name</p>
-                <p class="text-gray-500 mb-4" th:text="${user.email}">email@example.com</p>
+                   th:text="${currentUser.firstName + ' ' + currentUser.lastName}">Student Name</p>
+                <p class="text-gray-500 mb-4" th:text="${currentUser.email}">email@example.com</p>
 
                 <!-- Upload Image -->
                 <form th:action="@{/student/profile/upload-image}" method="post" enctype="multipart/form-data" class="w-full">

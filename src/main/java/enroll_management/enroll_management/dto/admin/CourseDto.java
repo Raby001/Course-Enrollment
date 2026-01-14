@@ -10,7 +10,7 @@ public class CourseDto {
     private Integer credits;
     private Integer maxCapacity;
     private Long lecturerId;
-    private String lecturerName; // Assuming User has a getFullName() method
+    private String lecturerName;
     private String status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

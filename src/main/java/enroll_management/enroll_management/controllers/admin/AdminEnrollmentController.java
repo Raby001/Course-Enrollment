@@ -18,9 +18,6 @@ public class AdminEnrollmentController {
     @Autowired
     private EnrollmentService enrollmentService;
 
-    // =========================
-    // VIEW ALL ENROLLMENTS
-    // =========================
     @GetMapping
     public String listAllEnrollments(Model model) {
         model.addAttribute(
@@ -31,9 +28,6 @@ public class AdminEnrollmentController {
         return "admin/enrollments"; 
     }
 
-    // =========================
-    // VIEW ENROLLMENTS BY STUDENT
-    // =========================
     @GetMapping("/student/{studentId}")
     public String viewByStudent(
             @PathVariable Long studentId,
@@ -47,9 +41,6 @@ public class AdminEnrollmentController {
         return "admin/enrollments";
     }
 
-    // =========================
-    // SHOW CREATE FORM
-    // =========================
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("enrollment", new EnrollmentCreateDto());
@@ -57,9 +48,6 @@ public class AdminEnrollmentController {
         return "admin/enrollment-create";
     }
 
-    // =========================
-    // HANDLE CREATE
-    // =========================
     @PostMapping("/create")
     public String createEnrollment(
             @Valid @ModelAttribute("enrollment") EnrollmentCreateDto dto,
@@ -69,9 +57,6 @@ public class AdminEnrollmentController {
         return "redirect:/admin/enrollments";
     }
 
-    // =========================
-    // DELETE (HTML FORM)
-    // =========================
     @PostMapping("/delete/{id}")
     public String deleteEnrollment(
             @PathVariable("id") Long id,

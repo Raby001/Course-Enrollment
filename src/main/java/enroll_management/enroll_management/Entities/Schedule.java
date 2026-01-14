@@ -46,10 +46,10 @@ public class Schedule {
     
     // ===== SCHEDULE DETAILS =====
     @Column(name = "academic_year", nullable = false)
-    private Integer academicYear;  // e.g., 2024
+    private Integer academicYear; 
     
     @Column(name = "semester", nullable = false, length = 20)
-    private String semester;  // e.g., "FALL", "SPRING", "SUMMER"
+    private String semester; 
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -62,7 +62,7 @@ public class Schedule {
     private LocalTime endTime;
     
     @Column(name = "status", length = 20)
-    private String status = "SCHEDULED";  // SCHEDULED, CANCELLED, COMPLETED
+    private String status = "SCHEDULED"; 
     
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -160,10 +160,7 @@ public class Schedule {
                classroom.getCapacity() >= course.getMaxCapacity();
     }
     
-    // Check if classroom has required equipment
     public boolean classroomHasRequiredEquipment() {
-        // You could add equipment requirements to Course entity
-        // For now, just a placeholder
         return true;
     }
     
