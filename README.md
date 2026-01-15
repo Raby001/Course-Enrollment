@@ -152,18 +152,3 @@ Run the test suite using Gradle:
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Contact
-
-For questions or support, please contact:
-- Project Maintainer: [Your Name]
-- Email: your.email@example.com
-- GitHub: [your-username](https://github.com/your-username)
-
----
-
-*Built with ❤️ for educational institutions*
